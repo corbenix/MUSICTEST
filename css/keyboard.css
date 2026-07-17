@@ -1,0 +1,313 @@
+/* ==========================================================================
+   KEYBOARD PAGE
+   ========================================================================== */
+
+:root { --tool-rgb: var(--keyboard-rgb); --tool-light-rgb: var(--keyboard-light-rgb); }
+
+/* ── Match the bass page's panel width behavior: full-bleed inside
+   .tool-panel (no 24px side padding) and the same responsive max-width
+   scaling from 720p laptops up to 4K, so the Scale Explorer and Chord
+   Finder cards are exactly as wide as the bass page's cards at every
+   breakpoint instead of being boxed in by tool.css's default 1200px /
+   24px-padding panel. ──────────────────────────────────────────────── */
+:root { --kb-panel-maxw: 1200px; }
+@media (min-width: 601px) and (max-width: 1099px) { :root { --kb-panel-maxw: 100%; } }
+@media (min-width: 1920px) { :root { --kb-panel-maxw: 1200px; } }
+@media (min-width: 2560px) { :root { --kb-panel-maxw: 1440px; } }
+@media (min-width: 3840px) { :root { --kb-panel-maxw: 1800px; } }
+.tool-panel { width: 100%; max-width: var(--kb-panel-maxw); padding-left: 0; padding-right: 0; }
+
+.piano-panel {
+    position: relative;
+    background:
+        radial-gradient(120% 140% at 50% -10%, rgba(var(--tool-rgb), .10), transparent 60%),
+        var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 16px 20px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.piano-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.piano-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* ── Play button — runs the currently highlighted scale or chord back
+   through the piano samples. Gold accent to match the pk--root key
+   highlight, so it visually reads as "hear what's lit up". Disabled
+   (greyed, no pointer) whenever no scale/chord root is selected. ───── */
+.keyboard-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(160deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
+    border-color: transparent;
+    color: #4a3300;
+}
+.keyboard-play-btn:hover {
+    color: #4a3300;
+    background: linear-gradient(160deg, #ffeab0 0%, #ffd980 55%, #e6ae3f 100%);
+    border-color: transparent;
+}
+.keyboard-play-btn:disabled {
+    background: var(--glass-md);
+    border-color: rgba(var(--tool-light-rgb), .22);
+    color: var(--text2);
+    opacity: .45;
+    cursor: not-allowed;
+}
+.keyboard-play-btn.is-playing { animation: kb-play-pulse 0.6s var(--ease) infinite; }
+@keyframes kb-play-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.piano-scroll { overflow: visible; border-radius: 10px; width: 100%; }
+
+/* ── Felt rail — the strip of color real upright pianos show just above
+   the keytops. Spans the full width of the keybed (same width as
+   .piano at every octave count) and grounds the sky-cyan brand accent
+   at the top of the instrument instead of leaving the keys to float in
+   the glass panel on their own. ─────────────────────────────────────── */
+.piano-felt {
+    height: 10px;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .95), rgba(var(--tool-rgb), .85));
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .35);
+    position: relative;
+}
+.piano-felt::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: rgba(0, 0, 0, .35);
+}
+
+.piano {
+    position: relative;
+    height: 168px;
+    display: flex;
+    width: 100%;
+    padding-top: 4px;
+    background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15) 8px, transparent 8px);
+    border-radius: 0 0 8px 8px;
+}
+/* More octaves packed into the same panel width means each key gets
+   narrower — trim the key height to match so the keys don't end up
+   tall and pin-thin at 5 octaves. */
+.piano[data-octaves="3"] { height: 150px; }
+.piano[data-octaves="5"] { height: 128px; }
+
+.pk {
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-display);
+    padding: 0;
+    transition: background .1s var(--ease), transform .06s var(--ease), box-shadow .1s var(--ease), filter .1s var(--ease);
+}
+
+/* ── White keys — layered gradient for a glossy ivory look, a hairline
+   seam between neighboring keys, and a soft inner shadow that reads as
+   keybed depth rather than a flat rectangle. ───────────────────────── */
+.pk--white {
+    position: relative;
+    height: 100%;
+    background:
+        linear-gradient(180deg, #ffffff 0%, #f4f1ff 55%, #e6e0fa 100%);
+    border: 1px solid rgba(20, 14, 40, .55);
+    border-right: 1px solid rgba(20, 14, 40, .30);
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 11px;
+    z-index: 1;
+    box-shadow: inset 0 -14px 16px -12px rgba(120, 105, 180, .35), inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+.pk--white:last-child { border-right: 1px solid rgba(20, 14, 40, .55); }
+.pk--white:hover { background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #efe9ff 100%); filter: brightness(1.02); }
+.pk--white.pk--pressed,
+.pk--white:active {
+    background: linear-gradient(180deg, #e4dcff 0%, #d3c8f7 100%);
+    transform: translateY(2px);
+    box-shadow: inset 0 6px 10px -4px rgba(60, 40, 110, .45);
+}
+
+.pk-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #8a7fb0;
+    letter-spacing: .02em;
+    pointer-events: none;
+}
+
+/* ── Black keys — deep glossy gradient with a sheen highlight near the
+   top (like polished ebony catching light), matching depth cues to the
+   white keys' inset shadow. ─────────────────────────────────────────── */
+.pk--black {
+    position: absolute;
+    top: 0;
+    height: 63%;
+    background: linear-gradient(180deg, #3a3350 0%, #1c1730 45%, #0d0a18 100%);
+    border: 1px solid #000;
+    border-radius: 0 0 6px 6px;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .18), inset 0 -10px 14px -8px rgba(0, 0, 0, .8), 0 4px 8px rgba(0, 0, 0, .5);
+}
+.pk--black .pk-label { color: #b8b0d6; }
+.pk--black:hover { background: linear-gradient(180deg, #4a4266 0%, #241d3c 45%, #100c1d 100%); }
+.pk--black.pk--pressed,
+.pk--black:active {
+    background: linear-gradient(180deg, #221c38 0%, #0d0a18 100%);
+    transform: translateY(2px);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, .7);
+}
+
+.pk--highlight.pk--white {
+    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .55) 0%, rgba(var(--tool-rgb), .40) 55%, rgba(var(--tool-rgb), .30) 100%);
+    box-shadow: inset 0 -14px 16px -12px rgba(var(--tool-rgb), .55), inset 0 1px 0 rgba(255, 255, 255, .8), 0 0 14px rgba(var(--tool-rgb), .35);
+}
+.pk--highlight.pk--black {
+    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .85) 0%, rgba(var(--tool-rgb), .90) 55%, rgba(6, 60, 80, .95) 100%);
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .35), 0 0 14px rgba(var(--tool-rgb), .55);
+}
+.pk--root.pk--white {
+    background: linear-gradient(180deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
+    box-shadow: inset 0 -14px 16px -12px rgba(184, 146, 58, .55), inset 0 1px 0 rgba(255, 255, 255, .9), 0 0 16px rgba(255, 209, 102, .45);
+}
+.pk--root.pk--black {
+    background: linear-gradient(180deg, #e0b95a 0%, #b8923a 55%, #7a5e20 100%);
+    box-shadow: inset 0 2px 3px rgba(255, 235, 190, .35), 0 0 16px rgba(255, 209, 102, .5);
+}
+.pk--root .pk-label { color: #4a3300; font-weight: 800; }
+
+@media (max-width: 480px) {
+    .piano { height: 140px; }
+    .pk-label { font-size: 9.5px; }
+}
+
+/* ── Octave toggle — exact copy of the bass page's pill-group/pill-btn
+   fret-count toggle, reused here for switching the piano between a
+   2, 3, or 5 octave range. ─────────────────────────────────────────── */
+.pill-group {
+    display: inline-flex;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 8px;
+    overflow: hidden;
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 2px 10px rgba(0, 0, 0, .25);
+}
+.pill-btn {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background .15s var(--ease), color .15s var(--ease);
+}
+.pill-btn:hover { color: rgb(var(--tool-light-rgb)); background: rgba(var(--tool-rgb), .18); }
+.pill-btn.active {
+    background: linear-gradient(160deg, rgba(190, 235, 255, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 165, .92) 100%);
+    color: #fff;
+}
+.pill-btn.active:hover { background: linear-gradient(160deg, rgba(190, 235, 255, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 165, .92) 100%); }
+
+/* ── Sharp/flat spelling toggle for the Scale Explorer's root picker —
+   ported 100% from the Bass page's Scale Visualizer. Cycles
+   natural → sharp → flat, revealing the accidental pills (C#/D♭ etc.)
+   alongside the naturals. Sharp = blue, flat = amber. ──────────────── */
+.sf-sep {
+    display: inline-block;
+    width: 1.5px;
+    height: 22px;
+    background: var(--border2);
+    border-radius: 2px;
+    align-self: center;
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+.sf-toggle {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, .045);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    cursor: pointer;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+    white-space: nowrap;
+    margin-left: 4px;
+}
+.sf-toggle:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
+}
+.sf-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-acc-pill[data-hidden="1"] { display: none !important; }
+.sf-acc-pill[data-mode="sharp"]:hover {
+    background: rgba(0, 150, 255, .14);
+    border-color: rgba(125, 223, 255, .40);
+    color: #fff;
+}
+.sf-acc-pill[data-mode="flat"]:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
+}
+.sf-acc-pill.active[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .70));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-acc-pill.active[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}

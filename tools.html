@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Tuner & Metronome — Chord Nexus</title>
+    <meta name="description" content="A microphone chromatic tuner and a metronome — free music tools for any instrument." />
+    <link rel="canonical" href="https://chordex.pages.dev/tools.html" />
+
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/tool.css" />
+    <link rel="stylesheet" href="css/tools.css" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cn-bg" aria-hidden="true">
+        <div class="cn-bg-glow cn-bg-glow--1"></div>
+        <div class="cn-bg-glow cn-bg-glow--2"></div>
+        <div class="cn-bg-sparkles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <nav class="nclg-nav">
+        <a class="nclg-nav-brand" href="index.html">
+            <img src="assets/img/logo.png" alt="Chord Nexus logo" class="nclg-nav-logo" />
+            <div class="nclg-nav-wordmark"><strong>CHORD</strong><span>NEXUS</span></div>
+        </a>
+        <div class="nclg-nav-links">
+            <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><span class="nclg-nav-icon" aria-hidden="true">🎻</span></a>
+            <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
+            <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
+            <a class="nclg-nav-link" href="tools.html" aria-current="page" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        </div>
+    </nav>
+
+
+    <main>
+        <h1 class="sr-only">Other Tools</h1>
+        <nav class="section-nav-card" aria-label="Tool navigation">
+            <a class="section-nav-btn" href="guitar.html"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
+            <a class="section-nav-btn" href="bass.html"><span class="section-nav-icon" aria-hidden="true">🎻</span><span class="section-nav-label">Bass</span></a>
+            <a class="section-nav-btn" href="keyboard.html"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
+            <a class="section-nav-btn" href="chord-builder.html"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
+            <a class="section-nav-btn" href="tools.html" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Other Tools</span></a>
+        </nav>
+
+        <div class="tool-tabs" role="tablist">
+            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-tuner">Tuner</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-metro">Metronome</button>
+        </div>
+
+        <section id="panel-tuner" class="tool-panel" role="tabpanel">
+            <div class="tuner-panel">
+                <div id="tuner-note" class="tuner-note">—</div>
+                <div id="tuner-cents" class="tuner-cents">0 cents</div>
+                <div class="tuner-gauge"><div id="tuner-needle" class="tuner-needle"></div></div>
+                <div id="tuner-status" class="tuner-status">Microphone off</div>
+                <button id="tuner-start" type="button" class="tool-btn">Start Tuner</button>
+            </div>
+        </section>
+
+        <section id="panel-metro" class="tool-panel" role="tabpanel" hidden>
+            <div class="metro-panel">
+                <div id="metro-dot" class="metro-dot"></div>
+                <div class="metro-bpm-row">
+                    <button id="metro-minus" type="button" class="metro-bpm-btn">−</button>
+                    <div>
+                        <div id="metro-bpm" class="metro-bpm-value">100</div>
+                        <div class="metro-bpm-label">BPM</div>
+                    </div>
+                    <button id="metro-plus" type="button" class="metro-bpm-btn">+</button>
+                </div>
+                <button id="metro-toggle" type="button" class="tool-btn">Start</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <img src="assets/img/logo.png" alt="Chord Nexus logo" class="site-footer-logo" />
+        <span class="site-footer-text">© <span id="footer-year"></span> Chord Nexus by CORBENIX Studio</span>
+        <span class="site-footer-tagline">Connect. Learn. Create.</span>
+    </footer>
+
+    <script src="js/music-theory.js"></script>
+    <script src="js/tools.js"></script>
+    <script src="js/background.js"></script>
+</body>
+</html>

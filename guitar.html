@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Guitar Scales, CAGED System & Chords — Chord Nexus</title>
+    <meta name="description" content="Interactive guitar fretboard tool: explore scales across the neck, learn the CAGED system, look up open chord shapes, and find capo positions." />
+    <link rel="canonical" href="https://chordex.pages.dev/guitar.html" />
+
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/circle-of-fifths.css" />
+    <link rel="stylesheet" href="css/tool.css" />
+    <link rel="stylesheet" href="css/fretboard.css" />
+    <link rel="stylesheet" href="css/guitar.css" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cn-bg" aria-hidden="true">
+        <div class="cn-bg-glow cn-bg-glow--1"></div>
+        <div class="cn-bg-glow cn-bg-glow--2"></div>
+        <div class="cn-bg-sparkles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <nav class="nclg-nav">
+        <a class="nclg-nav-brand" href="index.html">
+            <img src="assets/img/logo.png" alt="Chord Nexus logo" class="nclg-nav-logo" />
+            <div class="nclg-nav-wordmark"><strong>CHORD</strong><span>NEXUS</span></div>
+        </a>
+        <div class="nclg-nav-links">
+            <a class="nclg-nav-link" href="guitar.html" aria-current="page" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><span class="nclg-nav-icon" aria-hidden="true">🎻</span></a>
+            <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
+            <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
+            <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        </div>
+    </nav>
+
+
+    <main>
+        <h1 class="sr-only">Guitar</h1>
+        <nav class="section-nav-card" aria-label="Tool navigation">
+            <a class="section-nav-btn" href="guitar.html" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
+            <a class="section-nav-btn" href="bass.html"><span class="section-nav-icon" aria-hidden="true">🎻</span><span class="section-nav-label">Bass</span></a>
+            <a class="section-nav-btn" href="keyboard.html"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
+            <a class="section-nav-btn" href="chord-builder.html"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
+            <a class="section-nav-btn" href="tools.html"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Other Tools</span></a>
+        </nav>
+
+        <div id="circle-of-fifths-mount"></div>
+
+        <div class="tool-tabs" role="tablist">
+            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-scale">Scale Explorer</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-caged">CAGED System</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-chords">Chord Library</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-capo">Capo Explorer</button>
+        </div>
+
+        <section id="panel-scale" class="tool-panel" role="tabpanel">
+            <div class="controls-row">
+                <div class="control-field">
+                    <label for="scale-root">Root note</label>
+                    <select id="scale-root"></select>
+                </div>
+                <div class="control-field">
+                    <label for="scale-type">Scale</label>
+                    <select id="scale-type"></select>
+                </div>
+            </div>
+            <div class="scale-card">
+                <div class="scale-card-label">Scale Notes</div>
+                <div id="scale-chips" class="scale-pill-row"></div>
+            </div>
+            <div class="fretboard-panel">
+                <div id="scale-fretboard"></div>
+            </div>
+        </section>
+
+        <section id="panel-caged" class="tool-panel" role="tabpanel" hidden>
+            <div class="controls-row">
+                <div class="control-field">
+                    <label for="caged-root">Root note</label>
+                    <select id="caged-root"></select>
+                </div>
+            </div>
+            <div id="caged-picker" class="caged-picker"></div>
+            <p id="tool-note" class="tool-note"></p>
+            <div class="fretboard-panel">
+                <div id="caged-fretboard"></div>
+            </div>
+        </section>
+
+        <section id="panel-chords" class="tool-panel" role="tabpanel" hidden>
+            <div id="chord-lib-grid" class="chord-lib-grid"></div>
+            <div class="fretboard-panel" style="margin-top:18px;">
+                <div id="chord-lib-fretboard"></div>
+            </div>
+        </section>
+
+        <section id="panel-capo" class="tool-panel" role="tabpanel" hidden>
+            <div class="controls-row">
+                <div class="control-field">
+                    <label for="capo-open-chord">Chord shape you're playing</label>
+                    <select id="capo-open-chord">
+                        <option value="C">C shape</option>
+                        <option value="A">A shape</option>
+                        <option value="G">G shape</option>
+                        <option value="D">D shape</option>
+                        <option value="E">E shape</option>
+                    </select>
+                </div>
+            </div>
+            <p class="tool-note">Shows what chord actually sounds at each capo position, for the shape you're fretting.</p>
+            <div id="capo-results" class="capo-result-grid"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <img src="assets/img/logo.png" alt="Chord Nexus logo" class="site-footer-logo" />
+        <span class="site-footer-text">© <span id="footer-year"></span> Chord Nexus by CORBENIX Studio</span>
+        <span class="site-footer-tagline">Connect. Learn. Create.</span>
+    </footer>
+
+    <script src="js/music-theory.js"></script>
+    <script src="js/fretboard.js"></script>
+    <script src="js/guitar-data.js"></script>
+    <script src="js/guitar.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/circle-of-fifths.js"></script>
+</body>
+</html>

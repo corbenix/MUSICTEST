@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Interactive Piano — Scales & Chords — Chord Nexus</title>
+    <meta name="description" content="Interactive piano keyboard: click keys to hear notes, and highlight any scale or chord across two octaves." />
+    <link rel="canonical" href="https://chordex.pages.dev/keyboard.html" />
+
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/circle-of-fifths.css" />
+    <link rel="stylesheet" href="css/tool.css" />
+    <link rel="stylesheet" href="css/keyboard.css" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cn-bg" aria-hidden="true">
+        <div class="cn-bg-glow cn-bg-glow--1"></div>
+        <div class="cn-bg-glow cn-bg-glow--2"></div>
+        <div class="cn-bg-sparkles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <nav class="nclg-nav">
+        <a class="nclg-nav-brand" href="index.html">
+            <img src="assets/img/logo.png" alt="Chord Nexus logo" class="nclg-nav-logo" />
+            <div class="nclg-nav-wordmark"><strong>CHORD</strong><span>NEXUS</span></div>
+        </a>
+        <div class="nclg-nav-links">
+            <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><span class="nclg-nav-icon" aria-hidden="true">🎻</span></a>
+            <a class="nclg-nav-link" href="keyboard.html" aria-current="page" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
+            <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
+            <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        </div>
+    </nav>
+
+
+    <main>
+        <h1 class="sr-only">Keyboard</h1>
+        <nav class="section-nav-card" aria-label="Tool navigation">
+            <a class="section-nav-btn" href="guitar.html"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
+            <a class="section-nav-btn" href="bass.html"><span class="section-nav-icon" aria-hidden="true">🎻</span><span class="section-nav-label">Bass</span></a>
+            <a class="section-nav-btn" href="keyboard.html" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
+            <a class="section-nav-btn" href="chord-builder.html"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
+            <a class="section-nav-btn" href="tools.html"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Other Tools</span></a>
+        </nav>
+
+        <div id="circle-of-fifths-mount"></div>
+
+        <section class="tool-panel">
+            <div class="tool-controls-card">
+                <div class="tool-controls-title">🎶 Scale Explorer</div>
+                <p class="tool-controls-desc">Pick a root and mode to see its notes highlighted across the keyboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="scale-root-pills" class="root-pill-row"></div>
+                </div>
+                <select id="scale-type" class="scale-select"></select>
+            </div>
+
+            <div class="tool-controls-card">
+                <div class="tool-controls-title">🎹 Chord Finder</div>
+                <p class="tool-controls-desc">Pick a root and chord type to see its notes highlighted across the keyboard.</p>
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Root</span>
+                        <div id="chord-root-pills" class="ps-pills ps-root-pills root-pill-row"></div>
+                    </div>
+                    <div id="chord-type-row" class="ps-row ps-type-row">
+                        <span class="ps-micro-label">Type</span>
+                        <div id="chord-type-pills" class="ps-pills ps-type-pills"></div>
+                    </div>
+                </div>
+                <div id="chord-display" class="chord-display">
+                    <div class="chord-display-name">Select a chord</div>
+                    <div class="chord-display-notes"></div>
+                </div>
+            </div>
+
+            <div class="piano-panel">
+                <div class="piano-toolbar">
+                    <button type="button" id="keyboard-play-btn" class="reset-btn keyboard-play-btn" disabled title="Play the selected scale or chord">▶ Play</button>
+                    <div class="pill-group">
+                        <button type="button" id="label-mode-toggle" class="pill-btn">Notes</button>
+                    </div>
+                    <div class="piano-toolbar-right">
+                        <div class="pill-group">
+                            <button type="button" id="octave-toggle-2" class="pill-btn">2 oct</button>
+                            <button type="button" id="octave-toggle-3" class="pill-btn">3 oct</button>
+                            <button type="button" id="octave-toggle-5" class="pill-btn">5 oct</button>
+                        </div>
+                        <div class="pill-group">
+                            <button type="button" id="sustain-toggle" class="pill-btn">Sustain</button>
+                        </div>
+                        <button type="button" id="chord-clear-btn" class="reset-btn">Clear Keys</button>
+                    </div>
+                </div>
+                <div class="piano-scroll">
+                    <div class="piano-felt"></div>
+                    <div id="piano" class="piano"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <img src="assets/img/logo.png" alt="Chord Nexus logo" class="site-footer-logo" />
+        <span class="site-footer-text">© <span id="footer-year"></span> Chord Nexus by CORBENIX Studio</span>
+        <span class="site-footer-tagline">Connect. Learn. Create.</span>
+    </footer>
+
+    <script src="js/music-theory.js"></script>
+    <script src="js/keyboard-data.js"></script>
+    <script src="js/keyboard.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/circle-of-fifths.js"></script>
+</body>
+</html>

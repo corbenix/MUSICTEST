@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Bass Guitar Scales & Fretboard — Chord Nexus</title>
+    <meta name="description" content="Interactive bass fretboard tool: explore scales across the neck in 4-string or 5-string tuning, and find every position of a note." />
+    <link rel="canonical" href="https://chordex.pages.dev/bass.html" />
+
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/circle-of-fifths.css" />
+    <link rel="stylesheet" href="css/tool.css" />
+    <link rel="stylesheet" href="css/bass.css" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cn-bg" aria-hidden="true">
+        <div class="cn-bg-glow cn-bg-glow--1"></div>
+        <div class="cn-bg-glow cn-bg-glow--2"></div>
+        <div class="cn-bg-sparkles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <nav class="nclg-nav">
+        <a class="nclg-nav-brand" href="index.html">
+            <img src="assets/img/logo.png" alt="Chord Nexus logo" class="nclg-nav-logo" />
+            <div class="nclg-nav-wordmark"><strong>CHORD</strong><span>NEXUS</span></div>
+        </a>
+        <div class="nclg-nav-links">
+            <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-current="page" aria-label="Bass" title="Bass"><span class="nclg-nav-icon" aria-hidden="true">🎻</span></a>
+            <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
+            <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
+            <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        </div>
+    </nav>
+
+    <main>
+        <h1 class="sr-only">Bass</h1>
+        <nav class="section-nav-card" aria-label="Tool navigation">
+            <a class="section-nav-btn" href="guitar.html"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
+            <a class="section-nav-btn" href="bass.html" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎻</span><span class="section-nav-label">Bass</span></a>
+            <a class="section-nav-btn" href="keyboard.html"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
+            <a class="section-nav-btn" href="chord-builder.html"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
+            <a class="section-nav-btn" href="tools.html"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Other Tools</span></a>
+        </nav>
+
+        <div id="circle-of-fifths-mount"></div>
+
+        <section class="tool-panel">
+            <div class="bass-controls-panel scale-visualizer-card">
+                <div class="bass-panel-title">🎶 Scale Visualizer</div>
+                <p class="bass-panel-desc">Overlay any scale across the bass fretboard. Pick a root and mode to apply instantly.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="bass-scalevis-root-pills" class="root-pill-row"></div>
+                </div>
+                <select id="bass-scale-select" class="scale-select"></select>
+            </div>
+
+            <div class="bass-controls-panel">
+                <div class="bass-panel-title">🎯 Bass Root Note</div>
+                <p class="bass-panel-desc">Pick a root to mark it across the bass fretboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="bass-root-pills" class="root-pill-row"></div>
+                </div>
+            </div>
+
+            <div class="bass-toolbar">
+                <div class="bass-toolbar-group">
+                    <div class="pill-group">
+                        <button type="button" id="fret-toggle-b-12" class="pill-btn">12</button>
+                        <button type="button" id="fret-toggle-b-15" class="pill-btn">15</button>
+                        <button type="button" id="fret-toggle-b-24" class="pill-btn">24</button>
+                    </div>
+                    <div class="pill-group">
+                        <button type="button" id="bass-4-btn" class="pill-btn">4-String</button>
+                        <button type="button" id="bass-5-btn" class="pill-btn">5-String</button>
+                    </div>
+                </div>
+                <button type="button" id="bass-clear-btn" class="reset-btn">Clear Fretboard</button>
+            </div>
+
+            <div class="fretboard-scroll-container">
+                <div class="fretboard-wrap">
+                    <div class="fret-header-row">
+                        <div class="fret-header-spacer"></div>
+                        <div class="fret-header-cells" id="b-fret-header"></div>
+                    </div>
+                    <div id="b-strings-container"></div>
+                    <div class="marker-row">
+                        <div class="marker-spacer"></div>
+                        <div id="b-marker-cells" style="display:flex; flex:1;"></div>
+                    </div>
+                </div>
+            </div>
+            <span class="scroll-hint">Swipe horizontally to navigate frets →</span>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <img src="assets/img/logo.png" alt="Chord Nexus logo" class="site-footer-logo" />
+        <span class="site-footer-text">© <span id="footer-year"></span> Chord Nexus by CORBENIX Studio</span>
+        <span class="site-footer-tagline">Connect. Learn. Create.</span>
+    </footer>
+
+    <script src="js/music-theory.js"></script>
+    <script src="js/bass.js"></script>
+    <script src="js/circle-of-fifths.js"></script>
+    <script src="js/background.js"></script>
+</body>
+</html>

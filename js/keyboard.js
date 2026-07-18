@@ -192,35 +192,21 @@
     });
 
     // ── Global sharp/flat display mode ────────────────────────────────
-    // One switch for the whole page: which spelling (♯ or ♭) accidental
+    // One switch for the whole *site*: which spelling (♯ or ♭) accidental
     // notes use everywhere — the keyboard's black-key labels, the root
     // pills in the Scale Explorer / Chord Finder, and the chord name
-    // display. Replaces the old setup where each picker had its own
-    // sharp/flat choice.
-    let noteDisplayMode = 'sharp';
+    // display. Backed by window.NoteDisplay (see js/note-display.js), so
+    // the choice persists across the Keyboard, Bass, Guitar, and Chord
+    // Builder pages instead of resetting per page.
+    let noteDisplayMode = window.NoteDisplay.getMode();
     const noteDisplayToggle = document.getElementById('note-display-toggle');
 
-    // Converts a canonical sharp-spelled note (e.g. "C#") into display
-    // text for the current mode. Naturals pass through unchanged.
     function toDisplayNote(sharpVal) {
-        if (!sharpVal || !sharpVal.includes('#')) return sharpVal;
-        if (noteDisplayMode === 'sharp') return sharpVal.replace('#', '♯');
-        const idx = MT.NOTES_SHARP.indexOf(sharpVal);
-        return idx === -1 ? sharpVal : MT.NOTES_FLAT[idx].replace('b', '♭');
+        return window.NoteDisplay.toDisplayNote(sharpVal, noteDisplayMode);
     }
 
-    function updateNoteDisplayToggle() {
-        noteDisplayToggle.textContent = noteDisplayMode === 'sharp' ? '♯' : '♭';
-        noteDisplayToggle.title = noteDisplayMode === 'sharp'
-            ? 'Showing sharps — click for flats (♭)'
-            : 'Showing flats — click for sharps (♯)';
-        noteDisplayToggle.dataset.mode = noteDisplayMode;
-    }
-    updateNoteDisplayToggle();
-
-    noteDisplayToggle.addEventListener('click', () => {
-        noteDisplayMode = noteDisplayMode === 'sharp' ? 'flat' : 'sharp';
-        updateNoteDisplayToggle();
+    window.NoteDisplay.bindToggle(noteDisplayToggle, mode => {
+        noteDisplayMode = mode;
         updateKeyLabels();
         refreshScaleAccidentalPills();
         refreshChordAccidentalPills();

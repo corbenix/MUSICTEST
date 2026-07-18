@@ -24,6 +24,7 @@
     const string4Btn = document.getElementById('bass-4-btn');
     const string5Btn = document.getElementById('bass-5-btn');
     const clearBtn = document.getElementById('bass-clear-btn');
+    const bassPlayBtn = document.getElementById('bass-play-btn');
     const scalevisPillRow = document.getElementById('bass-scalevis-root-pills');
     const bassRootPillRow = document.getElementById('bass-root-pills');
     const rootPillRows = [scalevisPillRow, bassRootPillRow];
@@ -32,16 +33,94 @@
     // Scale Notes card removed — the Circle of Fifths widget above now
     // serves as the at-a-glance scale reference for the selected root.
 
-    // ── Build root pills (naturals + ♮/♯/♭ toggle + accidental pills).
+    // ── Audio — real bass samples from audio/bass, pitch-shifted (same
+    // approach as the Keyboard page) to cover every note from the
+    // nearest sampled one. Uses Web Audio's AudioBufferSourceNode so
+    // playbackRate is reliably honored on every browser, including iOS
+    // Safari. ─────────────────────────────────────────────────────────
+    const BASS_SAMPLES = [
+        ['As', 1], ['As', 2], ['As', 3], ['As', 4],
+        ['Cs', 1], ['Cs', 2], ['Cs', 3], ['Cs', 4], ['Cs', 5],
+        ['E', 1], ['E', 2], ['E', 3], ['E', 4],
+        ['G', 1], ['G', 2], ['G', 3], ['G', 4],
+    ].map(([file, oct]) => {
+        const sharpNote = { As: 'A#', Cs: 'C#', E: 'E', G: 'G' }[file];
+        return { url: `audio/bass/${file}${oct}.mp3`, abs: oct * 12 + MT.noteIndex(sharpNote) };
+    });
+
+    function nearestBassSample(targetAbs) {
+        let best = BASS_SAMPLES[0];
+        let bestDiff = Infinity;
+        BASS_SAMPLES.forEach(s => {
+            const diff = Math.abs(targetAbs - s.abs);
+            if (diff < bestDiff) { bestDiff = diff; best = s; }
+        });
+        return { url: best.url, semitoneDiff: targetAbs - best.abs };
+    }
+
+    let audioCtx = null;
+    function getAudioContext() {
+        if (!audioCtx) {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new Ctx();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+    }
+
+    const bufferCache = {};
+    const bufferPromises = {};
+    function loadBuffer(url) {
+        if (bufferCache[url]) return Promise.resolve(bufferCache[url]);
+        if (bufferPromises[url]) return bufferPromises[url];
+        const ctx = getAudioContext();
+        bufferPromises[url] = fetch(url)
+            .then(res => res.arrayBuffer())
+            .then(data => ctx.decodeAudioData(data))
+            .then(buf => { bufferCache[url] = buf; return buf; })
+            .catch(() => null);
+        return bufferPromises[url];
+    }
+    BASS_SAMPLES.forEach(s => loadBuffer(s.url));
+
+    function playTone(noteName, octave) {
+        try {
+            const targetAbs = octave * 12 + MT.noteIndex(noteName);
+            const { url, semitoneDiff } = nearestBassSample(targetAbs);
+            loadBuffer(url).then(buffer => {
+                if (!buffer) return;
+                const ctx = getAudioContext();
+                const source = ctx.createBufferSource();
+                source.buffer = buffer;
+                source.playbackRate.value = Math.pow(2, semitoneDiff / 12);
+
+                const gain = ctx.createGain();
+                gain.gain.value = 0.85;
+                source.connect(gain);
+                gain.connect(ctx.destination);
+
+                source.start(0);
+                const stopAt = ctx.currentTime + 0.9;
+                gain.gain.setValueAtTime(0.85, Math.max(ctx.currentTime, stopAt - 0.05));
+                gain.gain.linearRampToValueAtTime(0, stopAt);
+                source.stop(stopAt);
+            });
+        } catch (e) { /* audio unavailable, fail silently */ }
+    }
+
+    // ── Build root pills (naturals + accidental pills, always visible).
     // Built once per row (Scale Visualizer + Bass Root Note) — each row
-    // tracks its own root AND its own accidental display mode
-    // independently of the other. ─────────────────────────────────────
+    // tracks its own selected root, but the sharp/flat spelling of the
+    // accidental pills is driven by the single global toggle in the
+    // toolbar (window.NoteDisplay), shared across every instrument page. ─
     const NATURALS = ['C','D','E','F','G','A','B'];
-    const rowState = new Map(); // row element -> { mode: 'natural'|'sharp'|'flat', accidentalPills: [] }
+    const rowState = new Map(); // row element -> { accidentalPills: [] }
 
     rootPillRows.forEach(row => {
         const isScaleVis = row === scalevisPillRow;
-        const state = { mode: 'natural', accidentalPills: [] };
+        const state = { accidentalPills: [] };
         rowState.set(row, state);
 
         NATURALS.forEach(note => {
@@ -57,16 +136,6 @@
         const sep = document.createElement('span');
         sep.className = 'sf-sep';
         row.appendChild(sep);
-
-        const sfToggle = document.createElement('button');
-        sfToggle.type = 'button';
-        sfToggle.className = 'sf-toggle';
-        sfToggle.addEventListener('click', () => {
-            state.mode = state.mode === 'natural' ? 'sharp' : state.mode === 'sharp' ? 'flat' : 'natural';
-            updateToggleLabel(row, sfToggle);
-            refreshAccidentalPills(row);
-        });
-        row.appendChild(sfToggle);
 
         MT.NOTES_SHARP.forEach((sharpVal, i) => {
             if (!sharpVal.includes('#')) return; // naturals already built above
@@ -93,54 +162,27 @@
         repaint();
     }
 
-    function refreshAccidentalPills(row) {
-        const state = rowState.get(row);
-        const isScaleVis = row === scalevisPillRow;
-        state.accidentalPills.forEach(p => {
-            if (state.mode === 'natural') {
-                p.el.dataset.hidden = '1';
-                p.el.dataset.mode = 'natural';
-                p.el.textContent = p.sharpLabel;
-            } else if (state.mode === 'sharp') {
-                p.el.dataset.hidden = '0';
-                p.el.dataset.mode = 'sharp';
-                p.el.textContent = p.sharpLabel;
-            } else {
-                p.el.dataset.hidden = '0';
-                p.el.dataset.mode = 'flat';
-                p.el.textContent = p.flatLabel;
-            }
+    // ── Global sharp/flat display mode ──────────────────────────────────
+    // One switch for the whole *site* (see js/note-display.js): flips the
+    // spelling of every accidental pill on this page and persists across
+    // the Keyboard/Guitar/Chord Builder pages too.
+    let noteDisplayMode = window.NoteDisplay.getMode();
+    const noteDisplayToggle = document.getElementById('note-display-toggle');
+
+    function refreshAccidentalPills() {
+        rowState.forEach(state => {
+            state.accidentalPills.forEach(p => {
+                p.el.dataset.mode = noteDisplayMode;
+                p.el.textContent = noteDisplayMode === 'sharp' ? p.sharpLabel : p.flatLabel;
+            });
         });
-        // Deselect a hidden accidental root so the board doesn't keep
-        // highlighting a note this row's picker no longer shows as active.
-        if (state.mode === 'natural') {
-            if (isScaleVis && scaleVisRoot && !NATURALS.includes(scaleVisRoot)) {
-                scaleVisRoot = '';
-                row.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
-                repaint();
-            } else if (!isScaleVis && bassRootNote && !NATURALS.includes(bassRootNote)) {
-                bassRootNote = '';
-                row.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
-                repaint();
-            }
-        }
     }
+    refreshAccidentalPills();
 
-    function updateToggleLabel(row, toggleEl) {
-        const state = rowState.get(row);
-        let label, title;
-        if (state.mode === 'natural') { label = '♮'; title = 'Showing natural notes — click for Sharp (#)'; }
-        else if (state.mode === 'sharp') { label = '#'; title = 'Showing sharps — click for Flat (♭)'; }
-        else { label = '♭'; title = 'Showing flats — click for Natural (♮)'; }
-        toggleEl.textContent = label;
-        toggleEl.title = title;
-        toggleEl.dataset.mode = state.mode;
-    }
-
-    rootPillRows.forEach(row => {
-        const toggleEl = row.querySelector('.sf-toggle');
-        updateToggleLabel(row, toggleEl);
-        refreshAccidentalPills(row);
+    window.NoteDisplay.bindToggle(noteDisplayToggle, mode => {
+        noteDisplayMode = mode;
+        refreshAccidentalPills();
+        repaint();
     });
 
     // ── Build scale select ──────────────────────────────────────────────
@@ -254,11 +296,68 @@
         cell.classList.toggle('active');
     });
 
+    // ── Play button — replays whatever's currently selected: the Scale
+    // Visualizer's scale (as an ascending run) if a root+scale is picked,
+    // otherwise the single Bass Root Note if one is picked. Mirrors the
+    // Keyboard page's Play button, laid out starting from a low bass
+    // register (octave 2) since that's a bass, not a piano.
+    let playTimeouts = [];
+    function stopScheduledPlayback() {
+        playTimeouts.forEach(id => clearTimeout(id));
+        playTimeouts = [];
+        if (bassPlayBtn) bassPlayBtn.classList.remove('is-playing');
+    }
+
+    function getActiveNotes() {
+        if (scaleVisRoot && activeScale) {
+            const preferFlats = noteDisplayMode === 'flat';
+            return MT.scaleNotes(scaleVisRoot, activeScale, preferFlats);
+        }
+        if (bassRootNote) return [bassRootNote];
+        return null;
+    }
+
+    function layOutAscending(notes) {
+        let octave = 2;
+        let prevIdx = -1;
+        return notes.map(note => {
+            const idx = MT.noteIndex(note);
+            if (idx < prevIdx) octave++;
+            prevIdx = idx;
+            return { note, octave };
+        });
+    }
+
+    function updatePlayButtonState() {
+        if (!bassPlayBtn) return;
+        const notes = getActiveNotes();
+        bassPlayBtn.disabled = !notes || !notes.length;
+        if (!notes) stopScheduledPlayback();
+    }
+
+    function playActiveNotes() {
+        const notes = getActiveNotes();
+        if (!notes || !notes.length) return;
+        stopScheduledPlayback();
+        const timeline = layOutAscending(notes);
+        bassPlayBtn.classList.add('is-playing');
+        timeline.forEach((item, i) => {
+            const id = setTimeout(() => {
+                playTone(item.note, item.octave);
+                if (i === timeline.length - 1) {
+                    const doneId = setTimeout(() => bassPlayBtn.classList.remove('is-playing'), 300);
+                    playTimeouts.push(doneId);
+                }
+            }, i * 230);
+            playTimeouts.push(id);
+        });
+    }
+    if (bassPlayBtn) bassPlayBtn.addEventListener('click', playActiveNotes);
+
     function repaint() {
-        const scalePreferFlats = scaleVisRoot && MT.PREFERS_FLATS.has(scaleVisRoot);
-        const rootPreferFlats = bassRootNote && MT.PREFERS_FLATS.has(bassRootNote);
+        const preferFlats = noteDisplayMode === 'flat';
         const scaleNotesSet = activeScale && scaleVisRoot
-            ? new Set(MT.scaleNotes(scaleVisRoot, activeScale, scalePreferFlats).map(n => MT.noteIndex(n)))
+            ? new Set(MT.scaleNotes(scaleVisRoot, activeScale, preferFlats).map(n => MT.noteIndex(n)))
             : null;
         const rootIdx = bassRootNote ? MT.noteIndex(bassRootNote) : null;
         const scaleRootIdx = scaleVisRoot ? MT.noteIndex(scaleVisRoot) : null;
@@ -274,10 +373,10 @@
             cell.classList.toggle('bass-root-match', !!isRootMatch);
             cell.classList.toggle('scale-root-ring', !!isScaleRoot);
 
-            dot.textContent = isRootMatch
-                ? MT.noteName(pc, rootPreferFlats)
-                : (isScaleMatch ? MT.noteName(pc, scalePreferFlats) : MT.noteName(pc, false));
+            dot.textContent = MT.noteName(pc, preferFlats);
         });
+
+        updatePlayButtonState();
     }
 
     setFretCount(12);

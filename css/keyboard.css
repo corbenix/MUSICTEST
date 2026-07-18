@@ -20,13 +20,40 @@
 .piano-panel {
     position: relative;
     background:
-        radial-gradient(120% 140% at 50% -10%, rgba(var(--tool-rgb), .10), transparent 60%),
-        var(--glass);
-    border: 1px solid var(--glass-border);
+        linear-gradient(160deg, rgba(var(--tool-rgb), .14), rgba(var(--tool-rgb), .02)),
+        linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(var(--tool-light-rgb), .26);
     border-radius: var(--radius-lg);
     padding: 18px 16px 20px;
-    box-shadow: var(--shadow-card);
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, .45),
+        0 2px 8px rgba(0, 0, 0, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        0 0 34px rgba(var(--tool-rgb), .10);
     overflow: hidden;
+}
+.piano-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 90% at 6% -12%, rgba(255, 255, 255, .12), transparent 55%);
+    z-index: 0;
+}
+.piano-panel::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+    pointer-events: none;
+    z-index: 0;
+}
+.piano-panel > * {
+    position: relative;
+    z-index: 1;
 }
 
 .piano-toolbar {
@@ -98,7 +125,7 @@
 
 .piano {
     position: relative;
-    height: 168px;
+    height: 182px;
     display: flex;
     width: 100%;
     padding-top: 4px;
@@ -108,8 +135,8 @@
 /* More octaves packed into the same panel width means each key gets
    narrower — trim the key height to match so the keys don't end up
    tall and pin-thin at 5 octaves. */
-.piano[data-octaves="3"] { height: 150px; }
-.piano[data-octaves="5"] { height: 128px; }
+.piano[data-octaves="3"] { height: 182px; }
+.piano[data-octaves="5"] { height: 182px; }
 
 .pk {
     border: none;
@@ -141,18 +168,20 @@
 .pk--white:hover { background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #efe9ff 100%); filter: brightness(1.02); }
 .pk--white.pk--pressed,
 .pk--white:active {
-    background: linear-gradient(180deg, #e4dcff 0%, #d3c8f7 100%);
+    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .95) 0%, rgba(var(--tool-rgb), 1) 100%);
+    color: #062a3d;
     transform: translateY(2px);
-    box-shadow: inset 0 6px 10px -4px rgba(60, 40, 110, .45);
+    box-shadow: 0 0 10px rgba(var(--tool-rgb), .5);
 }
 
 .pk-label {
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
     color: #8a7fb0;
     letter-spacing: .02em;
     pointer-events: none;
 }
+.pk--white .pk-label { color: #1a1a1a; }
 
 /* ── Black keys — deep glossy gradient with a sheen highlight near the
    top (like polished ebony catching light), matching depth cues to the
@@ -160,7 +189,7 @@
 .pk--black {
     position: absolute;
     top: 0;
-    height: 63%;
+    height: 66.5%;
     background: linear-gradient(180deg, #3a3350 0%, #1c1730 45%, #0d0a18 100%);
     border: 1px solid #000;
     border-radius: 0 0 6px 6px;
@@ -171,36 +200,59 @@
     padding-bottom: 8px;
     box-shadow: inset 0 2px 3px rgba(255, 255, 255, .18), inset 0 -10px 14px -8px rgba(0, 0, 0, .8), 0 4px 8px rgba(0, 0, 0, .5);
 }
-.pk--black .pk-label { color: #b8b0d6; }
+.pk--black .pk-label {
+    color: #b8b0d6;
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+}
 .pk--black:hover { background: linear-gradient(180deg, #4a4266 0%, #241d3c 45%, #100c1d 100%); }
 .pk--black.pk--pressed,
 .pk--black:active {
-    background: linear-gradient(180deg, #221c38 0%, #0d0a18 100%);
+    background: rgba(3, 105, 161, .95);
+    border-color: rgba(var(--tool-rgb), 1);
     transform: translateY(2px);
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, .7);
+    box-shadow: 0 0 10px rgba(var(--tool-rgb), .6);
 }
 
 .pk--highlight.pk--white {
-    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .55) 0%, rgba(var(--tool-rgb), .40) 55%, rgba(var(--tool-rgb), .30) 100%);
-    box-shadow: inset 0 -14px 16px -12px rgba(var(--tool-rgb), .55), inset 0 1px 0 rgba(255, 255, 255, .8), 0 0 14px rgba(var(--tool-rgb), .35);
+    background: #2381b3;
+    color: #fff;
+    box-shadow: inset 0 -4px 10px rgba(35, 129, 179, .35), 0 0 8px rgba(39, 158, 222, .3);
+    border-bottom-color: #279ede;
 }
 .pk--highlight.pk--black {
-    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .85) 0%, rgba(var(--tool-rgb), .90) 55%, rgba(6, 60, 80, .95) 100%);
-    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .35), 0 0 14px rgba(var(--tool-rgb), .55);
+    background: #2381b3;
+    border-color: #279ede;
+    color: #e3f4ff;
+    box-shadow: 0 0 8px rgba(35, 129, 179, .45), inset 0 0 4px rgba(255, 255, 255, .12);
+}
+.pk--highlight-scale.pk--white {
+    background: #135577;
+    color: #fff;
+    box-shadow: inset 0 -4px 10px rgba(19, 85, 119, .45), 0 0 8px rgba(24, 114, 163, .35);
+    border-bottom-color: #1d6f9c;
+}
+.pk--highlight-scale.pk--black {
+    background: #135577;
+    border-color: #1d6f9c;
+    color: #cfe9fb;
+    box-shadow: 0 0 8px rgba(19, 85, 119, .55), inset 0 0 4px rgba(255, 255, 255, .1);
 }
 .pk--root.pk--white {
-    background: linear-gradient(180deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
-    box-shadow: inset 0 -14px 16px -12px rgba(184, 146, 58, .55), inset 0 1px 0 rgba(255, 255, 255, .9), 0 0 16px rgba(255, 209, 102, .45);
+    border-bottom: 7px solid var(--gold);
+    box-shadow: inset 0 -4px 10px rgba(19, 85, 119, .45), 0 3px 10px rgba(255, 209, 102, .55);
 }
 .pk--root.pk--black {
-    background: linear-gradient(180deg, #e0b95a 0%, #b8923a 55%, #7a5e20 100%);
-    box-shadow: inset 0 2px 3px rgba(255, 235, 190, .35), 0 0 16px rgba(255, 209, 102, .5);
+    border-bottom: 5px solid var(--gold);
+    box-shadow: 0 0 8px rgba(19, 85, 119, .55), inset 0 0 4px rgba(255, 255, 255, .1), 0 3px 8px rgba(255, 209, 102, .6);
 }
-.pk--root .pk-label { color: #4a3300; font-weight: 800; }
+
 
 @media (max-width: 480px) {
     .piano { height: 140px; }
-    .pk-label { font-size: 9.5px; }
+    .pk-label { font-size: 10px; }
 }
 
 /* ── Octave toggle — exact copy of the bass page's pill-group/pill-btn
@@ -233,6 +285,23 @@
     color: #fff;
 }
 .pill-btn.active:hover { background: linear-gradient(160deg, rgba(190, 235, 255, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 165, .92) 100%); }
+
+/* ── Global sharp/flat note-display toggle in the piano toolbar —
+   one switch that drives accidental spelling everywhere on the page
+   (black keys, root pills, chord name). Blue = sharp, amber = flat,
+   matching the accent colors already used by the per-row toggles. ── */
+#note-display-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+#note-display-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
 
 /* ── Sharp/flat spelling toggle for the Scale Explorer's root picker —
    ported 100% from the Bass page's Scale Visualizer. Cycles
@@ -468,32 +537,77 @@
     .kb-computer-hint { display: none; }
 }
 
-/* ── Computer-keyboard key-mapping badges — small label on each .pk
-   showing which physical key plays it (set via data-kbkey in
-   js/keyboard.js), so the current Z/X octave position is visible right
-   on the keybed instead of only in a static hint line. ─────────────── */
-.pk[data-kbkey]::after {
+/* ── Computer-keyboard key-mapping badges — sit right above each key's
+   note label (instead of up at the top of the key) so the two read as
+   one connected label instead of two separate things fighting for
+   attention. White keys get a small round chip with just the letter,
+   sitting right above their existing note-name label. Black keys are
+   too short for two separate labels, so their chip carries both lines
+   (letter + note name) and the plain note label underneath is hidden
+   to avoid repeating it. ─────────────────────────────────────────── */
+.pk--white[data-kbkey]::after {
     content: attr(data-kbkey);
     position: absolute;
+    bottom: 29px;
     left: 50%;
-    bottom: 28px;
     transform: translateX(-50%);
-    font-size: 9px;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 4px;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, .55);
-    color: #fff;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 9.45px;
+    font-weight: 800;
+    letter-spacing: .01em;
     pointer-events: none;
-    letter-spacing: .02em;
     z-index: 3;
+    background: rgba(20, 16, 30, .88);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .4), inset 0 0 0 1px rgba(255, 255, 255, .15);
 }
+
 .pk--black[data-kbkey]::after {
-    bottom: 18px;
-    background: rgba(255, 255, 255, .88);
-    color: #111;
+    content: attr(data-kbkey);
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 9.45px;
+    font-weight: 800;
+    letter-spacing: .01em;
+    pointer-events: none;
+    z-index: 4;
+    background: rgba(16, 12, 30, .85);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
 }
+
+
+/* 5-oct keys are narrower than 2/3-oct (36 white keys in the same
+   panel width), so the badges shrink to match rather than the piano
+   scrolling or the keys being forced wider than the panel. */
+.piano[data-octaves="5"] .pk--white[data-kbkey]::after {
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    font-size: 9px;
+    bottom: 25px;
+}
+.piano[data-octaves="5"] .pk--black[data-kbkey]::after {
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    font-size: 9px;
+}
+.piano[data-octaves="5"] .pk-label { font-size: 9px; }
+
 @media (pointer: coarse) {
     .pk[data-kbkey]::after { display: none; }
 }

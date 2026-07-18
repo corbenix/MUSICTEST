@@ -8,6 +8,12 @@
         5: ['G','D','A','E','B'],
     };
 
+    // Real octave of each open string (standard bass registers), used to
+    // compute each fret's true absolute pitch — not just its pitch class —
+    // so scale playback can span the whole fretboard instead of looping
+    // back to a single octave.
+    const OPEN_OCTAVE = { G: 2, D: 2, A: 1, E: 1, B: 0 };
+
     let stringCount = 4;
     let fretCount = 12;
     let scaleVisRoot = '';
@@ -258,11 +264,13 @@
             const fretsRow = document.createElement('div');
             fretsRow.className = 'frets-row';
             const openIdx = MT.noteIndex(openNote);
+            const openAbs = OPEN_OCTAVE[openNote] * 12 + openIdx;
 
             for (let f = 1; f <= fretCount; f++) {
                 const cell = document.createElement('div');
                 cell.className = 'fret-cell';
                 cell.dataset.fret = f;
+                cell.dataset.abs = String(openAbs + f);
 
                 const dot = document.createElement('div');
                 dot.className = 'fret-dot';
@@ -308,6 +316,20 @@
         if (bassPlayBtn) bassPlayBtn.classList.remove('is-playing');
     }
 
+    // ── Playback speed — cycles .5x → .75x → 1x, dividing the per-note
+    // step delay (lower multiplier = slower playback).
+    const PLAY_SPEEDS = [0.5, 0.75, 1];
+    let playSpeed = 1;
+    const bassSpeedToggle = document.getElementById('bass-speed-toggle');
+    if (bassSpeedToggle) {
+        bassSpeedToggle.addEventListener('click', () => {
+            const idx = (PLAY_SPEEDS.indexOf(playSpeed) + 1) % PLAY_SPEEDS.length;
+            playSpeed = PLAY_SPEEDS[idx];
+            bassSpeedToggle.textContent = playSpeed + 'x';
+            bassSpeedToggle.classList.toggle('active', playSpeed !== 1);
+        });
+    }
+
     function getActiveNotes() {
         if (scaleVisRoot && activeScale) {
             const preferFlats = noteDisplayMode === 'flat';
@@ -317,15 +339,25 @@
         return null;
     }
 
-    function layOutAscending(notes) {
-        let octave = 2;
-        let prevIdx = -1;
-        return notes.map(note => {
-            const idx = MT.noteIndex(note);
-            if (idx < prevIdx) octave++;
-            prevIdx = idx;
-            return { note, octave };
+    // Builds the note-by-note playback order for the Scale Visualizer:
+    // every fret across the whole fretboard whose pitch class is in the
+    // scale (i.e. every cell that's actually highlighted), deduped by
+    // real absolute pitch and sorted low to high — so playback spans
+    // the entire board instead of looping back after one octave.
+    function buildScaleTimeline() {
+        const preferFlats = noteDisplayMode === 'flat';
+        const scaleSet = new Set(MT.scaleNotes(scaleVisRoot, activeScale, preferFlats).map(n => MT.noteIndex(n)));
+        const seen = new Set();
+        const timeline = [];
+        document.querySelectorAll('.fret-cell').forEach(cell => {
+            const abs = Number(cell.dataset.abs);
+            const pc = abs % 12;
+            if (!scaleSet.has(pc) || seen.has(abs)) return;
+            seen.add(abs);
+            timeline.push({ note: MT.noteName(pc, preferFlats), octave: Math.floor(abs / 12), abs });
         });
+        timeline.sort((a, b) => a.abs - b.abs);
+        return timeline;
     }
 
     function updatePlayButtonState() {
@@ -336,10 +368,12 @@
     }
 
     function playActiveNotes() {
-        const notes = getActiveNotes();
-        if (!notes || !notes.length) return;
+        const timeline = (scaleVisRoot && activeScale)
+            ? buildScaleTimeline()
+            : (bassRootNote ? [{ note: bassRootNote, octave: 2 }] : []);
+        if (!timeline.length) return;
         stopScheduledPlayback();
-        const timeline = layOutAscending(notes);
+        const stepDelay = 230 / playSpeed;
         bassPlayBtn.classList.add('is-playing');
         timeline.forEach((item, i) => {
             const id = setTimeout(() => {
@@ -348,7 +382,7 @@
                     const doneId = setTimeout(() => bassPlayBtn.classList.remove('is-playing'), 300);
                     playTimeouts.push(doneId);
                 }
-            }, i * 230);
+            }, i * stepDelay);
             playTimeouts.push(id);
         });
     }

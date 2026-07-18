@@ -280,11 +280,39 @@
         playTimeouts = [];
         if (keyboardPlayBtn) keyboardPlayBtn.classList.remove('is-playing');
     }
+
+    // ── Playback speed — cycles .5x → .75x → 1x, shared by scale and
+    // chord playback. Divides the per-note step delay, so a lower
+    // multiplier plays back slower (more time between notes).
+    const PLAY_SPEEDS = [0.5, 0.75, 1];
+    let playSpeed = 1;
+    const keyboardSpeedToggle = document.getElementById('keyboard-speed-toggle');
+    if (keyboardSpeedToggle) {
+        keyboardSpeedToggle.addEventListener('click', () => {
+            const idx = (PLAY_SPEEDS.indexOf(playSpeed) + 1) % PLAY_SPEEDS.length;
+            playSpeed = PLAY_SPEEDS[idx];
+            keyboardSpeedToggle.textContent = playSpeed + 'x';
+            keyboardSpeedToggle.classList.toggle('active', playSpeed !== 1);
+        });
+    }
+
+    // Builds the note-by-note playback order for a scale: every key
+    // currently highlighted as part of the scale (i.e. across the
+    // whole visible keyboard range, however many octaves that is),
+    // sorted low to high — so playback always matches exactly what's
+    // lit up on the keys, not just a single octave.
+    function buildScaleTimeline() {
+        return Array.from(pianoEl.querySelectorAll('.pk--highlight-scale'))
+            .map(el => ({ note: el.dataset.note, octave: Number(el.dataset.octave) }))
+            .sort((a, b) => (a.octave * 12 + MT.noteIndex(a.note)) - (b.octave * 12 + MT.noteIndex(b.note)));
+    }
+
     function playActiveNotes() {
         if (!activeNotes || !activeNotes.length) return;
         stopScheduledPlayback();
-        const timeline = layOutAscending(activeNotes);
-        const stepDelay = activeIsChord ? 45 : 230;
+        const timeline = activeIsChord ? layOutAscending(activeNotes) : buildScaleTimeline();
+        if (!timeline.length) return;
+        const stepDelay = (activeIsChord ? 45 : 230) / playSpeed;
         keyboardPlayBtn.classList.add('is-playing');
         timeline.forEach((item, i) => {
             const id = setTimeout(() => {

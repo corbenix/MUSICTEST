@@ -71,6 +71,7 @@
 
             <div class="bass-toolbar">
                 <div class="bass-toolbar-group">
+                    <button type="button" id="bass-play-btn" class="reset-btn bass-play-btn" disabled title="Play the selected scale or root note">▶ Play</button>
                     <div class="pill-group">
                         <button type="button" id="fret-toggle-b-12" class="pill-btn">12</button>
                         <button type="button" id="fret-toggle-b-15" class="pill-btn">15</button>
@@ -81,7 +82,12 @@
                         <button type="button" id="bass-5-btn" class="pill-btn">5-String</button>
                     </div>
                 </div>
-                <button type="button" id="bass-clear-btn" class="reset-btn">Clear Fretboard</button>
+                <div class="bass-toolbar-group">
+                    <div class="pill-group">
+                        <button type="button" id="note-display-toggle" class="pill-btn" title="Switch note names between sharps and flats">♯</button>
+                    </div>
+                    <button type="button" id="bass-clear-btn" class="reset-btn">Clear Fretboard</button>
+                </div>
             </div>
 
             <div class="fretboard-scroll-container">
@@ -108,6 +114,7 @@
     </footer>
 
     <script src="js/music-theory.js"></script>
+    <script src="js/note-display.js"></script>
     <script src="js/bass.js"></script>
     <script src="js/circle-of-fifths.js"></script>
     <script src="js/background.js"></script>

@@ -296,19 +296,27 @@
 
     // Manual note finder: clicking any fret cell toggles its own
     // highlight, independent of the Scale Visualizer / Bass Root Note
-    // pickers. Delegated on the container so it survives buildBoard()
-    // rebuilding the cells on fret/string count changes.
+    // pickers, and plays that fret's real pitch as audible feedback —
+    // like plucking the string at that fret. Delegated on the container
+    // so it survives buildBoard() rebuilding the cells on fret/string
+    // count changes.
     stringsContainer.addEventListener('click', e => {
         const cell = e.target.closest('.fret-cell');
         if (!cell) return;
         cell.classList.toggle('active');
+        const abs = Number(cell.dataset.abs);
+        const preferFlats = noteDisplayMode === 'flat';
+        playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
     });
 
-    // ── Play button — replays whatever's currently selected: the Scale
-    // Visualizer's scale (as an ascending run) if a root+scale is picked,
-    // otherwise the single Bass Root Note if one is picked. Mirrors the
-    // Keyboard page's Play button, laid out starting from a low bass
-    // register (octave 2) since that's a bass, not a piano.
+    // ── Play button — replays whatever's currently selected in the
+    // Scale Visualizer (as an ascending run across the whole
+    // fretboard). The Bass Root Note picker is a highlight-only
+    // reference and is intentionally NOT wired to this button — instead,
+    // individual frets play their own note the moment they're toggled
+    // (see the manual note finder above). Mirrors the Keyboard page's
+    // Play button, laid out starting from a low bass register (octave 2)
+    // since that's a bass, not a piano.
     let playTimeouts = [];
     function stopScheduledPlayback() {
         playTimeouts.forEach(id => clearTimeout(id));
@@ -335,7 +343,6 @@
             const preferFlats = noteDisplayMode === 'flat';
             return MT.scaleNotes(scaleVisRoot, activeScale, preferFlats);
         }
-        if (bassRootNote) return [bassRootNote];
         return null;
     }
 
@@ -368,9 +375,7 @@
     }
 
     function playActiveNotes() {
-        const timeline = (scaleVisRoot && activeScale)
-            ? buildScaleTimeline()
-            : (bassRootNote ? [{ note: bassRootNote, octave: 2 }] : []);
+        const timeline = (scaleVisRoot && activeScale) ? buildScaleTimeline() : [];
         if (!timeline.length) return;
         stopScheduledPlayback();
         const stepDelay = 230 / playSpeed;

@@ -137,9 +137,9 @@
             el.className = 'pk pk--black';
             el.dataset.note = k.note;
             el.dataset.octave = displayOctave;
-            const leftPct = (whiteIndex + 1) * whiteWidthPct - (whiteWidthPct * 0.28);
+            const leftPct = (whiteIndex + 1) * whiteWidthPct - (whiteWidthPct * 0.40);
             el.style.left = leftPct + '%';
-            el.style.width = (whiteWidthPct * 0.56) + '%';
+            el.style.width = (whiteWidthPct * 0.80) + '%';
             el.innerHTML = `<span class="pk-label"></span>`;
             el.addEventListener('click', () => { playTone(k.note, displayOctave); flash(el); });
             pianoEl.appendChild(el);
@@ -179,7 +179,7 @@
             } else if (labelMode === 'intervals') {
                 label.textContent = MT.degreeLabel(MT.noteIndex(el.dataset.note) - rootIdx);
             } else {
-                label.textContent = el.classList.contains('pk--white') ? el.dataset.note + el.dataset.octave : el.dataset.note;
+                label.textContent = el.classList.contains('pk--white') ? el.dataset.note + el.dataset.octave : toDisplayNote(el.dataset.note);
             }
         });
     }
@@ -189,6 +189,43 @@
         labelModeToggle.textContent = LABEL_MODE_TEXT[labelMode];
         labelModeToggle.classList.toggle('active', labelMode !== 'notes');
         updateKeyLabels();
+    });
+
+    // ── Global sharp/flat display mode ────────────────────────────────
+    // One switch for the whole page: which spelling (♯ or ♭) accidental
+    // notes use everywhere — the keyboard's black-key labels, the root
+    // pills in the Scale Explorer / Chord Finder, and the chord name
+    // display. Replaces the old setup where each picker had its own
+    // sharp/flat choice.
+    let noteDisplayMode = 'sharp';
+    const noteDisplayToggle = document.getElementById('note-display-toggle');
+
+    // Converts a canonical sharp-spelled note (e.g. "C#") into display
+    // text for the current mode. Naturals pass through unchanged.
+    function toDisplayNote(sharpVal) {
+        if (!sharpVal || !sharpVal.includes('#')) return sharpVal;
+        if (noteDisplayMode === 'sharp') return sharpVal.replace('#', '♯');
+        const idx = MT.NOTES_SHARP.indexOf(sharpVal);
+        return idx === -1 ? sharpVal : MT.NOTES_FLAT[idx].replace('b', '♭');
+    }
+
+    function updateNoteDisplayToggle() {
+        noteDisplayToggle.textContent = noteDisplayMode === 'sharp' ? '♯' : '♭';
+        noteDisplayToggle.title = noteDisplayMode === 'sharp'
+            ? 'Showing sharps — click for flats (♭)'
+            : 'Showing flats — click for sharps (♯)';
+        noteDisplayToggle.dataset.mode = noteDisplayMode;
+    }
+    updateNoteDisplayToggle();
+
+    noteDisplayToggle.addEventListener('click', () => {
+        noteDisplayMode = noteDisplayMode === 'sharp' ? 'flat' : 'sharp';
+        updateNoteDisplayToggle();
+        updateKeyLabels();
+        refreshScaleAccidentalPills();
+        refreshChordAccidentalPills();
+        renderChord();
+        renderInversionCards();
     });
 
     // Tracks whichever notes are currently highlighted (scale or chord,
@@ -224,15 +261,16 @@
         // still highlight every occurrence across the whole range.
         const voicing = (isChord && notes && notes.length) ? layOutAscending(notes) : null;
         pianoEl.querySelectorAll('.pk').forEach(el => {
-            el.classList.remove('pk--highlight', 'pk--root');
+            el.classList.remove('pk--highlight', 'pk--highlight-scale', 'pk--root', 'pk--chord-root');
             if (!notes) return;
+            const keyIdx = MT.noteIndex(el.dataset.note);
             const isMatch = voicing
-                ? voicing.some(v => v.note === el.dataset.note && v.octave === Number(el.dataset.octave))
-                : notes.includes(el.dataset.note);
+                ? voicing.some(v => MT.noteIndex(v.note) === keyIdx && v.octave === Number(el.dataset.octave))
+                : notes.some(n => MT.noteIndex(n) === keyIdx);
             if (isMatch) {
-                el.classList.add('pk--highlight');
+                el.classList.add(isChord ? 'pk--highlight' : 'pk--highlight-scale');
                 if (root && MT.noteIndex(root) === MT.noteIndex(el.dataset.note)) {
-                    el.classList.add('pk--root');
+                    el.classList.add(isChord ? 'pk--chord-root' : 'pk--root');
                 }
             }
         });
@@ -290,9 +328,22 @@
         octaveCount = n;
         [octaveToggle2, octaveToggle3, octaveToggle5].forEach(b => b.classList.remove('active'));
         ({ 2: octaveToggle2, 3: octaveToggle3, 5: octaveToggle5 })[n].classList.add('active');
+        // applyHighlight() unconditionally clears every key's highlight
+        // before re-applying its own, so calling renderScale() then
+        // renderChord() unconditionally would let an inactive chord
+        // (no root selected) wipe out an active scale highlight, or
+        // vice versa. Re-render whichever one was actually driving the
+        // keyboard's highlight last so it "wins" and survives the
+        // rebuild, instead of always letting the chord render clear it.
+        const wasChordActive = activeIsChord && !!activeNotes;
         buildPiano();
-        renderScale();
-        renderChord();
+        if (wasChordActive) {
+            renderScale();
+            renderChord();
+        } else {
+            renderChord();
+            renderScale();
+        }
         resetComputerKeyboardInput();
     }
     octaveToggle2.addEventListener('click', () => setOctaveCount(2));
@@ -301,9 +352,9 @@
     octaveToggle5.classList.add('active');
 
     // ── Scale mode ──────────────────────────────────────────────────────
-    // Root picker ported 100% from the Bass page's Scale Visualizer:
-    // naturals + a ♮/♯/♭ toggle that reveals the accidental pills
-    // (C#/D♭ etc.), independent of the Chord Finder's picker below.
+    // Root picker: naturals + accidental pills (C#/D♭ etc.), always
+    // visible. Their spelling (sharp vs flat) is driven entirely by the
+    // global note-display toggle in the piano toolbar.
     const scaleRootPills = document.getElementById('scale-root-pills');
     const scaleType = document.getElementById('scale-type');
     var scaleRootValue = '';
@@ -315,7 +366,7 @@
     });
 
     const NATURALS = ['C','D','E','F','G','A','B'];
-    const scaleRowState = { mode: 'natural', accidentalPills: [] };
+    const scaleRowState = { accidentalPills: [] };
 
     NATURALS.forEach(note => {
         const btn = document.createElement('button');
@@ -330,16 +381,6 @@
     const scaleSfSep = document.createElement('span');
     scaleSfSep.className = 'sf-sep';
     scaleRootPills.appendChild(scaleSfSep);
-
-    const scaleSfToggle = document.createElement('button');
-    scaleSfToggle.type = 'button';
-    scaleSfToggle.className = 'sf-toggle';
-    scaleSfToggle.addEventListener('click', () => {
-        scaleRowState.mode = scaleRowState.mode === 'natural' ? 'sharp' : scaleRowState.mode === 'sharp' ? 'flat' : 'natural';
-        updateScaleToggleLabel();
-        refreshScaleAccidentalPills();
-    });
-    scaleRootPills.appendChild(scaleSfToggle);
 
     MT.NOTES_SHARP.forEach((sharpVal, i) => {
         if (!sharpVal.includes('#')) return; // naturals already built above
@@ -363,40 +404,10 @@
 
     function refreshScaleAccidentalPills() {
         scaleRowState.accidentalPills.forEach(p => {
-            if (scaleRowState.mode === 'natural') {
-                p.el.dataset.hidden = '1';
-                p.el.dataset.mode = 'natural';
-                p.el.textContent = p.sharpLabel;
-            } else if (scaleRowState.mode === 'sharp') {
-                p.el.dataset.hidden = '0';
-                p.el.dataset.mode = 'sharp';
-                p.el.textContent = p.sharpLabel;
-            } else {
-                p.el.dataset.hidden = '0';
-                p.el.dataset.mode = 'flat';
-                p.el.textContent = p.flatLabel;
-            }
+            p.el.dataset.mode = noteDisplayMode;
+            p.el.textContent = noteDisplayMode === 'sharp' ? p.sharpLabel : p.flatLabel;
         });
-        // Deselect a hidden accidental root so the keyboard doesn't keep
-        // highlighting a note this picker no longer shows as active.
-        if (scaleRowState.mode === 'natural' && scaleRootValue && !NATURALS.includes(scaleRootValue)) {
-            scaleRootValue = '';
-            scaleRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
-            updateKeyLabels();
-            renderScale();
-        }
     }
-
-    function updateScaleToggleLabel() {
-        let label, title;
-        if (scaleRowState.mode === 'natural') { label = '♮'; title = 'Showing natural notes — click for Sharp (#)'; }
-        else if (scaleRowState.mode === 'sharp') { label = '#'; title = 'Showing sharps — click for Flat (♭)'; }
-        else { label = '♭'; title = 'Showing flats — click for Natural (♮)'; }
-        scaleSfToggle.textContent = label;
-        scaleSfToggle.title = title;
-        scaleSfToggle.dataset.mode = scaleRowState.mode;
-    }
-    updateScaleToggleLabel();
     refreshScaleAccidentalPills();
 
     function renderScale() {
@@ -540,7 +551,7 @@
         inversionsPanel.classList.add('is-visible');
         inversionCardsEl.innerHTML = '';
         const typeLabel = type === 'Major' ? 'Major' : type;
-        const rootLabel = root.replace('#', '♯');
+        const rootLabel = toDisplayNote(root);
 
         notes.forEach((_, i) => {
             const voicing = notes.slice(i).concat(notes.slice(0, i));
@@ -558,7 +569,7 @@
             name.className = 'inversion-card-name';
             name.textContent = i === 0
                 ? `${rootLabel} ${typeLabel}`
-                : `${rootLabel} ${typeLabel} / ${voicing[0].replace('#', '♯')} bass`;
+                : `${rootLabel} ${typeLabel} / ${toDisplayNote(voicing[0])} bass`;
             card.appendChild(name);
 
             const mini = document.createElement('div');
@@ -585,6 +596,8 @@
 
     const chordClearBtn = document.getElementById('chord-clear-btn');
     chordClearBtn.addEventListener('click', () => {
+        scaleRootValue = '';
+        scaleRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
         chordRootValue = '';
         chordTypeValue = 'Major';
         chordInversionValue = 0;
@@ -594,10 +607,11 @@
         if (chordInversionRow) chordInversionRow.classList.remove('ps-visible');
         buildInversionPills();
         updateKeyLabels();
+        renderScale();
         renderChord();
     });
 
-    const chordRowState = { mode: 'natural', accidentalPills: [] };
+    const chordRowState = { accidentalPills: [] };
 
     NATURALS.forEach(note => {
         const btn = document.createElement('button');
@@ -612,16 +626,6 @@
     const chordSfSep = document.createElement('span');
     chordSfSep.className = 'sf-sep';
     chordRootPills.appendChild(chordSfSep);
-
-    const chordSfToggle = document.createElement('button');
-    chordSfToggle.type = 'button';
-    chordSfToggle.className = 'sf-toggle';
-    chordSfToggle.addEventListener('click', () => {
-        chordRowState.mode = chordRowState.mode === 'natural' ? 'sharp' : chordRowState.mode === 'sharp' ? 'flat' : 'natural';
-        updateChordToggleLabel();
-        refreshChordAccidentalPills();
-    });
-    chordRootPills.appendChild(chordSfToggle);
 
     MT.NOTES_SHARP.forEach((sharpVal, i) => {
         if (!sharpVal.includes('#')) return; // naturals already built above
@@ -638,49 +642,21 @@
 
     function selectChordRoot(sharpVal) {
         chordRootValue = chordRootValue === sharpVal ? '' : sharpVal;
+        chordInversionValue = 0;
         chordRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === chordRootValue));
         chordTypeRow.classList.toggle('ps-visible', !!chordRootValue);
         if (chordInversionRow) chordInversionRow.classList.toggle('ps-visible', !!chordRootValue);
+        buildInversionPills();
         updateKeyLabels();
         renderChord();
     }
 
     function refreshChordAccidentalPills() {
         chordRowState.accidentalPills.forEach(p => {
-            if (chordRowState.mode === 'natural') {
-                p.el.dataset.hidden = '1';
-                p.el.dataset.mode = 'natural';
-                p.el.textContent = p.sharpLabel;
-            } else if (chordRowState.mode === 'sharp') {
-                p.el.dataset.hidden = '0';
-                p.el.dataset.mode = 'sharp';
-                p.el.textContent = p.sharpLabel;
-            } else {
-                p.el.dataset.hidden = '0';
-                p.el.dataset.mode = 'flat';
-                p.el.textContent = p.flatLabel;
-            }
+            p.el.dataset.mode = noteDisplayMode;
+            p.el.textContent = noteDisplayMode === 'sharp' ? p.sharpLabel : p.flatLabel;
         });
-        // Deselect a hidden accidental root so the keyboard doesn't keep
-        // highlighting a note this picker no longer shows as active.
-        if (chordRowState.mode === 'natural' && chordRootValue && !NATURALS.includes(chordRootValue)) {
-            chordRootValue = '';
-            chordRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
-            updateKeyLabels();
-            renderChord();
-        }
     }
-
-    function updateChordToggleLabel() {
-        let label, title;
-        if (chordRowState.mode === 'natural') { label = '♮'; title = 'Showing natural notes — click for Sharp (#)'; }
-        else if (chordRowState.mode === 'sharp') { label = '#'; title = 'Showing sharps — click for Flat (♭)'; }
-        else { label = '♭'; title = 'Showing flats — click for Natural (♮)'; }
-        chordSfToggle.textContent = label;
-        chordSfToggle.title = title;
-        chordSfToggle.dataset.mode = chordRowState.mode;
-    }
-    updateChordToggleLabel();
     refreshChordAccidentalPills();
 
     function renderChord() {
@@ -706,7 +682,7 @@
         const voicingNotes = notes.slice(inv).concat(notes.slice(0, inv));
         const typeLabel = type === 'Major' ? 'Major' : type;
         const invLabel = inv === 0 ? '' : ` (${INVERSION_LABELS[inv] || inv + 'th'} inversion)`;
-        chordDisplayName.textContent = `${root.replace('#', '♯')} ${typeLabel}${invLabel}`;
+        chordDisplayName.textContent = `${toDisplayNote(root)} ${typeLabel}${invLabel}`;
         chordDisplayName.classList.add('has-chord');
         chordDisplayNotes.textContent = notes.join(' · ');
         applyHighlight(voicingNotes, root, true);
@@ -739,6 +715,7 @@
     const SHIFTED_KEY_ALIASES = { ':': ';' };
     let computerOctaveShift = 0; // in octaves, adjusted by Z / X
     const heldComputerKeys = {}; // physical key -> the .pk element it's sounding
+    let computerKeyboardEnabled = true; // toggled via the Keyboard: On/Off button, default on
 
     // Converts a semitone offset from C4 into an actual { note, octave }
     // pair using the same note-naming table every other instrument page
@@ -800,6 +777,7 @@
 
     function applyComputerKeyLabels() {
         clearComputerKeyLabels();
+        if (!computerKeyboardEnabled) return;
         Object.keys(KEY_OFFSETS).forEach(key => {
             const totalOffset = computerOctaveShift * 12 + KEY_OFFSETS[key];
             const { note, octave } = noteFromC4Offset(totalOffset);
@@ -824,6 +802,7 @@
     }
 
     document.addEventListener('keydown', (e) => {
+        if (!computerKeyboardEnabled) return;
         if (e.repeat) return; // ignore OS auto-repeat
         if (e.metaKey || e.ctrlKey || e.altKey) return; // don't hijack browser shortcuts
         if (isTypingTarget(e)) return;
@@ -858,6 +837,23 @@
     // release everything so no key gets stuck lit with no keyup to
     // ever clear it.
     window.addEventListener('blur', resetComputerKeyboardInput);
+
+    // On/off toggle for the whole computer-keyboard-piano feature.
+    // Default on. Turning it off releases any held notes, clears the
+    // on-key badges, and mutes the keydown/keyup listeners above without
+    // removing them.
+    const kbMidiToggle = document.getElementById('kb-midi-toggle');
+    kbMidiToggle.addEventListener('click', () => {
+        computerKeyboardEnabled = !computerKeyboardEnabled;
+        kbMidiToggle.classList.toggle('active', computerKeyboardEnabled);
+        kbMidiToggle.setAttribute('aria-pressed', String(computerKeyboardEnabled));
+        kbMidiToggle.textContent = computerKeyboardEnabled ? '⌨ Keyboard: On' : '⌨ Keyboard: Off';
+        if (!computerKeyboardEnabled) {
+            resetComputerKeyboardInput(); // releases held notes; also reapplies (empty) labels
+        } else {
+            applyComputerKeyLabels();
+        }
+    });
 
     applyComputerKeyLabels();
     renderScale();

@@ -84,16 +84,22 @@
                 <div class="piano-toolbar">
                     <button type="button" id="keyboard-play-btn" class="reset-btn keyboard-play-btn" disabled title="Play the selected scale or chord">▶ Play</button>
                     <div class="pill-group">
-                        <button type="button" id="label-mode-toggle" class="pill-btn">Notes</button>
+                        <button type="button" id="octave-toggle-2" class="pill-btn">2 oct</button>
+                        <button type="button" id="octave-toggle-3" class="pill-btn">3 oct</button>
+                        <button type="button" id="octave-toggle-5" class="pill-btn">5 oct</button>
+                    </div>
+                    <div class="pill-group">
+                        <button type="button" id="sustain-toggle" class="pill-btn">Sustain</button>
                     </div>
                     <div class="piano-toolbar-right">
                         <div class="pill-group">
-                            <button type="button" id="octave-toggle-2" class="pill-btn">2 oct</button>
-                            <button type="button" id="octave-toggle-3" class="pill-btn">3 oct</button>
-                            <button type="button" id="octave-toggle-5" class="pill-btn">5 oct</button>
+                            <button type="button" id="note-display-toggle" class="pill-btn" title="Switch note names between sharps and flats">♯</button>
                         </div>
                         <div class="pill-group">
-                            <button type="button" id="sustain-toggle" class="pill-btn">Sustain</button>
+                            <button type="button" id="label-mode-toggle" class="pill-btn">Notes</button>
+                        </div>
+                        <div class="pill-group">
+                            <button type="button" id="kb-midi-toggle" class="pill-btn active" title="Toggle computer-keyboard piano input" aria-pressed="true">⌨ Keyboard: On</button>
                         </div>
                         <button type="button" id="chord-clear-btn" class="reset-btn">Clear Keys</button>
                     </div>
@@ -102,7 +108,7 @@
                     <div class="piano-felt"></div>
                     <div id="piano" class="piano"></div>
                 </div>
-                <p class="kb-computer-hint">⌨ Play with your computer keyboard: <b>A S D F G H J K L ;</b> for white keys, <b>W E T Y U O P</b> for black keys. <b>Z / X</b> shifts octaves down/up.</p>
+                <p class="kb-computer-hint">⌨ The badges above each key's note show your computer-keyboard mapping. <b>Z / X</b> shifts it down/up an octave.</p>
             </div>
 
             <div id="inversions-panel" class="inversions-panel">

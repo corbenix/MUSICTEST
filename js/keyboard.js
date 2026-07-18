@@ -511,6 +511,11 @@
             chordInversionPills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', Number(p.dataset.inversion) === chordInversionValue));
         }
         renderChord();
+        // Auto-play only on an explicit inversion pick (pill or card
+        // click) — not on the initial chord selection, which defaults
+        // to root position silently. Picking root position again this
+        // way still counts as an explicit pick, so it plays too.
+        playActiveNotes();
     }
     buildInversionPills();
 

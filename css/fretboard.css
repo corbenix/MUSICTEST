@@ -1,0 +1,98 @@
+/* ==========================================================================
+   FRETBOARD — shared between guitar.html and bass.html
+   ========================================================================== */
+
+.fb-wrap {
+    --fb-fret-w: 46px;
+    --fb-string-h: 34px;
+    overflow-x: auto;
+    padding: 4px 4px 12px;
+}
+.fb-grid {
+    min-width: 860px;
+}
+
+@media (max-width: 600px) {
+    .fb-wrap {
+        --fb-fret-w: 38px;
+        --fb-string-h: 28px;
+        padding: 4px 4px 10px;
+    }
+    .fb-grid { min-width: 700px; }
+    .fb-dot { width: 20px; height: 20px; font-size: 9px; }
+    .fb-dot--shape { width: 22px; height: 22px; font-size: 10px; }
+}
+
+.fb-openrow,
+.fb-fretnums,
+.fb-string-row {
+    display: grid;
+    grid-template-columns: repeat(calc(var(--fb-frets) + 1), var(--fb-fret-w));
+}
+
+.fb-openrow { margin-left: 0; }
+
+.fb-openmark {
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text3);
+    width: var(--fb-fret-w);
+}
+
+.fb-fretnum {
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--font-display);
+}
+
+.fb-string-row {
+    position: relative;
+    border-top: 1px solid var(--border2);
+}
+.fb-string-row:last-child { border-bottom: 1px solid var(--border2); }
+
+.fb-cell {
+    height: var(--fb-string-h);
+    border-right: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fb-cell--nut { border-right: 3px solid var(--border2); }
+
+.fb-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: var(--font-display);
+    background: rgba(var(--fret-accent-rgb, 124,111,224), 0.75);
+    color: #0a0714;
+    box-shadow: 0 0 0 2px rgba(6,4,20,0.6);
+    z-index: 2;
+}
+.fb-dot--root {
+    background: var(--gold);
+    box-shadow: 0 0 0 2px rgba(6,4,20,0.6), 0 0 10px rgba(255,209,102,0.6);
+}
+.fb-dot--shape { width: 26px; height: 26px; font-size: 11px; }
+
+.fretboard-panel {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 6px 10px 10px;
+    box-shadow: var(--shadow-card);
+}

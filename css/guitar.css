@@ -1,0 +1,64 @@
+/* ==========================================================================
+   GUITAR PAGE — CAGED picker, chord library, capo results
+   ========================================================================== */
+
+:root { --tool-rgb: var(--guitar-rgb); --tool-light-rgb: var(--guitar-light-rgb); }
+
+.caged-picker { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.caged-btn {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text2);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+}
+.caged-btn:hover { background: var(--glass-md); color: var(--text); }
+.caged-btn[aria-pressed="true"] {
+    background: rgba(var(--tool-rgb), 0.24);
+    border-color: rgba(var(--tool-rgb), 0.55);
+    color: var(--text);
+}
+
+.chord-lib-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+.chord-lib-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+}
+.chord-lib-card:hover { background: var(--glass-md); }
+.chord-lib-card[aria-selected="true"] { border-color: rgba(var(--tool-rgb), 0.5); background: rgba(var(--tool-rgb), 0.1); }
+.chord-lib-card-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13.5px;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.capo-result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+}
+.capo-result {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 6px;
+    text-align: center;
+}
+.capo-result-fret { font-size: 11px; color: var(--text3); }
+.capo-result-note { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-top: 2px; }

@@ -1,0 +1,580 @@
+/* ==========================================================================
+   BASS PAGE — rebuilt to match the original app's real fretboard system:
+   wood/blue board, nut, per-string rows, glowing fret-dots, pill toggles.
+   ========================================================================== */
+
+:root { --tool-rgb: var(--bass-rgb); --tool-light-rgb: var(--bass-light-rgb); }
+
+/* ── Responsive scale tokens for the fretboard + surrounding cards.
+   Base tier below targets ~1100–1919px (the most common desktop width).
+   Smaller/larger tiers scale everything from 720p laptops up to 4K
+   monitors so neither the cards nor the fretboard end up
+   comically small (4K) or cramped/overflowing (720p). ── */
+:root {
+    --bf-panel-maxw: 1200px;
+    --bf-wrap-minw: 860px;
+    --bf-dot: 40px;
+    --bf-dot-fs: 14px;
+    --bf-string-h: 60px;
+    --bf-label-w: 32px;
+    --bf-label-fs: 16px;
+    --bf-badge: 40px;
+    --bf-badge-fs: 14px;
+    --bf-nut-w: 8px;
+    --bf-spacer-w: 100px;
+    --bf-card-fs: 12px;
+    --bf-card-pad: 16px 18px;
+}
+
+/* 720p-class laptops, small tablets/windows (601–1099px) */
+@media (min-width: 601px) and (max-width: 1099px) {
+    :root {
+        --bf-panel-maxw: 100%;
+        --bf-wrap-minw: 760px;
+        --bf-dot: 34px;
+        --bf-dot-fs: 12px;
+        --bf-string-h: 52px;
+        --bf-label-w: 28px;
+        --bf-label-fs: 14px;
+        --bf-badge: 34px;
+        --bf-badge-fs: 12px;
+        --bf-nut-w: 7px;
+        --bf-spacer-w: 88px;
+        --bf-card-fs: 11.5px;
+        --bf-card-pad: 14px 16px;
+    }
+}
+
+/* 1440p / QHD desktops and larger laptop displays */
+@media (min-width: 1920px) {
+    :root {
+        --bf-panel-maxw: 1200px;
+        --bf-wrap-minw: 980px;
+        --bf-dot: 46px;
+        --bf-dot-fs: 15px;
+        --bf-string-h: 68px;
+        --bf-label-w: 36px;
+        --bf-label-fs: 17px;
+        --bf-badge: 46px;
+        --bf-badge-fs: 15px;
+        --bf-nut-w: 9px;
+        --bf-spacer-w: 112px;
+        --bf-card-fs: 13px;
+        --bf-card-pad: 18px 20px;
+    }
+}
+
+/* 2K / entry 4K-scaled desktops */
+@media (min-width: 2560px) {
+    :root {
+        --bf-panel-maxw: 1440px;
+        --bf-wrap-minw: 1080px;
+        --bf-dot: 50px;
+        --bf-dot-fs: 16px;
+        --bf-string-h: 76px;
+        --bf-label-w: 40px;
+        --bf-label-fs: 18px;
+        --bf-badge: 50px;
+        --bf-badge-fs: 16px;
+        --bf-nut-w: 10px;
+        --bf-spacer-w: 120px;
+        --bf-card-fs: 14px;
+        --bf-card-pad: 20px 22px;
+    }
+}
+
+/* True 4K (3840px+) */
+@media (min-width: 3840px) {
+    :root {
+        --bf-panel-maxw: 1800px;
+        --bf-wrap-minw: 1280px;
+        --bf-dot: 58px;
+        --bf-dot-fs: 18px;
+        --bf-string-h: 88px;
+        --bf-label-w: 46px;
+        --bf-label-fs: 20px;
+        --bf-badge: 58px;
+        --bf-badge-fs: 18px;
+        --bf-nut-w: 11px;
+        --bf-spacer-w: 136px;
+        --bf-card-fs: 15.5px;
+        --bf-card-pad: 24px 26px;
+    }
+}
+
+/* ── Match the reference/guitar page's 1200px panel width so the Scale
+   Visualizer, Bass Root Note, and fretboard aren't narrower than the
+   rest of the site on typical desktop widths.
+   (tool.css's side padding on .tool-panel would otherwise shrink these
+   cards 24px in from each side vs. an edge-to-edge layout.) ── */
+.tool-panel { width: 100%; max-width: var(--bf-panel-maxw); padding-left: 0; padding-right: 0; }
+
+/* ── Workspace title bar (icon+name handled by tool.css; this is the
+   per-page controls row that sits inside the same header rhythm) ──────── */
+.bass-controls-panel {
+    background:
+        linear-gradient(160deg, rgba(var(--bass-rgb), .13), rgba(var(--bass-rgb), .02)),
+        linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
+    border: 1px solid rgba(var(--bass-light-rgb), .26);
+    border-radius: var(--radius-lg);
+    padding: var(--bf-card-pad);
+    margin-bottom: 16px;
+    box-shadow: 0 0 20px rgba(var(--bass-rgb), .10);
+}
+.bass-panel-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(var(--bf-card-fs) + 3px);
+    color: rgb(var(--bass-light-rgb));
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.bass-panel-desc { color: var(--text2); font-size: var(--bf-card-fs); margin: 0 0 10px; }
+
+/* ── Scale Visualizer card — icon+title, description, divider, then a
+   full-width scale-type bar (ported from the original app's global
+   "Visual Key Scale Highlighting" panel) ──────────────────────────── */
+.scale-visualizer-card .bass-panel-desc {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 14px;
+}
+.scale-visualizer-card .scale-select { width: 100%; margin-top: 10px; }
+
+.pill-group {
+    display: inline-flex;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 8px;
+    overflow: hidden;
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 2px 10px rgba(0, 0, 0, .25);
+}
+.pill-btn {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background .15s var(--ease), color .15s var(--ease);
+}
+.pill-btn:hover { color: #a8f0e4; background: rgba(var(--tool-rgb), .18); }
+.pill-btn.active {
+    background: linear-gradient(160deg, rgba(150, 235, 220, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(25, 150, 140, .92) 100%);
+    color: #fff;
+}
+.pill-btn.active:hover { background: linear-gradient(160deg, rgba(150, 235, 220, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(25, 150, 140, .92) 100%); }
+
+.bass-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.bass-toolbar-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.reset-btn {
+    background: var(--glass-md);
+    border: 1px solid rgba(var(--tool-light-rgb), .22);
+    color: var(--text2);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s var(--ease);
+}
+.reset-btn:hover { color: var(--text); border-color: rgba(var(--tool-light-rgb), 0.32); background: rgba(var(--tool-rgb), 0.16); }
+
+/* ── Play button — replays the currently selected scale or root note
+   through the real bass samples. Same gold treatment as the Keyboard
+   page's Play button so the two read as the same control. Disabled
+   (greyed, no pointer) whenever nothing is selected to play. ───────── */
+.bass-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(160deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
+    border-color: transparent;
+    color: #4a3300;
+}
+.bass-play-btn:hover {
+    color: #4a3300;
+    background: linear-gradient(160deg, #ffeab0 0%, #ffd980 55%, #e6ae3f 100%);
+    border-color: transparent;
+}
+.bass-play-btn:disabled {
+    background: var(--glass-md);
+    border-color: rgba(var(--tool-light-rgb), .22);
+    color: var(--text2);
+    opacity: .45;
+    cursor: not-allowed;
+}
+.bass-play-btn.is-playing { animation: kb-play-pulse 0.6s var(--ease) infinite; }
+@keyframes kb-play-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ── Global sharp/flat note-display toggle — one switch shared across
+   every instrument page (see js/note-display.js). Blue = sharp,
+   amber = flat, matching the accent colors used by the accidental
+   pills below. ──────────────────────────────────────────────────────── */
+#note-display-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+#note-display-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+
+/* ── Root pill row ───────────────────────────────────────────────────── */
+.ps-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ps-micro-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--text3);
+    flex-shrink: 0;
+}
+.root-pill-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.root-pill {
+    background: rgba(255, 255, 255, .045);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    line-height: 1.6;
+    cursor: pointer;
+    min-width: 42px;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+}
+
+.root-pill:hover {
+    background: rgba(var(--tool-rgb), .16);
+    border-color: rgba(var(--tool-light-rgb), 0.40);
+    color: #fff;
+}
+.root-pill.active {
+    background: linear-gradient(160deg, rgba(150, 240, 225, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 95, .92) 100%);
+    border-color: rgba(var(--tool-light-rgb), .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(var(--tool-rgb), .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+
+/* ── Sharp/flat spelling toggle — cycles natural → sharp → flat,
+   revealing the accidental pills (C#/D♭ etc.) alongside the naturals.
+   Sharp = blue, flat = amber, matching the original app's shared
+   accidental color scheme (kept distinct from the per-tab teal accent) ── */
+.sf-sep {
+    display: inline-block;
+    width: 1.5px;
+    height: 22px;
+    background: var(--border2);
+    border-radius: 2px;
+    align-self: center;
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+.sf-toggle {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, .045);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    cursor: pointer;
+    line-height: 1.6;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+    white-space: nowrap;
+    margin-left: 4px;
+}
+.sf-toggle:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
+}
+.sf-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-acc-pill[data-hidden="1"] { display: none !important; }
+.sf-acc-pill[data-mode="sharp"]:hover {
+    background: rgba(0, 150, 255, .14);
+    border-color: rgba(125, 223, 255, .40);
+    color: #fff;
+}
+.sf-acc-pill[data-mode="flat"]:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
+}
+.sf-acc-pill.active[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .70));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-acc-pill.active[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+
+/* ── Scale dropdown — dark, rounded, custom arrow (ported from the
+   original app's Scale Visualizer select), tinted teal to match the
+   rest of the Bass tab identity ─────────────────────────────────── */
+.scale-select {
+    background-color: rgba(6, 4, 20, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: var(--font-body, inherit);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 30px 8px 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236ee6d7' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    cursor: pointer;
+    min-width: 90px;
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.scale-select:hover { border-color: rgba(var(--tool-light-rgb), .40); }
+.scale-select:focus {
+    border-color: rgba(var(--tool-light-rgb), .55);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--tool-rgb), 0.18);
+}
+.scale-select option {
+    background: #09071e;
+    color: #f2eeff;
+    font-size: 13px;
+    padding: 6px 10px;
+}
+.scale-select option:checked,
+.scale-select option:hover {
+    background: #123c37;
+    color: #fff;
+}
+
+/* ── Fretboard ───────────────────────────────────────────────────────── */
+.fretboard-scroll-container {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(var(--tool-light-rgb), .26);
+    background:
+        linear-gradient(160deg, rgba(var(--tool-rgb), .13), rgba(var(--tool-rgb), .02)),
+        linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, .45),
+        0 2px 8px rgba(0, 0, 0, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        0 0 34px rgba(var(--tool-rgb), .10);
+}
+.fretboard-wrap {
+    background: #0d2430;
+    min-width: var(--bf-wrap-minw);
+    padding: 18px 16px 18px 0;
+    border-radius: var(--radius-lg);
+}
+.fret-header-row { display: flex; align-items: center; margin-bottom: 6px; }
+.fret-header-spacer { width: var(--bf-spacer-w); flex-shrink: 0; }
+.fret-header-cells { display: flex; flex: 1; }
+.fret-num { flex: 1; text-align: center; font-size: calc(var(--bf-dot-fs) - 1px); color: #7ea3b5; }
+.fret-num.marker { color: var(--gold); font-weight: 700; }
+
+.string-row {
+    display: flex;
+    align-items: center;
+    height: var(--bf-string-h);
+    border-top: 1px solid rgba(0,0,0,.25);
+}
+.string-row:first-of-type { border-top: none; }
+.string-label {
+    width: var(--bf-label-w);
+    text-align: center;
+    font-size: var(--bf-label-fs);
+    font-weight: 700;
+    color: #cfe6f2;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+/* Open string indicator (fret 0) — always "open," matching the
+   reference app's default open-string badge. Purely visual, since
+   this page has no audio engine to mute/unmute. */
+.open-note-badge {
+    width: var(--bf-badge);
+    height: var(--bf-badge);
+    border-radius: 50%;
+    border: 1.5px solid #1d9e75;
+    background: rgba(13,48,40,.55);
+    color: #4dd4a8;
+    font-size: var(--bf-badge-fs);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nut {
+    width: var(--bf-nut-w);
+    height: 75%;
+    background: #e5dec9;
+    border-radius: 3px;
+    flex-shrink: 0;
+    box-shadow: 1px 1px 3px #00000080;
+    z-index: 3;
+}
+.frets-row { display: flex; flex: 1; height: 100%; position: relative; }
+.frets-row::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(#f0f0ffb3, #64646e80);
+    pointer-events: none;
+}
+.fret-cell {
+    flex: 1;
+    height: 100%;
+    border-right: 2px solid rgba(0,0,0,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+.fret-dot {
+    width: var(--bf-dot); height: var(--bf-dot);
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.25);
+    background: #101a24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--bf-dot-fs);
+    font-weight: 700;
+    color: #9bc0e3;
+    position: relative;
+    z-index: 2;
+    transition: background .18s cubic-bezier(0.22,1,0.36,1), border-color .18s cubic-bezier(0.22,1,0.36,1), box-shadow .25s cubic-bezier(0.22,1,0.36,1), color .14s var(--ease);
+}
+.fret-cell.bass-scale-match .fret-dot {
+    background: linear-gradient(160deg, rgba(140,255,230,.95) 0%, rgba(46,196,182,.95) 45%, rgba(20,110,98,1) 100%);
+    border-color: rgba(140,255,230,.75);
+    color: #e6fff9;
+    box-shadow: 0 0 16px rgba(77,255,232,0.85);
+}
+/* Scale Visualizer: ring the fretboard dot that is the root of the
+   selected scale, so it reads as "the root" at a glance rather than
+   just another in-scale note. */
+.fret-cell.bass-scale-match.scale-root-ring:not(.bass-root-match) .fret-dot {
+    box-shadow: 0 0 12px rgba(77,255,232,0.6), 0 0 0 2px #101a24, 0 0 0 4px rgba(255,255,255,0.65);
+}
+.fret-cell.bass-root-match .fret-dot {
+    background: #10786a;
+    border-color: #a8fff2;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(168,255,242,1);
+}
+
+/* Manual "note finder" — clicking any fret cell toggles a highlight on
+   that specific note, independent of the Scale Visualizer / Bass Root
+   Note pickers. Matches the reference app's teal active-fret treatment,
+   and (like the reference) wins over scale/root highlighting when a
+   cell is both clicked and part of the active scale or root. */
+.fret-cell { cursor: pointer; }
+.fret-cell.active .fret-dot {
+    background: #0f5348 !important;
+    border-color: #1f9686 !important;
+    color: #fff !important;
+    box-shadow: 0 0 8px rgba(var(--tool-rgb), .35) !important;
+}
+
+.marker-row { display: flex; align-items: center; margin-top: 8px; }
+.marker-spacer { width: var(--bf-spacer-w); flex-shrink: 0; }
+.fret-marker-dot {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fret-marker-dot span {
+    width: clamp(6px, 0.9vw, 10px); height: clamp(6px, 0.9vw, 10px);
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+}
+.fret-marker-dot.is-double span { box-shadow: -9px 0 0 rgba(255,255,255,0.18); }
+
+.scroll-hint {
+    display: block;
+    text-align: center;
+    font-size: 11.5px;
+    color: rgba(var(--tool-light-rgb), .65);
+    margin-top: 10px;
+}
+@media (min-width: 900px) {
+    .scroll-hint { display: none; }
+}
+
+/* ── Mobile (≤600px) — placed after the base rules above so these
+   overrides actually win the cascade (equal specificity + later source
+   order). Values match the reference app's mobile bass fretboard. ── */
+@media (max-width: 600px) {
+    :root { --bf-panel-maxw: 100%; --bf-card-fs: 11px; --bf-card-pad: 12px 14px; }
+    .root-pill { font-size: 11px; padding: 5px 10px; }
+    .fretboard-wrap { min-width: 700px; padding: 14px 10px 14px 0; }
+    .string-row { height: 46px; }
+    .string-label { width: 26px; font-size: 13px; }
+    .fret-header-spacer, .marker-spacer { width: 74px; }
+    .open-note-badge { width: 28px; height: 28px; font-size: 12px; }
+    .nut { width: 6px; }
+    .fret-dot { width: 28px; height: 28px; font-size: 11px; }
+    .fret-num { font-size: 11px; }
+}

@@ -195,6 +195,53 @@
 }
 .reset-btn:hover { color: var(--text); border-color: rgba(var(--tool-light-rgb), 0.32); background: rgba(var(--tool-rgb), 0.16); }
 
+/* ── Play button — replays the currently selected scale or root note
+   through the real bass samples. Same gold treatment as the Keyboard
+   page's Play button so the two read as the same control. Disabled
+   (greyed, no pointer) whenever nothing is selected to play. ───────── */
+.bass-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(160deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
+    border-color: transparent;
+    color: #4a3300;
+}
+.bass-play-btn:hover {
+    color: #4a3300;
+    background: linear-gradient(160deg, #ffeab0 0%, #ffd980 55%, #e6ae3f 100%);
+    border-color: transparent;
+}
+.bass-play-btn:disabled {
+    background: var(--glass-md);
+    border-color: rgba(var(--tool-light-rgb), .22);
+    color: var(--text2);
+    opacity: .45;
+    cursor: not-allowed;
+}
+.bass-play-btn.is-playing { animation: kb-play-pulse 0.6s var(--ease) infinite; }
+@keyframes kb-play-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ── Global sharp/flat note-display toggle — one switch shared across
+   every instrument page (see js/note-display.js). Blue = sharp,
+   amber = flat, matching the accent colors used by the accidental
+   pills below. ──────────────────────────────────────────────────────── */
+#note-display-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+#note-display-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+
 /* ── Root pill row ───────────────────────────────────────────────────── */
 .ps-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ps-micro-label {

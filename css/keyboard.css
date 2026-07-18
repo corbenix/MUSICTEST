@@ -311,3 +311,189 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
+
+/* ==========================================================================
+   CHORD INVERSIONS PANEL — one card per usable inversion of the current
+   chord (Root/1st/2nd/3rd), each showing a mini keyboard with the chord
+   tones lit up (bass note of that voicing in a lighter blue, the rest in
+   a deeper blue) and the note order printed underneath. Hidden until a
+   chord root is selected; clicking a card jumps the main Chord Finder's
+   inversion picker to match, which re-highlights the full-size keyboard
+   below. ────────────────────────────────────────────────────────────── */
+.inversions-panel {
+    display: none;
+    background:
+        radial-gradient(120% 140% at 50% -10%, rgba(var(--tool-rgb), .10), transparent 60%),
+        var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 16px 16px 18px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 16px;
+}
+.inversions-panel.is-visible { display: block; }
+
+.inversions-panel-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.inversions-panel-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: rgb(var(--tool-light-rgb));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.inversions-panel-hint {
+    font-size: 11.5px;
+    color: var(--text3);
+}
+
+.inversion-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.inversion-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-md);
+    padding: 12px 14px 14px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: border-color .15s var(--ease), background .15s var(--ease), box-shadow .15s var(--ease), transform .1s var(--ease);
+}
+.inversion-card:hover {
+    border-color: rgba(var(--tool-light-rgb), .40);
+    background: rgba(var(--tool-rgb), .08);
+}
+.inversion-card:active { transform: scale(0.98); }
+.inversion-card.active {
+    border-color: rgb(var(--tool-light-rgb));
+    background: rgba(var(--tool-rgb), .12);
+    box-shadow: 0 0 0 1px rgba(var(--tool-light-rgb), .55), 0 0 18px rgba(var(--tool-rgb), .30);
+}
+
+.inversion-card-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text3);
+}
+.inversion-card.active .inversion-card-label { color: rgb(var(--tool-light-rgb)); }
+.inversion-card-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 2px 0 10px;
+}
+
+/* Mini keyboard — a single illustrative octave (7 white + 5 black keys)
+   showing pitch-class highlights for the voicing's notes. Not tied to
+   the real piano's audio range; purely a diagram. */
+.mini-piano {
+    position: relative;
+    height: 60px;
+    display: flex;
+    width: 100%;
+}
+.mini-pk {
+    border: none;
+    padding: 0;
+}
+.mini-pk--white {
+    position: relative;
+    height: 100%;
+    flex: 1 0 auto;
+    background: linear-gradient(180deg, #efe9ff 0%, #ded5f5 100%);
+    border: 1px solid rgba(20, 14, 40, .5);
+    border-right: none;
+    border-radius: 0 0 4px 4px;
+    z-index: 1;
+}
+.mini-pk--white:last-child { border-right: 1px solid rgba(20, 14, 40, .5); }
+.mini-pk--black {
+    position: absolute;
+    top: 0;
+    height: 60%;
+    width: 9.5%;
+    background: linear-gradient(180deg, #2c2640 0%, #100c1d 100%);
+    border: 1px solid #000;
+    border-radius: 0 0 3px 3px;
+    z-index: 2;
+}
+.mini-pk--highlight-bass {
+    background: linear-gradient(180deg, rgba(var(--tool-light-rgb), .95) 0%, rgba(var(--tool-light-rgb), .70) 100%) !important;
+    box-shadow: 0 0 10px rgba(var(--tool-light-rgb), .55);
+}
+.mini-pk--highlight-tone {
+    background: linear-gradient(180deg, rgba(var(--tool-rgb), 1) 0%, rgba(15, 110, 165, .95) 100%) !important;
+    box-shadow: 0 0 10px rgba(var(--tool-rgb), .55);
+}
+.mini-pk--black.mini-pk--highlight-bass,
+.mini-pk--black.mini-pk--highlight-tone { box-shadow: 0 0 8px rgba(var(--tool-light-rgb), .6); }
+
+.inversion-card-notes {
+    margin-top: 9px;
+    font-size: 11.5px;
+    color: var(--text2);
+    letter-spacing: .02em;
+}
+
+/* ── Computer-keyboard MIDI hint — sits under the piano, explains the
+   ASDF/QWERTY + Z/X mapping used by the physical-keyboard input added
+   in js/keyboard.js. Hidden on touch-only screens since it's not
+   relevant there. ─────────────────────────────────────────────────── */
+.kb-computer-hint {
+    margin: 12px 2px 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text2);
+    letter-spacing: .01em;
+}
+.kb-computer-hint b {
+    color: var(--text);
+    font-weight: 600;
+}
+@media (pointer: coarse) {
+    .kb-computer-hint { display: none; }
+}
+
+/* ── Computer-keyboard key-mapping badges — small label on each .pk
+   showing which physical key plays it (set via data-kbkey in
+   js/keyboard.js), so the current Z/X octave position is visible right
+   on the keybed instead of only in a static hint line. ─────────────── */
+.pk[data-kbkey]::after {
+    content: attr(data-kbkey);
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, .55);
+    color: #fff;
+    pointer-events: none;
+    letter-spacing: .02em;
+    z-index: 3;
+}
+.pk--black[data-kbkey]::after {
+    bottom: 18px;
+    background: rgba(255, 255, 255, .88);
+    color: #111;
+}
+@media (pointer: coarse) {
+    .pk[data-kbkey]::after { display: none; }
+}

@@ -198,15 +198,16 @@
     let activeIsChord = false;
 
     // Lays a sequence of note names out across ascending octaves,
-    // starting from the current range's base octave, climbing one
-    // octave every time a note's chromatic index wraps back around
-    // (e.g. B → C). Used to pick a single, real-sounding voicing for a
-    // chord — one instance of each note — instead of every occurrence
-    // of that note name across the whole keyboard. Also used by
-    // playback so what's highlighted is exactly what gets played.
+    // always starting from octave 4 (C4 — the standard reference
+    // octave), climbing one octave every time a note's chromatic
+    // index wraps back around (e.g. B → C), regardless of which
+    // keyboard range (2/3/5 oct) is currently displayed. Used to pick
+    // a single, real-sounding voicing for a chord — one instance of
+    // each note — instead of every occurrence of that note name
+    // across the whole keyboard. Also used by playback so what's
+    // highlighted is exactly what gets played.
     function layOutAscending(notes) {
-        const startOctave = START_OCTAVE[octaveCount];
-        let octave = startOctave;
+        let octave = 4;
         let prevIdx = -1;
         return notes.map(note => {
             const idx = MT.noteIndex(note);
@@ -292,6 +293,7 @@
         buildPiano();
         renderScale();
         renderChord();
+        resetComputerKeyboardInput();
     }
     octaveToggle2.addEventListener('click', () => setOctaveCount(2));
     octaveToggle3.addEventListener('click', () => setOctaveCount(3));
@@ -417,6 +419,7 @@
     const chordTypePills = document.getElementById('chord-type-pills');
     var chordRootValue = '';
     let chordTypeValue = 'Major';
+    let chordInversionValue = 0;
 
     const CHORD_TYPE_GROUPS = [
         [['Major','Maj'], ['Minor','Min'], ['Sus2','Sus2'], ['Sus4','Sus4'], ['Diminished','Dim'], ['Augmented','Aug']],
@@ -444,8 +447,134 @@
 
     function selectChordType(name) {
         chordTypeValue = name;
+        chordInversionValue = 0;
         chordTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === chordTypeValue));
+        buildInversionPills();
         renderChord();
+    }
+
+    // ── Inversion picker — rebuilt every time the chord type changes,
+    // since the number of usable inversions equals the chord's note
+    // count (a triad gets Root/1st/2nd, a 7th chord also gets 3rd, a
+    // power chord only gets Root/1st). Reordering the notes array so
+    // it starts from the inversion tone is enough: layOutAscending()
+    // already bumps any note lower than the previous one up an octave,
+    // which is exactly what an inversion is.
+    const chordInversionRow = document.getElementById('chord-inversion-row');
+    const chordInversionPills = document.getElementById('chord-inversion-pills');
+    const INVERSION_LABELS = ['Root', '1st', '2nd', '3rd'];
+
+    function buildInversionPills() {
+        if (!chordInversionPills) return;
+        const count = (MT.CHORD_FORMULAS[chordTypeValue] || []).length;
+        chordInversionPills.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'type-pill-btn';
+            btn.textContent = INVERSION_LABELS[i] || `${i}th`;
+            btn.dataset.inversion = String(i);
+            btn.classList.toggle('active', i === chordInversionValue);
+            btn.addEventListener('click', () => selectChordInversion(i));
+            chordInversionPills.appendChild(btn);
+        }
+    }
+
+    function selectChordInversion(i) {
+        chordInversionValue = i;
+        if (chordInversionPills) {
+            chordInversionPills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', Number(p.dataset.inversion) === chordInversionValue));
+        }
+        renderChord();
+    }
+    buildInversionPills();
+
+    // ── Chord Inversions panel — one card per usable inversion, each with
+    // its own mini keyboard diagram (bass note lit lighter, other tones
+    // lit darker) and the note order printed below it. Clicking a card
+    // jumps the inversion picker above to match. ──────────────────────
+    const inversionsPanel = document.getElementById('inversions-panel');
+    const inversionCardsEl = document.getElementById('inversion-cards');
+    const MINI_WHITE_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+    const MINI_BLACK_AFTER = { C: 'C#', D: 'D#', F: 'F#', G: 'G#', A: 'A#' };
+
+    function buildMiniPiano(container) {
+        container.innerHTML = '';
+        const whiteWidthPct = 100 / MINI_WHITE_NOTES.length;
+        MINI_WHITE_NOTES.forEach(note => {
+            const el = document.createElement('div');
+            el.className = 'mini-pk mini-pk--white';
+            el.dataset.note = note;
+            container.appendChild(el);
+        });
+        MINI_WHITE_NOTES.forEach((note, i) => {
+            const blackNote = MINI_BLACK_AFTER[note];
+            if (!blackNote) return;
+            const el = document.createElement('div');
+            el.className = 'mini-pk mini-pk--black';
+            el.dataset.note = blackNote;
+            el.style.left = ((i + 1) * whiteWidthPct - (whiteWidthPct * 0.28)) + '%';
+            container.appendChild(el);
+        });
+    }
+
+    function highlightMiniPiano(container, voicingNotes) {
+        const bassIdx = voicingNotes.length ? MT.noteIndex(voicingNotes[0]) : -1;
+        const toneIdxs = voicingNotes.slice(1).map(n => MT.noteIndex(n));
+        container.querySelectorAll('.mini-pk').forEach(el => {
+            el.classList.remove('mini-pk--highlight-bass', 'mini-pk--highlight-tone');
+            const idx = MT.noteIndex(el.dataset.note);
+            if (idx === bassIdx) el.classList.add('mini-pk--highlight-bass');
+            else if (toneIdxs.includes(idx)) el.classList.add('mini-pk--highlight-tone');
+        });
+    }
+
+    function renderInversionCards() {
+        const root = chordRootValue;
+        if (!root) { inversionsPanel.classList.remove('is-visible'); return; }
+        const type = chordTypeValue;
+        const preferFlats = MT.PREFERS_FLATS.has(root);
+        const notes = MT.chordNotes(root, type, preferFlats);
+        if (!notes || notes.length < 2) { inversionsPanel.classList.remove('is-visible'); return; }
+
+        inversionsPanel.classList.add('is-visible');
+        inversionCardsEl.innerHTML = '';
+        const typeLabel = type === 'Major' ? 'Major' : type;
+        const rootLabel = root.replace('#', '♯');
+
+        notes.forEach((_, i) => {
+            const voicing = notes.slice(i).concat(notes.slice(0, i));
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'inversion-card';
+            card.classList.toggle('active', i === chordInversionValue);
+
+            const label = document.createElement('div');
+            label.className = 'inversion-card-label';
+            label.textContent = i === 0 ? 'Root Position' : `${INVERSION_LABELS[i] || i + 'th'} Inversion`;
+            card.appendChild(label);
+
+            const name = document.createElement('div');
+            name.className = 'inversion-card-name';
+            name.textContent = i === 0
+                ? `${rootLabel} ${typeLabel}`
+                : `${rootLabel} ${typeLabel} / ${voicing[0].replace('#', '♯')} bass`;
+            card.appendChild(name);
+
+            const mini = document.createElement('div');
+            mini.className = 'mini-piano';
+            card.appendChild(mini);
+            buildMiniPiano(mini);
+            highlightMiniPiano(mini, voicing);
+
+            const notesLine = document.createElement('div');
+            notesLine.className = 'inversion-card-notes';
+            notesLine.textContent = voicing.join(' · ');
+            card.appendChild(notesLine);
+
+            card.addEventListener('click', () => selectChordInversion(i));
+            inversionCardsEl.appendChild(card);
+        });
     }
 
     const sustainToggle = document.getElementById('sustain-toggle');
@@ -458,9 +587,12 @@
     chordClearBtn.addEventListener('click', () => {
         chordRootValue = '';
         chordTypeValue = 'Major';
+        chordInversionValue = 0;
         chordRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
         chordTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === 'Major'));
         chordTypeRow.classList.remove('ps-visible');
+        if (chordInversionRow) chordInversionRow.classList.remove('ps-visible');
+        buildInversionPills();
         updateKeyLabels();
         renderChord();
     });
@@ -508,6 +640,7 @@
         chordRootValue = chordRootValue === sharpVal ? '' : sharpVal;
         chordRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === chordRootValue));
         chordTypeRow.classList.toggle('ps-visible', !!chordRootValue);
+        if (chordInversionRow) chordInversionRow.classList.toggle('ps-visible', !!chordRootValue);
         updateKeyLabels();
         renderChord();
     }
@@ -560,17 +693,173 @@
             chordDisplayName.classList.remove('has-chord');
             chordDisplayNotes.textContent = '';
             applyHighlight(null, null, false);
+            renderInversionCards();
             return;
         }
         const preferFlats = MT.PREFERS_FLATS.has(root);
         const notes = MT.chordNotes(root, type, preferFlats);
+        // Apply the selected inversion by rotating the note order so it
+        // starts from the inversion tone — layOutAscending() then bumps
+        // any note lower than the previous one up an octave, which is
+        // exactly what an inversion voicing is.
+        const inv = ((chordInversionValue % notes.length) + notes.length) % notes.length;
+        const voicingNotes = notes.slice(inv).concat(notes.slice(0, inv));
         const typeLabel = type === 'Major' ? 'Major' : type;
-        chordDisplayName.textContent = `${root.replace('#', '♯')} ${typeLabel}`;
+        const invLabel = inv === 0 ? '' : ` (${INVERSION_LABELS[inv] || inv + 'th'} inversion)`;
+        chordDisplayName.textContent = `${root.replace('#', '♯')} ${typeLabel}${invLabel}`;
         chordDisplayName.classList.add('has-chord');
         chordDisplayNotes.textContent = notes.join(' · ');
-        applyHighlight(notes, root, true);
+        applyHighlight(voicingNotes, root, true);
+        renderInversionCards();
     }
 
+    // ── Computer-keyboard input — ASDF... plays white keys, QWERTY...
+    // plays the black keys above them, Z/X shifts the whole layout down
+    // or up an octave. The layout always anchors on C4 (the 'A' key)
+    // regardless of which visible range (2/3/5 oct) is selected, since
+    // C4 is the piano-standard middle-C reference point; Z/X then shift
+    // from there and get clamped to whatever range is actually
+    // rendered. Semitone offsets from C4 for each physical key, laid
+    // out one row lower than QWERTY, on the home row:
+    //   row:  W  E     T  Y  U     O  P
+    //   row: A  S  D  F  G  H  J  K  L  ;
+    //   (A=white C, W=black C#, S=white D, E=black D#, D=white E, ...)
+    const KEY_OFFSETS = {
+        // white keys
+        'a': 0, 's': 2, 'd': 4, 'f': 5, 'g': 7, 'h': 9, 'j': 11,
+        'k': 12, 'l': 14, ';': 16,
+        // black keys
+        'w': 1, 'e': 3, 't': 6, 'y': 8, 'u': 10, 'o': 13, 'p': 15,
+    };
+    // Shift changes what some symbol keys report as e.key (';' becomes
+    // ':', for example) — a different character, not just a different
+    // case, so plain toLowerCase() doesn't undo it. Map the shifted
+    // variant back to its base key so lookups stay consistent whether
+    // or not Shift happens to be held (e.g. for the sustain shortcut).
+    const SHIFTED_KEY_ALIASES = { ':': ';' };
+    let computerOctaveShift = 0; // in octaves, adjusted by Z / X
+    const heldComputerKeys = {}; // physical key -> the .pk element it's sounding
+
+    // Converts a semitone offset from C4 into an actual { note, octave }
+    // pair using the same note-naming table every other instrument page
+    // uses, so it lines up exactly with the .pk elements' data-note /
+    // data-octave attributes.
+    function noteFromC4Offset(offset) {
+        const absolute = 4 * 12 + offset;
+        const octave = Math.floor(absolute / 12);
+        const semitone = ((absolute % 12) + 12) % 12;
+        return { note: MT.noteName(semitone), octave };
+    }
+
+    function findPianoKeyEl(note, octave) {
+        return pianoEl.querySelector(`.pk[data-note="${note}"][data-octave="${octave}"]`);
+    }
+
+    function normalizeComputerKey(e) {
+        const key = e.key.toLowerCase();
+        return SHIFTED_KEY_ALIASES[key] || key;
+    }
+
+    function isTypingTarget(e) {
+        const el = e.target;
+        if (!el) return false;
+        const tag = (el.tagName || '').toLowerCase();
+        return tag === 'input' || tag === 'textarea' || el.isContentEditable;
+    }
+
+    // Shifts the anchor octave with clamping to whatever range is
+    // actually visible (2 / 3 / 5 oct), so Z / X never silently plays
+    // nothing because the shifted keys landed off the rendered keybed.
+    function shiftComputerOctave(dir) {
+        const startOctave = START_OCTAVE[octaveCount];
+        const minShift = startOctave - 4;
+        const maxShift = (startOctave + octaveCount) - 4;
+        computerOctaveShift = Math.min(maxShift, Math.max(minShift, computerOctaveShift + dir));
+    }
+
+    function pressComputerKey(key) {
+        const totalOffset = computerOctaveShift * 12 + KEY_OFFSETS[key];
+        const { note, octave } = noteFromC4Offset(totalOffset);
+        const el = findPianoKeyEl(note, octave);
+        if (!el) return null; // shifted/mapped note falls outside the visible range
+        playTone(note, octave);
+        el.classList.add('pk--pressed');
+        return el;
+    }
+
+    function releaseComputerKey(el) {
+        el.classList.remove('pk--pressed');
+    }
+
+    // On-key labels showing which computer key plays each visible piano
+    // key, so the current Z/X octave position is visible right on the
+    // keybed instead of only in the static hint line below it.
+    function clearComputerKeyLabels() {
+        pianoEl.querySelectorAll('[data-kbkey]').forEach(el => el.removeAttribute('data-kbkey'));
+    }
+
+    function applyComputerKeyLabels() {
+        clearComputerKeyLabels();
+        Object.keys(KEY_OFFSETS).forEach(key => {
+            const totalOffset = computerOctaveShift * 12 + KEY_OFFSETS[key];
+            const { note, octave } = noteFromC4Offset(totalOffset);
+            const el = findPianoKeyEl(note, octave);
+            if (!el) return; // shifted/mapped note falls outside the visible range
+            el.setAttribute('data-kbkey', key === ';' ? ';' : key.toUpperCase());
+            el.title = 'Computer key: ' + (key === ';' ? ';' : key.toUpperCase());
+        });
+    }
+
+    // Releases every currently-held computer-keyboard note without
+    // touching anything else — used when the visible range changes
+    // (2/3/5 oct toggle) so a note held through a range switch doesn't
+    // get stuck lit with no way to release it.
+    function resetComputerKeyboardInput() {
+        Object.keys(heldComputerKeys).forEach(key => {
+            releaseComputerKey(heldComputerKeys[key]);
+            delete heldComputerKeys[key];
+        });
+        computerOctaveShift = 0;
+        applyComputerKeyLabels();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.repeat) return; // ignore OS auto-repeat
+        if (e.metaKey || e.ctrlKey || e.altKey) return; // don't hijack browser shortcuts
+        if (isTypingTarget(e)) return;
+
+        const key = normalizeComputerKey(e);
+
+        if (key === 'z' || key === 'x') {
+            shiftComputerOctave(key === 'z' ? -1 : 1);
+            applyComputerKeyLabels();
+            e.preventDefault();
+            return;
+        }
+
+        if (!(key in KEY_OFFSETS)) return;
+        if (heldComputerKeys[key]) return; // already sounding
+
+        const el = pressComputerKey(key);
+        if (!el) return;
+        e.preventDefault();
+        heldComputerKeys[key] = el;
+    });
+
+    document.addEventListener('keyup', (e) => {
+        const key = normalizeComputerKey(e);
+        const el = heldComputerKeys[key];
+        if (!el) return;
+        delete heldComputerKeys[key];
+        releaseComputerKey(el);
+    });
+
+    // If focus leaves the window mid-press (alt-tab, dev tools, etc.),
+    // release everything so no key gets stuck lit with no keyup to
+    // ever clear it.
+    window.addEventListener('blur', resetComputerKeyboardInput);
+
+    applyComputerKeyLabels();
     renderScale();
     renderChord();
 })();

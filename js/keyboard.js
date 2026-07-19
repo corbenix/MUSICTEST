@@ -124,7 +124,7 @@
             el.dataset.octave = displayOctave;
             el.style.width = whiteWidthPct + '%';
             el.innerHTML = `<span class="pk-label"></span>`;
-            el.addEventListener('click', () => { playTone(k.note, displayOctave); flash(el); });
+            el.addEventListener('click', () => { playTone(k.note, displayOctave); togglePlayedNote(el, k.note, displayOctave); });
             pianoEl.appendChild(el);
         });
 
@@ -141,7 +141,7 @@
             el.style.left = leftPct + '%';
             el.style.width = (whiteWidthPct * 0.80) + '%';
             el.innerHTML = `<span class="pk-label"></span>`;
-            el.addEventListener('click', () => { playTone(k.note, displayOctave); flash(el); });
+            el.addEventListener('click', () => { playTone(k.note, displayOctave); togglePlayedNote(el, k.note, displayOctave); });
             pianoEl.appendChild(el);
         });
 
@@ -151,6 +151,66 @@
     function flash(el) {
         el.classList.add('pk--pressed');
         setTimeout(() => el.classList.remove('pk--pressed'), 180);
+    }
+
+    // ── Auto chord detection from played notes ─────────────────────────
+    // Tracks whichever notes are currently sounding via a direct piano
+    // click (toggled on/off) or the computer-keyboard input (held while
+    // the physical key is down), keyed by "note-octave" so the same
+    // pitch class in different octaves is tracked separately. Whenever
+    // this set changes, the chord-display card is refreshed to show
+    // whatever chord (if any) those notes form — unless the Chord
+    // Finder has an explicit selection active, which takes priority.
+    const playedNotesMap = new Map();
+
+    function notePitchAbs(note, octave) {
+        return octave * 12 + MT.noteIndex(note);
+    }
+
+    function updatePlayedChordDisplay() {
+        if (chordRootValue) return; // Chord Finder selection takes priority
+        const chordDisplayName = document.querySelector('#chord-display .chord-display-name');
+        const chordDisplayNotes = document.querySelector('#chord-display .chord-display-notes');
+        if (!chordDisplayName || !chordDisplayNotes) return;
+
+        const sorted = Array.from(playedNotesMap.values()).sort((a, b) => a.abs - b.abs);
+        const noteNames = sorted.map(v => v.note);
+        const preferFlats = noteDisplayMode === 'flat';
+
+        if (!noteNames.length) {
+            chordDisplayName.textContent = 'Select a chord';
+            chordDisplayName.classList.remove('has-chord');
+            chordDisplayNotes.textContent = '';
+            return;
+        }
+
+        const detected = MT.detectChord(noteNames, preferFlats);
+        if (detected) {
+            const typeLabel = detected.chordName === 'Major' ? 'Major' : detected.chordName;
+            chordDisplayName.textContent = `${toDisplayNote(detected.root)} ${typeLabel}`;
+            chordDisplayName.classList.add('has-chord');
+        } else {
+            chordDisplayName.textContent = noteNames.length === 1 ? toDisplayNote(noteNames[0]) : 'No chord match';
+            chordDisplayName.classList.remove('has-chord');
+        }
+        chordDisplayNotes.textContent = noteNames.join(' · ');
+    }
+
+    // Toggled by direct piano clicks: first click lights the key and
+    // adds it to the played-notes set, a second click on the same key
+    // releases it — this is what lets a chord be built up one note at a
+    // time, unlike the momentary press-and-release of computer-keyboard
+    // input below.
+    function togglePlayedNote(el, note, octave) {
+        const key = note + octave;
+        if (playedNotesMap.has(key)) {
+            playedNotesMap.delete(key);
+            el.classList.remove('pk--pressed');
+        } else {
+            playedNotesMap.set(key, { note, octave, abs: notePitchAbs(note, octave) });
+            el.classList.add('pk--pressed');
+        }
+        updatePlayedChordDisplay();
     }
 
     // ── Key-label mode toggle — cycles Notes → Intervals → Off. Intervals
@@ -681,16 +741,14 @@
     function renderChord() {
         const root = chordRootValue;
         const type = chordTypeValue;
-        const chordDisplayName = document.querySelector('#chord-display .chord-display-name');
-        const chordDisplayNotes = document.querySelector('#chord-display .chord-display-notes');
         if (!root) {
-            chordDisplayName.textContent = 'Select a chord';
-            chordDisplayName.classList.remove('has-chord');
-            chordDisplayNotes.textContent = '';
             applyHighlight(null, null, false);
             renderInversionCards();
+            updatePlayedChordDisplay();
             return;
         }
+        const chordDisplayName = document.querySelector('#chord-display .chord-display-name');
+        const chordDisplayNotes = document.querySelector('#chord-display .chord-display-notes');
         const preferFlats = MT.PREFERS_FLATS.has(root);
         const notes = MT.chordNotes(root, type, preferFlats);
         // Apply the selected inversion by rotating the note order so it
@@ -780,11 +838,15 @@
         if (!el) return null; // shifted/mapped note falls outside the visible range
         playTone(note, octave);
         el.classList.add('pk--pressed');
+        playedNotesMap.set(note + octave, { note, octave, abs: notePitchAbs(note, octave) });
+        updatePlayedChordDisplay();
         return el;
     }
 
     function releaseComputerKey(el) {
         el.classList.remove('pk--pressed');
+        playedNotesMap.delete(el.dataset.note + el.dataset.octave);
+        updatePlayedChordDisplay();
     }
 
     // On-key labels showing which computer key plays each visible piano

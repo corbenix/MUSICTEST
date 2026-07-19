@@ -81,9 +81,43 @@ window.MusicTheory = (function () {
         }));
     }
 
+    // Reverse of chordNotes(): given a set of currently-sounding note
+    // names (any octave, duplicates/enharmonics fine), figures out which
+    // root + chord-type formula they match, if any. Used to auto-detect
+    // a chord from notes played on the piano (click or computer-keyboard
+    // input) rather than picked explicitly in the Chord Finder.
+    //
+    // Matching is exact: the played pitch-classes (deduped) must equal a
+    // formula's interval set exactly, for some root. Ties are resolved
+    // by preferring whichever candidate root the lowest played note
+    // actually belongs to (the bass note), then by formula order above.
+    function detectChord(playedNotes, preferFlats) {
+        if (!playedNotes || playedNotes.length < 2) return null;
+        const pitchClasses = Array.from(new Set(playedNotes.map(n => noteIndex(n)))).filter(i => i !== -1);
+        if (pitchClasses.length < 2) return null;
+
+        const lowestIdx = noteIndex(playedNotes[0]);
+
+        let candidates = [];
+        for (let root = 0; root < 12; root++) {
+            const relative = pitchClasses.map(pc => ((pc - root) + 12) % 12).sort((a, b) => a - b);
+            for (const chordName in CHORD_FORMULAS) {
+                const formula = CHORD_FORMULAS[chordName].map(iv => iv % 12).sort((a, b) => a - b);
+                if (relative.length === formula.length && relative.every((v, i) => v === formula[i])) {
+                    candidates.push({ root, chordName });
+                }
+            }
+        }
+        if (!candidates.length) return null;
+
+        const bassMatch = candidates.find(c => c.root === lowestIdx);
+        const chosen = bassMatch || candidates[0];
+        return { root: noteName(chosen.root, preferFlats), chordName: chosen.chordName };
+    }
+
     return {
         NOTES_SHARP, NOTES_FLAT, SCALES, CHORD_FORMULAS,
         noteName, noteIndex, scaleNotes, chordNotes, PREFERS_FLATS,
-        degreeLabel, scaleDegrees,
+        degreeLabel, scaleDegrees, detectChord,
     };
 })();

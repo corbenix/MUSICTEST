@@ -105,6 +105,7 @@
     const bpmPlus = document.getElementById('metro-plus');
     const metroToggle = document.getElementById('metro-toggle');
     const metroDot = document.getElementById('metro-dot');
+    const metroSlider = document.getElementById('metro-slider');
     let bpm = 100;
     let metroActive = false;
     let metroTimer = null;
@@ -128,10 +129,51 @@
         setTimeout(() => metroDot.classList.remove('metro-dot--flash'), 100);
     }
 
-    function updateBpmDisplay() { bpmDisplay.textContent = bpm; }
+    function updateBpmDisplay() {
+        if (document.activeElement !== bpmDisplay) bpmDisplay.value = bpm;
+        if (metroSlider) {
+            metroSlider.value = bpm;
+            const pct = ((bpm - metroSlider.min) / (metroSlider.max - metroSlider.min)) * 100;
+            metroSlider.style.setProperty('--metro-fill', pct + '%');
+        }
+    }
+
+    function commitBpmInput() {
+        let val = parseInt(bpmDisplay.value, 10);
+        if (isNaN(val)) val = bpm;
+        val = Math.min(300, Math.max(30, val));
+        bpm = val;
+        updateBpmDisplay();
+        if (metroActive) restartMetro();
+    }
+
+    bpmDisplay.addEventListener('input', () => {
+        bpmDisplay.value = bpmDisplay.value.replace(/[^0-9]/g, '');
+    });
+    bpmDisplay.addEventListener('blur', commitBpmInput);
+    bpmDisplay.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); bpmDisplay.blur(); }
+    });
+
+    const METRO_SNAP_POINTS = [100];
+    const METRO_SNAP_THRESHOLD = 3; // BPM distance within which the slider snaps
+
+    function applySnap(value) {
+        for (const point of METRO_SNAP_POINTS) {
+            if (Math.abs(value - point) <= METRO_SNAP_THRESHOLD) return point;
+        }
+        return value;
+    }
 
     bpmMinus.addEventListener('click', () => { bpm = Math.max(30, bpm - 5); updateBpmDisplay(); if (metroActive) restartMetro(); });
     bpmPlus.addEventListener('click', () => { bpm = Math.min(300, bpm + 5); updateBpmDisplay(); if (metroActive) restartMetro(); });
+    if (metroSlider) {
+        metroSlider.addEventListener('input', () => {
+            bpm = applySnap(parseInt(metroSlider.value, 10));
+            updateBpmDisplay();
+            if (metroActive) restartMetro();
+        });
+    }
 
     function restartMetro() {
         clearInterval(metroTimer);

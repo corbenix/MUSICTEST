@@ -117,7 +117,7 @@
     }
 
     // ── Build root pills (naturals + accidental pills, always visible).
-    // Built once per row (Scale Visualizer + Bass Root Note) — each row
+    // Built once per row (Scale Explorer + Bass Root Note) — each row
     // tracks its own selected root, but the sharp/flat spelling of the
     // accidental pills is driven by the single global toggle in the
     // toolbar (window.NoteDisplay), shared across every instrument page. ─
@@ -295,7 +295,7 @@
     }
 
     // Manual note finder: clicking any fret cell toggles its own
-    // highlight, independent of the Scale Visualizer / Bass Root Note
+    // highlight, independent of the Scale Explorer / Bass Root Note
     // pickers, and plays that fret's real pitch as audible feedback —
     // like plucking the string at that fret. Delegated on the container
     // so it survives buildBoard() rebuilding the cells on fret/string
@@ -310,7 +310,7 @@
     });
 
     // ── Play button — replays whatever's currently selected in the
-    // Scale Visualizer (as an ascending run across the whole
+    // Scale Explorer (as an ascending run across the whole
     // fretboard). The Bass Root Note picker is a highlight-only
     // reference and is intentionally NOT wired to this button — instead,
     // individual frets play their own note the moment they're toggled
@@ -346,7 +346,7 @@
         return null;
     }
 
-    // Builds the note-by-note playback order for the Scale Visualizer:
+    // Builds the note-by-note playback order for the Scale Explorer:
     // every fret across the whole fretboard whose pitch class is in the
     // scale (i.e. every cell that's actually highlighted), deduped by
     // real absolute pitch and sorted low to high — so playback spans

@@ -482,7 +482,7 @@
 
     // ── Chord mode ──────────────────────────────────────────────────────
     // Root picker ported 100% from the Scale Explorer's picker above
-    // (itself ported from the Bass page's Scale Visualizer): naturals +
+    // (itself ported from the Bass page's Scale Explorer): naturals +
     // a ♮/♯/♭ toggle that reveals the accidental pills, tracked
     // independently of the Scale Explorer's own root/mode state.
     const chordRootPills = document.getElementById('chord-root-pills');

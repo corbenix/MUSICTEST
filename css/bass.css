@@ -131,9 +131,15 @@
     align-items: center;
     gap: 8px;
 }
+.bass-panel-title-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
 .bass-panel-desc { color: var(--text2); font-size: var(--bf-card-fs); margin: 0 0 10px; }
 
-/* ── Scale Visualizer card — icon+title, description, divider, then a
+/* ── Scale Explorer card — icon+title, description, divider, then a
    full-width scale-type bar (ported from the original app's global
    "Visual Key Scale Highlighting" panel) ──────────────────────────── */
 .scale-visualizer-card .bass-panel-desc {
@@ -364,7 +370,7 @@
 }
 
 /* ── Scale dropdown — dark, rounded, custom arrow (ported from the
-   original app's Scale Visualizer select), tinted teal to match the
+   original app's Scale Explorer select), tinted teal to match the
    rest of the Bass tab identity ─────────────────────────────────── */
 .scale-select {
     background-color: rgba(6, 4, 20, 0.92);
@@ -511,7 +517,7 @@
     color: #e6fff9;
     box-shadow: 0 0 16px rgba(77,255,232,0.85);
 }
-/* Scale Visualizer: ring the fretboard dot that is the root of the
+/* Scale Explorer: ring the fretboard dot that is the root of the
    selected scale, so it reads as "the root" at a glance rather than
    just another in-scale note. */
 .fret-cell.bass-scale-match.scale-root-ring:not(.bass-root-match) .fret-dot {
@@ -525,7 +531,7 @@
 }
 
 /* Manual "note finder" — clicking any fret cell toggles a highlight on
-   that specific note, independent of the Scale Visualizer / Bass Root
+   that specific note, independent of the Scale Explorer / Bass Root
    Note pickers. Matches the reference app's teal active-fret treatment,
    and (like the reference) wins over scale/root highlighting when a
    cell is both clicked and part of the active scale or root. */

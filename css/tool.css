@@ -149,12 +149,13 @@
 .chord-display-name.has-chord { color: rgb(var(--tool-light-rgb)); }
 .chord-display-notes {
     color: var(--text2);
-    min-height: 15px;
+    min-height: 0;
     line-height: 15px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.chord-display-notes:not(:empty) { margin-top: 4px; }
 
 .tool-note { font-size: 13px; color: var(--text2); margin: 10px 2px 0; line-height: 1.5; }
 

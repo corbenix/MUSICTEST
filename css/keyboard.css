@@ -304,7 +304,7 @@
 }
 
 /* ── Sharp/flat spelling toggle for the Scale Explorer's root picker —
-   ported 100% from the Bass page's Scale Visualizer. Cycles
+   ported 100% from the Bass page's Scale Explorer. Cycles
    natural → sharp → flat, revealing the accidental pills (C#/D♭ etc.)
    alongside the naturals. Sharp = blue, flat = amber. ──────────────── */
 .sf-sep {

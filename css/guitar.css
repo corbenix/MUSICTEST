@@ -62,3 +62,74 @@
 }
 .capo-result-fret { font-size: 11px; color: var(--text3); }
 .capo-result-note { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-top: 2px; }
+
+/* Card-style tab selector (Chord Library / Capo / Scale / CAGED) */
+.tool-tabs--cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.tool-tabs--cards .tool-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text2);
+    font-family: var(--font-display);
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+}
+.tool-tabs--cards .tool-tab:hover {
+    background: var(--glass-md);
+    color: var(--text);
+}
+.tool-tabs--cards .tool-tab[aria-selected="true"] {
+    background: rgba(var(--tool-rgb), 0.16);
+    border-color: rgba(var(--tool-rgb), 0.6);
+    color: var(--text);
+}
+.tool-tab-icon {
+    flex-shrink: 0;
+    font-size: 20px;
+    color: var(--text3);
+}
+.tool-tab[aria-selected="true"] .tool-tab-icon {
+    color: rgb(var(--tool-light-rgb));
+}
+.tool-tab-icon--img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+.tool-tab-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.tool-tab-label {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tool-tab-desc {
+    font-family: var(--font-body, inherit);
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--text3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 720px) {
+    .tool-tabs--cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

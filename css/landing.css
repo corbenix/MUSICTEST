@@ -150,6 +150,11 @@
     background: rgba(var(--c-rgb), 0.16);
     border: 1px solid rgba(var(--c-rgb), 0.30);
 }
+.hub-card-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
 
 .hub-card-title {
     font-family: var(--font-display);

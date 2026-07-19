@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Tuner & Metronome — Chord Nexus</title>
-    <meta name="description" content="A microphone chromatic tuner and a metronome — free music tools for any instrument." />
+    <title>Tuner, Metronome & Song Analyzer — Chord Nexus</title>
+    <meta name="description" content="A microphone chromatic tuner, a metronome, and a song analyzer for BPM and key detection — free music tools for any instrument." />
     <link rel="canonical" href="https://chordex.pages.dev/tools.html" />
 
     <link rel="stylesheet" href="css/shared.css" />
@@ -28,7 +28,7 @@
         </a>
         <div class="nclg-nav-links">
             <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
-            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><span class="nclg-nav-icon" aria-hidden="true">🎻</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
             <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="tools.html" aria-current="page" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
@@ -41,7 +41,7 @@
         <h1 class="sr-only">Other Tools</h1>
         <nav class="section-nav-card" aria-label="Tool navigation">
             <a class="section-nav-btn" href="guitar.html"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="bass.html"><span class="section-nav-icon" aria-hidden="true">🎻</span><span class="section-nav-label">Bass</span></a>
+            <a class="section-nav-btn" href="bass.html"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
             <a class="section-nav-btn" href="keyboard.html"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
             <a class="section-nav-btn" href="chord-builder.html"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
             <a class="section-nav-btn" href="tools.html" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Other Tools</span></a>
@@ -50,6 +50,7 @@
         <div class="tool-tabs" role="tablist">
             <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-tuner">Tuner</button>
             <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-metro">Metronome</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-analyzer">Song Analyzer</button>
         </div>
 
         <section id="panel-tuner" class="tool-panel" role="tabpanel">
@@ -65,15 +66,84 @@
         <section id="panel-metro" class="tool-panel" role="tabpanel" hidden>
             <div class="metro-panel">
                 <div id="metro-dot" class="metro-dot"></div>
+                <div class="metro-scale">
+                    <div class="metro-slider-wrap">
+                        <input id="metro-slider" class="metro-slider" type="range" min="30" max="300" step="1" value="100" aria-label="Tempo (BPM)" />
+                        <span class="metro-snap-mark" style="--snap-pos: calc(9px + (100% - 18px) * 0.2593);" title="100 BPM"></span>
+                    </div>
+                    <div class="metro-scale-ticks">
+                        <span>30</span>
+                        <span>100</span>
+                        <span>200</span>
+                        <span>300</span>
+                    </div>
+                </div>
                 <div class="metro-bpm-row">
                     <button id="metro-minus" type="button" class="metro-bpm-btn">−</button>
                     <div>
-                        <div id="metro-bpm" class="metro-bpm-value">100</div>
+                        <input id="metro-bpm" class="metro-bpm-value" type="text" inputmode="numeric" value="100" maxlength="3" aria-label="BPM (editable)" />
                         <div class="metro-bpm-label">BPM</div>
                     </div>
                     <button id="metro-plus" type="button" class="metro-bpm-btn">+</button>
                 </div>
                 <button id="metro-toggle" type="button" class="tool-btn">Start</button>
+            </div>
+        </section>
+
+        <section id="panel-analyzer" class="tool-panel" role="tabpanel" hidden>
+            <div class="analyzer-panel">
+                <label for="analyzer-file" id="analyzer-dropzone" class="analyzer-dropzone">
+                    <input type="file" id="analyzer-file" accept="audio/*" hidden />
+                    <span class="analyzer-dropzone-icon" aria-hidden="true">🎵</span>
+                    <span class="analyzer-dropzone-text" id="analyzer-dropzone-text">Click or drop an audio file</span>
+                </label>
+                <button id="analyzer-start" type="button" class="tool-btn" disabled>Analyze Song</button>
+
+                <div id="analyzer-progress" class="analyzer-progress" hidden>
+                    <div class="analyzer-progress-track"><div id="analyzer-progress-fill" class="analyzer-progress-fill"></div></div>
+                    <div id="analyzer-status" class="analyzer-status">Analyzing…</div>
+                </div>
+
+                <div id="analyzer-results" class="analyzer-results" hidden>
+                    <div class="analyzer-result-row">
+                        <div class="analyzer-result">
+                            <div id="analyzer-bpm" class="analyzer-result-value">—</div>
+                            <div class="analyzer-result-label">BPM</div>
+                        </div>
+                        <div class="analyzer-result">
+                            <div id="analyzer-key" class="analyzer-result-value">—</div>
+                            <div class="analyzer-result-label">Key</div>
+                        </div>
+                    </div>
+                    <div class="analyzer-note">Estimates are approximate — works best on full songs with a clear, steady beat.</div>
+                </div>
+
+                <div id="analyzer-chords" class="analyzer-chords" hidden>
+                    <div class="analyzer-chords-title">Chord Progression</div>
+                    <div id="analyzer-chords-list" class="analyzer-chords-list"></div>
+                    <div class="analyzer-note">Chords are estimated from pitch content per second — treat as a helpful guide, not sheet music.</div>
+                </div>
+
+                <div class="analyzer-stems">
+                    <button id="analyzer-stems-btn" type="button" class="tool-btn" hidden>Generate Stems (Beta)</button>
+                    <div id="analyzer-stems-progress" class="analyzer-status" hidden>Splitting stems…</div>
+                    <div id="analyzer-stems-results" class="analyzer-stems-results" hidden>
+                        <div class="analyzer-stem">
+                            <div class="analyzer-stem-label">Instrumental (vocal-reduced)</div>
+                            <audio id="analyzer-stem-instrumental" class="analyzer-stem-audio" controls></audio>
+                            <a id="analyzer-stem-instrumental-dl" class="analyzer-stem-download" download="instrumental.wav">Download WAV</a>
+                        </div>
+                        <div class="analyzer-stem">
+                            <div class="analyzer-stem-label">Center Channel (vocals + centered instruments)</div>
+                            <audio id="analyzer-stem-center" class="analyzer-stem-audio" controls></audio>
+                            <a id="analyzer-stem-center-dl" class="analyzer-stem-download" download="center-channel.wav">Download WAV</a>
+                        </div>
+                        <div class="analyzer-note">Basic phase-cancellation split, not full AI stem separation — works best on stereo tracks with center-panned vocals, and won't isolate drums/bass individually.</div>
+                    </div>
+                    <div id="analyzer-stems-error" class="analyzer-error" hidden></div>
+                </div>
+
+                <div id="analyzer-error" class="analyzer-error" hidden></div>
             </div>
         </section>
     </main>
@@ -86,6 +156,7 @@
 
     <script src="js/music-theory.js"></script>
     <script src="js/tools.js"></script>
+    <script src="js/song-analyzer.js"></script>
     <script src="js/background.js"></script>
 </body>
 </html>

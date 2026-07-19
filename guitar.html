@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/fretboard.css" />
     <link rel="stylesheet" href="css/guitar.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -30,7 +31,7 @@
         </a>
         <div class="nclg-nav-links">
             <a class="nclg-nav-link" href="guitar.html" aria-current="page" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
-            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><span class="nclg-nav-icon" aria-hidden="true">🎻</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
             <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
@@ -43,7 +44,7 @@
         <h1 class="sr-only">Guitar</h1>
         <nav class="section-nav-card" aria-label="Tool navigation">
             <a class="section-nav-btn" href="guitar.html" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="bass.html"><span class="section-nav-icon" aria-hidden="true">🎻</span><span class="section-nav-label">Bass</span></a>
+            <a class="section-nav-btn" href="bass.html"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
             <a class="section-nav-btn" href="keyboard.html"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
             <a class="section-nav-btn" href="chord-builder.html"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
             <a class="section-nav-btn" href="tools.html"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Other Tools</span></a>
@@ -51,11 +52,35 @@
 
         <div id="circle-of-fifths-mount"></div>
 
-        <div class="tool-tabs" role="tablist">
-            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-scale">Scale Explorer</button>
-            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-caged">CAGED System</button>
-            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-chords">Chord Library</button>
-            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-capo">Capo Explorer</button>
+        <div class="tool-tabs tool-tabs--cards" role="tablist">
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-chords">
+                <img class="tool-tab-icon tool-tab-icon--img" src="assets/icons/gchord_lib.png" alt="" />
+                <span class="tool-tab-text">
+                    <span class="tool-tab-label">Chord Library</span>
+                    <span class="tool-tab-desc">Open chord shapes</span>
+                </span>
+            </button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-capo">
+                <img class="tool-tab-icon tool-tab-icon--img" src="assets/icons/capo_logo.png" alt="" />
+                <span class="tool-tab-text">
+                    <span class="tool-tab-label">Capo Explorer</span>
+                    <span class="tool-tab-desc">Find capo positions</span>
+                </span>
+            </button>
+            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-scale">
+                <img class="tool-tab-icon tool-tab-icon--img" src="assets/icons/gscale_exp.png" alt="" />
+                <span class="tool-tab-text">
+                    <span class="tool-tab-label">Scale Explorer</span>
+                    <span class="tool-tab-desc">Scales across the neck</span>
+                </span>
+            </button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-caged">
+                <i class="ti ti-layout-grid tool-tab-icon" aria-hidden="true"></i>
+                <span class="tool-tab-text">
+                    <span class="tool-tab-label">CAGED System</span>
+                    <span class="tool-tab-desc">Learn the 5 shapes</span>
+                </span>
+            </button>
         </div>
 
         <section id="panel-scale" class="tool-panel" role="tabpanel">

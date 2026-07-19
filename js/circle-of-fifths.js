@@ -21,14 +21,24 @@
 
     const STORAGE_ROOT_KEY = 'cof-selected-root';
     const STORAGE_COLLAPSED_KEY = 'cof-collapsed';
+    const STORAGE_SF_KEY = 'cof-use-flats';
 
     // Sharp → flat spelling for the circle's own display toggle. This is
     // purely cosmetic (which glyph is shown for the same 12 positions) and
     // is intentionally separate from the root-picker's ♮/♯/♭ pill logic
     // elsewhere on the site — it does not touch note selection, storage,
-    // or scale/chord computation.
+    // or scale/chord computation. Persisted globally (shared across every
+    // instrument page) so switching from, say, Guitar to Bass keeps
+    // whichever spelling the user last picked.
     const COF_FLAT_EQUIV = { 'F#': 'Gb', 'C#': 'Db', 'G#': 'Ab', 'D#': 'Eb', 'A#': 'Bb' };
-    let cofUseFlats = false;
+
+    function loadUseFlats() {
+        try { return localStorage.getItem(STORAGE_SF_KEY) === 'true'; } catch (e) { return false; }
+    }
+    function saveUseFlats(val) {
+        try { localStorage.setItem(STORAGE_SF_KEY, String(val)); } catch (e) { /* storage unavailable */ }
+    }
+    let cofUseFlats = loadUseFlats();
 
     function cofDisplayName(name) {
         if (!cofUseFlats) return name;
@@ -37,13 +47,19 @@
         return (COF_FLAT_EQUIV[m[1]] || m[1]) + m[2];
     }
 
+    // The selected root is also persisted globally (shared across every
+    // instrument page), same as the sharp/flat spelling above. Falls
+    // back to C if nothing's been saved yet or the saved value is no
+    // longer a valid circle position.
     function loadRoot() {
-        // Always land on C by default when the page loads; the selected
-        // key still updates live as the user clicks around the circle,
-        // it just isn't restored/persisted across visits.
-        return 'C';
+        try {
+            const saved = localStorage.getItem(STORAGE_ROOT_KEY);
+            return CIRCLE_MAJOR.includes(saved) ? saved : 'C';
+        } catch (e) { return 'C'; }
     }
-    function saveRoot(root) { /* intentionally not persisted — always start on C */ }
+    function saveRoot(root) {
+        try { localStorage.setItem(STORAGE_ROOT_KEY, root); } catch (e) { /* storage unavailable */ }
+    }
     function loadCollapsed() {
         try {
             const saved = localStorage.getItem(STORAGE_COLLAPSED_KEY);
@@ -83,7 +99,7 @@
                                 <h3 id="cof-legend-title">C Major Diatonic Chords</h3>
                                 <p>The 7 chords built from the C Major scale.</p>
                             </div>
-                            <button type="button" class="cof-sf-toggle" id="cof-sf-toggle" data-mode="sharp" aria-label="Show flat spellings on the circle">♯</button>
+                            <button type="button" class="cof-sf-toggle" id="cof-sf-toggle" data-mode="${cofUseFlats ? 'flat' : 'sharp'}" aria-label="${cofUseFlats ? 'Show sharp spellings' : 'Show flat spellings'}">${cofUseFlats ? '♭' : '♯'}</button>
                         </div>
                         <div class="diatonic-grid-top" id="cof-diatonic-top"></div>
                         <div class="diatonic-grid-bottom" id="cof-diatonic-bottom"></div>
@@ -212,6 +228,7 @@
     sfToggleBtn.addEventListener('click', e => {
         e.stopPropagation();
         cofUseFlats = !cofUseFlats;
+        saveUseFlats(cofUseFlats);
         sfToggleBtn.dataset.mode = cofUseFlats ? 'flat' : 'sharp';
         sfToggleBtn.textContent = cofUseFlats ? '♭' : '♯';
         sfToggleBtn.setAttribute('aria-label', cofUseFlats ? 'Show sharp spellings' : 'Show flat spellings');

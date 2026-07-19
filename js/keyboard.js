@@ -124,7 +124,7 @@
             el.dataset.octave = displayOctave;
             el.style.width = whiteWidthPct + '%';
             el.innerHTML = `<span class="pk-label"></span>`;
-            el.addEventListener('click', () => { playTone(k.note, displayOctave); togglePlayedNote(el, k.note, displayOctave); });
+            el.addEventListener('click', () => { playTone(k.note, displayOctave); flash(el); });
             pianoEl.appendChild(el);
         });
 
@@ -141,7 +141,7 @@
             el.style.left = leftPct + '%';
             el.style.width = (whiteWidthPct * 0.80) + '%';
             el.innerHTML = `<span class="pk-label"></span>`;
-            el.addEventListener('click', () => { playTone(k.note, displayOctave); togglePlayedNote(el, k.note, displayOctave); });
+            el.addEventListener('click', () => { playTone(k.note, displayOctave); flash(el); });
             pianoEl.appendChild(el);
         });
 
@@ -154,13 +154,14 @@
     }
 
     // ── Auto chord detection from played notes ─────────────────────────
-    // Tracks whichever notes are currently sounding via a direct piano
-    // click (toggled on/off) or the computer-keyboard input (held while
-    // the physical key is down), keyed by "note-octave" so the same
-    // pitch class in different octaves is tracked separately. Whenever
-    // this set changes, the chord-display card is refreshed to show
-    // whatever chord (if any) those notes form — unless the Chord
-    // Finder has an explicit selection active, which takes priority.
+    // Tracks whichever notes are currently held via the computer-
+    // keyboard input (held while the physical key is down), keyed by
+    // "note-octave" so the same pitch class in different octaves is
+    // tracked separately. Direct piano clicks stay momentary (just play
+    // + flash) and aren't tracked here. Whenever this set changes, the
+    // chord-display card is refreshed to show whatever chord (if any)
+    // those notes form — unless the Chord Finder has an explicit
+    // selection active, which takes priority.
     const playedNotesMap = new Map();
 
     function notePitchAbs(note, octave) {
@@ -196,22 +197,7 @@
         chordDisplayNotes.textContent = noteNames.join(' · ');
     }
 
-    // Toggled by direct piano clicks: first click lights the key and
-    // adds it to the played-notes set, a second click on the same key
-    // releases it — this is what lets a chord be built up one note at a
-    // time, unlike the momentary press-and-release of computer-keyboard
-    // input below.
-    function togglePlayedNote(el, note, octave) {
-        const key = note + octave;
-        if (playedNotesMap.has(key)) {
-            playedNotesMap.delete(key);
-            el.classList.remove('pk--pressed');
-        } else {
-            playedNotesMap.set(key, { note, octave, abs: notePitchAbs(note, octave) });
-            el.classList.add('pk--pressed');
-        }
-        updatePlayedChordDisplay();
-    }
+
 
     // ── Key-label mode toggle — cycles Notes → Intervals → Off. Intervals
     // are shown relative to whichever root is currently active (Chord
@@ -668,10 +654,25 @@
     }
 
     const sustainToggle = document.getElementById('sustain-toggle');
-    sustainToggle.addEventListener('click', () => {
-        sustainOn = !sustainOn;
+    function setSustain(on) {
+        sustainOn = on;
         sustainToggle.classList.toggle('active', sustainOn);
+    }
+    sustainToggle.addEventListener('click', () => setSustain(!sustainOn));
+
+    // Shift acts as a sustain-pedal shortcut: held down, it sustains
+    // notes just like clicking the Sustain button, and lets go the
+    // moment Shift is released. Doesn't require the computer-keyboard
+    // note input to be enabled, since it also applies to mouse clicks.
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Shift' || e.repeat || isTypingTarget(e)) return;
+        setSustain(true);
     });
+    document.addEventListener('keyup', (e) => {
+        if (e.key !== 'Shift') return;
+        setSustain(false);
+    });
+    window.addEventListener('blur', () => setSustain(false));
 
     const chordClearBtn = document.getElementById('chord-clear-btn');
     chordClearBtn.addEventListener('click', () => {

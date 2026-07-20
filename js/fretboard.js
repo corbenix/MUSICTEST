@@ -17,7 +17,11 @@ window.Fretboard = (function () {
     //            every fret gets a note-labeled dot, lit up when it matches.
     // dots: explicit shape markers [{string, fret, label, isRoot, muted, cagedLetter}] —
     //       "diagram" mode: only the given frets get a dot, everything else stays bare wood.
-    function render(container, { tuning, numFrets = 15, highlight = null, dots = null, capo = 0, preferFlats = false, showOpenBadge = false }) {
+    // openOctaves: optional array (same length/order as tuning) giving each open string's
+    //              real octave (e.g. [2,2,3,3,3,4] for standard guitar tuning). When given,
+    //              every cell is stamped with its true absolute pitch in data-abs, so a
+    //              caller can wire up click-to-play without recomputing string/fret math.
+    function render(container, { tuning, numFrets = 15, highlight = null, dots = null, capo = 0, preferFlats = false, showOpenBadge = false, openOctaves = null }) {
         container.innerHTML = '';
         const wrap = document.createElement('div');
         wrap.className = 'gtr-fretboard-wrap' + (showOpenBadge ? ' gtr-has-badge' : '');
@@ -46,6 +50,7 @@ window.Fretboard = (function () {
         for (let s = numStrings - 1; s >= 0; s--) {
             const openNote = tuning[s];
             const openIdx = MT.noteIndex(openNote);
+            const openOctave = openOctaves ? openOctaves[s] : null;
 
             const row = document.createElement('div');
             row.className = 'gtr-string-row';
@@ -87,6 +92,7 @@ window.Fretboard = (function () {
                 const cell = document.createElement('div');
                 cell.className = 'gtr-fret-cell';
                 const noteIdx = (openIdx + f) % 12;
+                if (openOctave !== null) cell.dataset.abs = openOctave * 12 + openIdx + f;
 
                 if (isDiagram && capo > 0 && f === capo) cell.classList.add('gtr-capo-active');
 

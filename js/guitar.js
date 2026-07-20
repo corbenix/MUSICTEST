@@ -56,10 +56,21 @@
         if (bufferPromises[url]) return bufferPromises[url];
         const ctx = getAudioContext();
         bufferPromises[url] = fetch(url)
-            .then(res => res.arrayBuffer())
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
+                return res.arrayBuffer();
+            })
             .then(data => ctx.decodeAudioData(data))
             .then(buf => { bufferCache[url] = buf; return buf; })
-            .catch(() => null);
+            .catch(err => {
+                // Surfaced instead of swallowed — a 404 here means the
+                // file/path doesn't match, and a generic "Failed to
+                // fetch" almost always means the page was opened as
+                // file:// (fetch() of local files is blocked by the
+                // browser) rather than served over http(s).
+                console.warn('[guitar audio] could not load', url, err);
+                return null;
+            });
         return bufferPromises[url];
     }
     GUITAR_SAMPLES.forEach(s => loadBuffer(s.url));
@@ -265,10 +276,25 @@
             tuning: TUNING,
             numFrets: 15,
             highlight: { notes, root, preferFlats },
+            openOctaves: OPEN_OCTAVES,
         });
     }
     scaleType.addEventListener('change', () => { stopScalePlayback(); renderScale(); });
     renderScale();
+
+    // Click any fret to toggle its own highlight and hear that fret's
+    // real pitch, independent of the auto-highlighted scale — same
+    // "manual note finder" behavior as the Bass page's fretboard.
+    // Delegated on the container (not the cells themselves) so it keeps
+    // working after renderScale() rebuilds the board on every change.
+    scaleBoard.addEventListener('click', e => {
+        const cell = e.target.closest('.gtr-fret-cell');
+        if (!cell || cell.dataset.abs === undefined) return;
+        cell.classList.toggle('gtr-user-picked');
+        const abs = Number(cell.dataset.abs);
+        const preferFlats = scaleNoteDisplayMode === 'flat';
+        playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
+    });
 
     // ── CAGED System ────────────────────────────────────────────────────
     // Pick a root to see all 5 CAGED shapes light up at once, wherever they

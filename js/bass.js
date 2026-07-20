@@ -250,12 +250,8 @@
             label.textContent = openNote;
             row.appendChild(label);
 
-            // Open string indicator — purely visual (no mute/audio behavior
-            // to toggle here), marking fret 0 the way the reference app does.
-            const openNote0 = document.createElement('div');
-            openNote0.className = 'open-note-badge';
-            openNote0.textContent = 'O';
-            row.appendChild(openNote0);
+            // Open string indicator (fret 0) removed — string legend now
+            // sits directly next to the nut instead.
 
             const nut = document.createElement('div');
             nut.className = 'nut';

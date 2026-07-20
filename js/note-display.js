@@ -5,6 +5,13 @@
 window.NoteDisplay = (function () {
     const STORAGE_KEY = 'cn-note-display-mode';
 
+    // Every button bound via bindToggle() on THIS page registers a
+    // listener here, so that flipping one toggle immediately repaints
+    // every other toggle/section on the same page too. The native
+    // 'storage' event only fires in *other* tabs, never in the tab that
+    // made the change, so it can't be relied on for in-page sync.
+    const listeners = [];
+
     function getMode() {
         try {
             return localStorage.getItem(STORAGE_KEY) === 'flat' ? 'flat' : 'sharp';
@@ -54,16 +61,24 @@ window.NoteDisplay = (function () {
             buttonEl.dataset.mode = mode;
         }
         paint();
+        // Register so this button/section gets repainted whenever ANY
+        // toggle on the page (this one or another) changes the mode.
+        listeners.push({ paint, onChange });
+
         buttonEl.addEventListener('click', () => {
             toggle();
-            paint();
-            if (onChange) onChange(getMode());
+            notifyAll();
         });
         window.addEventListener('storage', e => {
-            if (e.key === STORAGE_KEY) {
-                paint();
-                if (onChange) onChange(getMode());
-            }
+            if (e.key === STORAGE_KEY) notifyAll();
+        });
+    }
+
+    function notifyAll() {
+        const mode = getMode();
+        listeners.forEach(l => {
+            l.paint();
+            if (l.onChange) l.onChange(mode);
         });
     }
 

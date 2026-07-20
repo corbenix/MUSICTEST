@@ -1,94 +1,156 @@
-// Shared fretting-instrument fretboard renderer (guitar + bass both use this).
+// Guitar-only fretboard renderer (used by guitar.html's Scale Explorer,
+// CAGED, and Chord Library panels). Fully independent from js/bass.js /
+// css/bass.css — every class this file writes is namespaced "gtr-" so
+// nothing here can collide with, or be affected by, the Bass page.
+//
+// Visual design ported from css/bass.css's hand-built board: a wood/blue
+// neck with a string label + nut per row, a real fret-dot on every
+// fret, and a fret-inlay marker row underneath.
 window.Fretboard = (function () {
     const MT = window.MusicTheory;
+    const FRET_MARKERS = new Set([3, 5, 7, 9, 15, 17, 19, 21]);
+    const DOUBLE_MARKERS = new Set([12, 24]);
 
     // tuning: array of open-string note names, LOW to HIGH (e.g. ['E','A','D','G','B','E'])
     // numFrets: how many frets to draw
-    // highlight: { notes: [...], root: 'C', preferFlats: bool } or null
-    // dots: optional explicit shape markers [{string, fret, label, isRoot, muted}]
-    function render(container, { tuning, numFrets = 15, highlight = null, dots = null, capo = 0 }) {
+    // highlight: { notes: [...], root: 'C', preferFlats: bool } — "explorer" mode:
+    //            every fret gets a note-labeled dot, lit up when it matches.
+    // dots: explicit shape markers [{string, fret, label, isRoot, muted, cagedLetter}] —
+    //       "diagram" mode: only the given frets get a dot, everything else stays bare wood.
+    function render(container, { tuning, numFrets = 15, highlight = null, dots = null, capo = 0, preferFlats = false, showOpenBadge = false }) {
         container.innerHTML = '';
         const wrap = document.createElement('div');
-        wrap.className = 'fb-wrap';
+        wrap.className = 'gtr-fretboard-wrap' + (showOpenBadge ? ' gtr-has-badge' : '');
+        const isDiagram = !!dots;
 
-        const numStrings = tuning.length;
-        const fretMarkers = new Set([3,5,7,9,15,17,19,21]);
-        const doubleMarkers = new Set([12,24]);
+        // ── Header row (fret numbers) ────────────────────────────────
+        const headerRow = document.createElement('div');
+        headerRow.className = 'gtr-fret-header-row';
+        const spacer = document.createElement('div');
+        spacer.className = 'gtr-fret-header-spacer';
+        headerRow.appendChild(spacer);
 
-        const grid = document.createElement('div');
-        grid.className = 'fb-grid';
-        grid.style.setProperty('--fb-frets', numFrets);
-        grid.style.setProperty('--fb-strings', numStrings);
-
-        const nutRow = document.createElement('div');
-        nutRow.className = 'fb-fretnums';
-        for (let f = 0; f <= numFrets; f++) {
+        const headerCells = document.createElement('div');
+        headerCells.className = 'gtr-fret-header-cells';
+        for (let f = 1; f <= numFrets; f++) {
             const cell = document.createElement('div');
-            cell.className = 'fb-fretnum';
-            if (f > 0 && (fretMarkers.has(f) || doubleMarkers.has(f))) cell.textContent = f;
-            nutRow.appendChild(cell);
+            cell.className = 'gtr-fret-num' + ((FRET_MARKERS.has(f) || DOUBLE_MARKERS.has(f)) ? ' marker' : '');
+            cell.textContent = f;
+            headerCells.appendChild(cell);
         }
-        grid.appendChild(nutRow);
+        headerRow.appendChild(headerCells);
+        wrap.appendChild(headerRow);
 
+        // ── String rows ───────────────────────────────────────────────
+        const numStrings = tuning.length;
         for (let s = numStrings - 1; s >= 0; s--) {
-            const row = document.createElement('div');
-            row.className = 'fb-string-row';
             const openNote = tuning[s];
             const openIdx = MT.noteIndex(openNote);
 
-            for (let f = 0; f <= numFrets; f++) {
+            const row = document.createElement('div');
+            row.className = 'gtr-string-row';
+
+            const label = document.createElement('div');
+            label.className = 'gtr-string-label';
+            label.textContent = openNote;
+            row.appendChild(label);
+
+            // Open string indicator (fret 0) — only rendered for callers
+            // that opt in via showOpenBadge (Chord Library), where each
+            // string's open/muted/fretted state is a real, meaningful
+            // fact about a single fixed fingering. Everywhere else the
+            // string legend sits directly next to the nut.
+            if (showOpenBadge) {
+                const badge = document.createElement('div');
+                badge.className = 'gtr-open-note-badge';
+                if (isDiagram) {
+                    const isMuted = dots.some(d => d.string === s && d.muted);
+                    const isOpen = dots.some(d => d.string === s && d.fret === 0 && !d.muted);
+                    if (isMuted) { badge.classList.add('is-mute'); badge.textContent = '×'; }
+                    else if (isOpen) { badge.classList.add('is-open'); badge.textContent = 'O'; }
+                    else { badge.classList.add('is-blank'); }
+                } else {
+                    badge.classList.add('is-open');
+                    badge.textContent = 'O';
+                }
+                row.appendChild(badge);
+            }
+
+            const nut = document.createElement('div');
+            nut.className = 'gtr-nut';
+            row.appendChild(nut);
+
+            const fretsRow = document.createElement('div');
+            fretsRow.className = 'gtr-frets-row';
+
+            for (let f = 1; f <= numFrets; f++) {
                 const cell = document.createElement('div');
-                cell.className = 'fb-cell' + (f === 0 ? ' fb-cell--nut' : '');
+                cell.className = 'gtr-fret-cell';
+                const noteIdx = (openIdx + f) % 12;
+
+                if (isDiagram && capo > 0 && f === capo) cell.classList.add('gtr-capo-active');
 
                 if (f >= capo) {
-                    const noteIdx = (openIdx + f) % 12;
-                    const isHighlighted = highlight && highlight.notes.includes(MT.noteName(noteIdx, highlight.preferFlats));
-                    const isRoot = highlight && MT.noteIndex(highlight.root) === noteIdx;
+                    if (isDiagram) {
+                        const match = dots.find(d => d.string === s && d.fret === f && !d.muted);
+                        const dot = document.createElement('div');
+                        if (match) {
+                            if (match.isRoot) cell.classList.add('active');
+                            dot.className = 'gtr-fret-dot gtr-fret-dot--shape' + (match.cagedLetter ? ` caged-${match.cagedLetter}` : '');
+                            dot.textContent = match.label || MT.noteName(noteIdx, preferFlats);
+                        } else {
+                            dot.className = 'gtr-fret-dot';
+                            dot.textContent = MT.noteName(noteIdx, preferFlats);
+                        }
+                        cell.appendChild(dot);
+                    } else {
+                        const preferFlatsCell = highlight ? !!highlight.preferFlats : preferFlats;
+                        const noteName = MT.noteName(noteIdx, preferFlatsCell);
+                        const isHighlighted = highlight && highlight.notes.includes(noteName);
+                        const isRoot = highlight && MT.noteIndex(highlight.root) === noteIdx;
 
-                    if (isHighlighted) {
-                        const dot = document.createElement('span');
-                        dot.className = 'fb-dot' + (isRoot ? ' fb-dot--root' : '');
-                        dot.textContent = MT.noteName(noteIdx, highlight.preferFlats);
+                        cell.classList.toggle('gtr-scale-match', !!isHighlighted);
+                        cell.classList.toggle('gtr-root-match', !!isRoot);
+
+                        const dot = document.createElement('div');
+                        dot.className = 'gtr-fret-dot';
+                        dot.textContent = noteName;
                         cell.appendChild(dot);
                     }
                 }
-                row.appendChild(cell);
+                fretsRow.appendChild(cell);
             }
-            grid.appendChild(row);
+            row.appendChild(fretsRow);
+            wrap.appendChild(row);
         }
 
-        if (dots) {
-            dots.forEach(d => {
-                if (d.muted || d.fret < 0) return;
-                const rowIndex = numStrings - 1 - d.string;
-                const row = grid.children[rowIndex + 1];
-                if (!row) return;
-                const cell = row.children[d.fret];
-                if (!cell) return;
-                const dot = document.createElement('span');
-                dot.className = 'fb-dot fb-dot--shape' + (d.isRoot ? ' fb-dot--root' : '');
-                dot.textContent = d.label || '';
-                cell.appendChild(dot);
-            });
-        }
+        // ── Fret-inlay marker row (dots under the board) — matches the
+        // Bass page's board so both instruments read the same way. ────
+        const markerRow = document.createElement('div');
+        markerRow.className = 'gtr-marker-row';
+        const markerSpacer = document.createElement('div');
+        markerSpacer.className = 'gtr-marker-spacer';
+        markerRow.appendChild(markerSpacer);
 
-        const openRow = document.createElement('div');
-        openRow.className = 'fb-openrow';
-        for (let s = numStrings - 1; s >= 0; s--) {
-            const marker = document.createElement('div');
-            marker.className = 'fb-openmark';
-            if (dots) {
-                const m = dots.find(x => x.string === s && x.muted);
-                const d = dots.find(x => x.string === s && x.fret === 0 && !x.muted);
-                if (m) marker.textContent = '×';
-                else if (d) marker.textContent = 'O';
-            }
-            openRow.appendChild(marker);
+        const markerCells = document.createElement('div');
+        markerCells.style.display = 'flex';
+        markerCells.style.flex = '1';
+        for (let f = 1; f <= numFrets; f++) {
+            const dotWrap = document.createElement('div');
+            dotWrap.className = 'gtr-fret-marker-dot';
+            dotWrap.textContent = DOUBLE_MARKERS.has(f) ? '◆◆' : (FRET_MARKERS.has(f) ? '◆' : '');
+            markerCells.appendChild(dotWrap);
         }
+        markerRow.appendChild(markerCells);
+        wrap.appendChild(markerRow);
 
-        wrap.appendChild(openRow);
-        wrap.appendChild(grid);
         container.appendChild(wrap);
+
+        // ── Mobile swipe hint (hidden ≥900px via CSS) ──────────────────
+        const hint = document.createElement('span');
+        hint.className = 'gtr-scroll-hint';
+        hint.textContent = 'Swipe horizontally to navigate frets →';
+        container.appendChild(hint);
     }
 
     return { render };

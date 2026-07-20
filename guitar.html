@@ -84,42 +84,55 @@
         </div>
 
         <section id="panel-scale" class="tool-panel" role="tabpanel">
-            <div class="controls-row">
-                <div class="control-field">
-                    <label for="scale-root">Root note</label>
-                    <select id="scale-root"></select>
+            <div class="tool-controls-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/gscale_exp.png" alt="" /> Scale Explorer</div>
+                    <button type="button" id="scale-note-toggle" class="reset-btn scale-note-toggle" title="Switch note names between sharps and flats">♯</button>
                 </div>
-                <div class="control-field">
-                    <label for="scale-type">Scale</label>
-                    <select id="scale-type"></select>
+                <p class="tool-controls-desc">Pick a root and scale to see it mapped across the fretboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="scale-root-pills" class="root-pill-row scale-root-pills"></div>
                 </div>
+                <select id="scale-type" class="scale-select"></select>
             </div>
             <div class="scale-card">
                 <div class="scale-card-label">Scale Notes</div>
                 <div id="scale-chips" class="scale-pill-row"></div>
             </div>
-            <div class="fretboard-panel">
+            <div class="scale-playback-row">
+                <button type="button" id="scale-play-btn" class="reset-btn scale-play-btn" title="Play this scale">
+                    <i class="ti ti-player-play" aria-hidden="true"></i> Play
+                </button>
+                <button type="button" id="scale-speed-toggle" class="reset-btn scale-speed-toggle" title="Playback speed">1x</button>
+            </div>
+            <div class="gtr-fretboard-panel">
                 <div id="scale-fretboard"></div>
             </div>
         </section>
 
         <section id="panel-caged" class="tool-panel" role="tabpanel" hidden>
-            <div class="controls-row">
-                <div class="control-field">
-                    <label for="caged-root">Root note</label>
-                    <select id="caged-root"></select>
+            <div class="tool-controls-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title">🎯 CAGED System</div>
+                    <button type="button" id="caged-note-toggle" class="reset-btn caged-note-toggle" title="Switch note names between sharps and flats">♯</button>
                 </div>
+                <p class="tool-controls-desc">Select a root to highlight all CAGED shape positions across the fretboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="caged-root-pills" class="root-pill-row caged-root-pills"></div>
+                </div>
+                <p id="caged-auto-label" class="tool-note"></p>
+                <div id="caged-legend" class="caged-legend"></div>
             </div>
-            <div id="caged-picker" class="caged-picker"></div>
-            <p id="tool-note" class="tool-note"></p>
-            <div class="fretboard-panel">
+            <div class="gtr-fretboard-panel">
                 <div id="caged-fretboard"></div>
             </div>
         </section>
 
         <section id="panel-chords" class="tool-panel" role="tabpanel" hidden>
             <div id="chord-lib-grid" class="chord-lib-grid"></div>
-            <div class="fretboard-panel" style="margin-top:18px;">
+            <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="chord-lib-fretboard"></div>
             </div>
         </section>
@@ -137,8 +150,11 @@
                     </select>
                 </div>
             </div>
-            <p class="tool-note">Shows what chord actually sounds at each capo position, for the shape you're fretting.</p>
+            <p class="tool-note">Shows what chord actually sounds at each capo position, for the shape you're fretting. Select a position to see it on the fretboard.</p>
             <div id="capo-results" class="capo-result-grid"></div>
+            <div class="gtr-fretboard-panel" style="margin-top:18px;">
+                <div id="capo-fretboard"></div>
+            </div>
         </section>
     </main>
 
@@ -149,6 +165,7 @@
     </footer>
 
     <script src="js/music-theory.js"></script>
+    <script src="js/note-display.js"></script>
     <script src="js/fretboard.js"></script>
     <script src="js/guitar-data.js"></script>
     <script src="js/guitar.js"></script>

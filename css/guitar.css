@@ -13,6 +13,16 @@
     flex-shrink: 0;
 }
 
+/* Scale Explorer — frets are clickable (manual note finder, same as the
+   Bass page): a cyan ring marks any fret the user has clicked, layered
+   on top of whatever auto-highlight state (scale/root match) it's in. */
+#scale-fretboard .gtr-fret-cell { cursor: pointer; }
+#scale-fretboard .gtr-fret-cell:hover .gtr-fret-dot { transform: scale(1.08); }
+.gtr-fret-cell.gtr-user-picked .gtr-fret-dot {
+    outline: 2px solid rgba(125, 223, 255, .9);
+    outline-offset: 2px;
+}
+
 /* Scale Explorer — Play/Speed row, sits directly above the fretboard. */
 .scale-playback-row {
     display: flex;

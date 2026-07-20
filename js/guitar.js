@@ -18,12 +18,12 @@
     // playbackRate is reliably honored on every browser, including iOS
     // Safari. ─────────────────────────────────────────────────────────────
     const GUITAR_SAMPLES = [
-        ['As', 2], ['As', 3], ['As', 4], ['As', 5],
-        ['Cs', 2], ['Cs', 3], ['Cs', 4], ['Cs', 5], ['Cs', 6],
-        ['E', 2], ['E', 3], ['E', 4], ['E', 5],
-        ['G', 2], ['G', 3], ['G', 4], ['G', 5],
+        ['B', 2], ['B', 3], ['B', 4],
+        ['D', 2], ['D', 3], ['D', 4],
+        ['F', 2], ['F', 3], ['F', 4],
+        ['Gs', 2], ['Gs', 3], ['Gs', 4],
     ].map(([file, oct]) => {
-        const sharpNote = { As: 'A#', Cs: 'C#', E: 'E', G: 'G' }[file];
+        const sharpNote = { B: 'B', D: 'D', F: 'F', Gs: 'G#' }[file];
         return { url: `audio/guitar/${file}${oct}.mp3`, abs: oct * 12 + MT.noteIndex(sharpNote) };
     });
 

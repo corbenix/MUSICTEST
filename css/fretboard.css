@@ -1,98 +1,320 @@
 /* ==========================================================================
-   FRETBOARD — shared between guitar.html and bass.html
+   GUITAR FRETBOARD — used across guitar.html's own panels only (Scale
+   Explorer, CAGED, Chord Library). Fully self-contained: every class is
+   namespaced "gtr-" so this file shares no selectors with css/bass.css
+   and can be edited freely without touching the Bass page's board.
+
+   Visual design ported from css/bass.css's hand-built board (wood/blue
+   neck, nut, per-string rows, glowing fret-dots, fret-inlay markers)
+   and re-themed here with the guitar's own accent (--tool-rgb).
    ========================================================================== */
 
-.fb-wrap {
-    --fb-fret-w: 46px;
-    --fb-string-h: 34px;
-    overflow-x: auto;
-    padding: 4px 4px 12px;
-}
-.fb-grid {
-    min-width: 860px;
+:root {
+    --gf-wrap-minw: 860px;
+    --gf-dot: 40px;
+    --gf-dot-fs: 14px;
+    --gf-string-h: 60px;
+    --gf-label-w: 32px;
+    --gf-label-fs: 16px;
+    --gf-nut-w: 8px;
+    --gf-spacer-w: 52px;
+    --gf-badge: 40px;
+    --gf-badge-fs: 14px;
+    --gf-spacer-w-badge: 100px;
 }
 
-@media (max-width: 600px) {
-    .fb-wrap {
-        --fb-fret-w: 38px;
-        --fb-string-h: 28px;
-        padding: 4px 4px 10px;
+@media (min-width: 601px) and (max-width: 1099px) {
+    :root {
+        --gf-wrap-minw: 760px;
+        --gf-dot: 34px;
+        --gf-dot-fs: 12px;
+        --gf-string-h: 52px;
+        --gf-label-w: 28px;
+        --gf-label-fs: 14px;
+        --gf-nut-w: 7px;
+        --gf-spacer-w: 47px;
+        --gf-badge: 34px;
+        --gf-badge-fs: 12px;
+        --gf-spacer-w-badge: 88px;
     }
-    .fb-grid { min-width: 700px; }
-    .fb-dot { width: 20px; height: 20px; font-size: 9px; }
-    .fb-dot--shape { width: 22px; height: 22px; font-size: 10px; }
+}
+@media (min-width: 1920px) {
+    :root {
+        --gf-wrap-minw: 980px;
+        --gf-dot: 46px;
+        --gf-dot-fs: 15px;
+        --gf-string-h: 68px;
+        --gf-label-w: 36px;
+        --gf-label-fs: 17px;
+        --gf-nut-w: 9px;
+        --gf-spacer-w: 57px;
+        --gf-badge: 46px;
+        --gf-badge-fs: 15px;
+        --gf-spacer-w-badge: 112px;
+    }
+}
+@media (min-width: 2560px) {
+    :root {
+        --gf-wrap-minw: 1080px;
+        --gf-dot: 50px;
+        --gf-dot-fs: 16px;
+        --gf-string-h: 76px;
+        --gf-label-w: 40px;
+        --gf-label-fs: 18px;
+        --gf-nut-w: 10px;
+        --gf-spacer-w: 62px;
+        --gf-badge: 50px;
+        --gf-badge-fs: 16px;
+        --gf-spacer-w-badge: 120px;
+    }
+}
+@media (min-width: 3840px) {
+    :root {
+        --gf-wrap-minw: 1280px;
+        --gf-dot: 58px;
+        --gf-dot-fs: 18px;
+        --gf-string-h: 88px;
+        --gf-label-w: 46px;
+        --gf-label-fs: 20px;
+        --gf-nut-w: 11px;
+        --gf-spacer-w: 69px;
+        --gf-badge: 58px;
+        --gf-badge-fs: 18px;
+        --gf-spacer-w-badge: 136px;
+    }
+}
+@media (max-width: 600px) {
+    :root {
+        --gf-wrap-minw: 700px;
+        --gf-dot: 27px;
+        --gf-dot-fs: 10px;
+        --gf-string-h: 44px;
+        --gf-label-w: 24px;
+        --gf-label-fs: 13px;
+        --gf-nut-w: 6px;
+        --gf-spacer-w: 42px;
+        --gf-badge: 27px;
+        --gf-badge-fs: 10px;
+        --gf-spacer-w-badge: 74px;
+    }
 }
 
-.fb-openrow,
-.fb-fretnums,
-.fb-string-row {
-    display: grid;
-    grid-template-columns: repeat(calc(var(--fb-frets) + 1), var(--fb-fret-w));
-}
-
-.fb-openrow { margin-left: 0; }
-
-.fb-openmark {
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text3);
-    width: var(--fb-fret-w);
-}
-
-.fb-fretnum {
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    color: var(--text3);
-    font-family: var(--font-display);
-}
-
-.fb-string-row {
-    position: relative;
-    border-top: 1px solid var(--border2);
-}
-.fb-string-row:last-child { border-bottom: 1px solid var(--border2); }
-
-.fb-cell {
-    height: var(--fb-string-h);
-    border-right: 1px solid var(--border);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.fb-cell--nut { border-right: 3px solid var(--border2); }
-
-.fb-dot {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    font-family: var(--font-display);
-    background: rgba(var(--fret-accent-rgb, 124,111,224), 0.75);
-    color: #0a0714;
-    box-shadow: 0 0 0 2px rgba(6,4,20,0.6);
-    z-index: 2;
-}
-.fb-dot--root {
-    background: var(--gold);
-    box-shadow: 0 0 0 2px rgba(6,4,20,0.6), 0 0 10px rgba(255,209,102,0.6);
-}
-.fb-dot--shape { width: 26px; height: 26px; font-size: 11px; }
-
-.fretboard-panel {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+.gtr-fretboard-panel {
+    background:
+        linear-gradient(160deg, rgba(var(--tool-rgb), .13), rgba(var(--tool-rgb), .02)),
+        linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
+    border: 1px solid rgba(var(--tool-light-rgb), .26);
     border-radius: var(--radius-lg);
-    padding: 6px 10px 10px;
-    box-shadow: var(--shadow-card);
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, .45),
+        0 2px 8px rgba(0, 0, 0, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        0 0 34px rgba(var(--tool-rgb), .10);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Warm wood neck, coral-tinted to match this page's guitar accent —
+   distinct from the Bass page's blue board (css/bass.css #0d2430),
+   matching the reference tool's guitar/bass color split. */
+.gtr-fretboard-wrap {
+    background:
+        linear-gradient(160deg, rgba(var(--tool-rgb), .12), rgba(var(--tool-rgb), .02)),
+        #241510;
+    min-width: var(--gf-wrap-minw);
+    padding: 18px 16px 18px 0;
+    border-radius: var(--radius-lg);
+}
+
+.gtr-fret-header-row { display: flex; align-items: center; margin-bottom: 6px; }
+.gtr-fret-header-spacer { width: var(--gf-spacer-w); flex-shrink: 0; }
+.gtr-fret-header-cells { display: flex; flex: 1; }
+.gtr-fret-num { flex: 1; text-align: center; font-size: calc(var(--gf-dot-fs) - 1px); color: #c9bda7; }
+.gtr-fret-num.marker { color: var(--gold); font-weight: 700; }
+
+/* Chord Library opts into the open/muted-string badge (showOpenBadge)
+   since each string's O/×/blank state is real information about a
+   single fixed fingering. Widen the header/marker spacers to match so
+   the fret-number columns still line up over the actual frets. */
+.gtr-fretboard-wrap.gtr-has-badge .gtr-fret-header-spacer,
+.gtr-fretboard-wrap.gtr-has-badge .gtr-marker-spacer {
+    width: var(--gf-spacer-w-badge);
+}
+
+.gtr-string-row {
+    display: flex;
+    align-items: center;
+    height: var(--gf-string-h);
+    border-top: 1px solid rgba(0, 0, 0, .25);
+}
+.gtr-string-row:first-of-type { border-top: none; }
+
+.gtr-string-label {
+    width: var(--gf-label-w);
+    text-align: center;
+    font-size: var(--gf-label-fs);
+    font-weight: 700;
+    color: #e3dcd0;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+
+.gtr-open-note-badge {
+    width: var(--gf-badge);
+    height: var(--gf-badge);
+    border-radius: 50%;
+    font-size: var(--gf-badge-fs);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--border2);
+    background: rgba(0, 0, 0, .35);
+    color: #cda;
+}
+.gtr-open-note-badge.is-open {
+    border-color: #1d9e75;
+    background: rgba(13, 48, 40, .55);
+    color: #4dd4a8;
+}
+.gtr-open-note-badge.is-mute {
+    border-color: #c23a3a;
+    background: rgba(58, 13, 13, .55);
+    color: #f07070;
+}
+.gtr-open-note-badge.is-blank { opacity: .25; }
+
+.gtr-nut {
+    width: var(--gf-nut-w);
+    height: 75%;
+    background: #e5dec9;
+    border-radius: 3px;
+    flex-shrink: 0;
+    box-shadow: 1px 1px 3px #00000080;
+    z-index: 3;
+}
+
+.gtr-frets-row { display: flex; flex: 1; height: 100%; position: relative; }
+.gtr-frets-row::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(#f0f0ffb3, #64646e80);
+    pointer-events: none;
+}
+
+.gtr-fret-cell {
+    flex: 1;
+    height: 100%;
+    border-right: 2px solid rgba(0, 0, 0, .4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.gtr-fret-dot {
+    width: var(--gf-dot); height: var(--gf-dot);
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, .25);
+    background: #1e110c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--gf-dot-fs);
+    font-weight: 700;
+    color: #bfae95;
+    position: relative;
+    z-index: 2;
+    transition: background .18s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color .18s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow .25s cubic-bezier(0.22, 1, 0.36, 1),
+                color .14s var(--ease);
+}
+
+/* Scale Explorer — every fret is labeled; matched notes light up in the
+   rose/coral color copied straight from the reference app's
+   .guitar-scale-match treatment, the root gets its own ring (also
+   copied from the reference's .scale-root-ring). */
+.gtr-fret-cell.gtr-scale-match .gtr-fret-dot {
+    background: linear-gradient(160deg, rgba(255, 150, 165, .95) 0%, rgba(224, 50, 72, .95) 45%, rgba(158, 25, 42, 1) 100%);
+    border-color: rgba(255, 150, 165, .75);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(255, 60, 90, 1);
+}
+.gtr-fret-cell.gtr-root-match:not(.gtr-scale-match) .gtr-fret-dot {
+    background: var(--gold);
+    border-color: #fff0c2;
+    color: #2a1c00;
+    box-shadow: 0 0 18px rgba(255, 209, 102, .85);
+}
+.gtr-fret-cell.gtr-scale-match.gtr-root-match .gtr-fret-dot {
+    box-shadow: 0 0 14px rgba(255, 60, 90, .85), 0 0 0 2px #1e110c, 0 0 0 4px rgba(255, 255, 255, .65);
+}
+
+/* Chord Library / CAGED / Capo — explicit shape dots, always gold unless
+   overridden by a CAGED per-letter color below. */
+.gtr-fret-dot--shape {
+    background: var(--gold);
+    border-color: #fff0c2;
+    color: #2a1c00;
+    box-shadow: 0 0 12px rgba(255, 209, 102, .6);
+}
+.gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
+    background: var(--purple) !important;
+    border-color: var(--purple-l) !important;
+    color: #fff !important;
+    box-shadow: 0 0 14px rgba(124, 111, 224, .8) !important;
+}
+
+/* CAGED System — each shape gets its own fixed color, independent of page theme */
+.gtr-fret-dot--shape.caged-C { background: #e07040 !important; border-color: #f0a070 !important; color: #fff !important; box-shadow: 0 0 12px #e0704099; }
+.gtr-fret-dot--shape.caged-A { background: #3a7fd4 !important; border-color: #70b0f5 !important; color: #fff !important; box-shadow: 0 0 12px #3a7fd499; }
+.gtr-fret-dot--shape.caged-G { background: #28a858 !important; border-color: #60d880 !important; color: #fff !important; box-shadow: 0 0 12px #28a85899; }
+.gtr-fret-dot--shape.caged-E { background: #cc2828 !important; border-color: #f06060 !important; color: #fff !important; box-shadow: 0 0 12px #cc282899; }
+.gtr-fret-dot--shape.caged-D { background: #b89000 !important; border-color: #f0d040 !important; color: #fff !important; box-shadow: 0 0 12px #b8900099; }
+
+/* Capo Explorer highlight (still supported if dots ever include it) */
+/* Capo bar — a slim gold bar at the front edge of the barred fret,
+   echoing the nut's shape/language instead of tinting the whole cell
+   (keeps the board reading identical to the other panels). */
+.gtr-fret-cell.gtr-capo-active { position: relative; }
+.gtr-fret-cell.gtr-capo-active::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255, 209, 102, .55);
+    z-index: 3;
+}
+
+/* ── Fret-inlay markers (dots below the board at frets 3,5,7,9,12,15,17,
+   19,21 — 12/24 doubled) — ported straight from css/bass.css so the
+   guitar board reads the same as the bass board. ─────────────────── */
+.gtr-marker-row { display: flex; align-items: center; margin-top: 8px; }
+.gtr-marker-spacer { width: var(--gf-spacer-w); flex-shrink: 0; }
+.gtr-fret-marker-dot {
+    flex: 1;
+    text-align: center;
+    font-size: clamp(9px, 0.9vw, 12px);
+    color: var(--gold);
+}
+
+.gtr-scroll-hint {
+    display: block;
+    text-align: center;
+    font-size: 11.5px;
+    color: rgba(var(--tool-light-rgb), .65);
+    margin-top: 10px;
+}
+@media (min-width: 900px) {
+    .gtr-scroll-hint { display: none; }
 }

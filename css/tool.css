@@ -205,6 +205,7 @@
 @media (max-width: 480px) {
     .root-pill { font-size: 11px; padding: 5px 10px; }
 }
+.root-pill:active { transform: scale(0.93); transition-duration: 0.08s; }
 
 .ps-block { display: flex; flex-direction: column; gap: 8px; }
 .ps-type-row { display: none; }

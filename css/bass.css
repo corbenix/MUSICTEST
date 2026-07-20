@@ -18,10 +18,8 @@
     --bf-string-h: 60px;
     --bf-label-w: 32px;
     --bf-label-fs: 16px;
-    --bf-badge: 40px;
-    --bf-badge-fs: 14px;
     --bf-nut-w: 8px;
-    --bf-spacer-w: 100px;
+    --bf-spacer-w: 52px;
     --bf-card-fs: 12px;
     --bf-card-pad: 16px 18px;
 }
@@ -36,10 +34,8 @@
         --bf-string-h: 52px;
         --bf-label-w: 28px;
         --bf-label-fs: 14px;
-        --bf-badge: 34px;
-        --bf-badge-fs: 12px;
         --bf-nut-w: 7px;
-        --bf-spacer-w: 88px;
+        --bf-spacer-w: 47px;
         --bf-card-fs: 11.5px;
         --bf-card-pad: 14px 16px;
     }
@@ -55,10 +51,8 @@
         --bf-string-h: 68px;
         --bf-label-w: 36px;
         --bf-label-fs: 17px;
-        --bf-badge: 46px;
-        --bf-badge-fs: 15px;
         --bf-nut-w: 9px;
-        --bf-spacer-w: 112px;
+        --bf-spacer-w: 57px;
         --bf-card-fs: 13px;
         --bf-card-pad: 18px 20px;
     }
@@ -74,10 +68,8 @@
         --bf-string-h: 76px;
         --bf-label-w: 40px;
         --bf-label-fs: 18px;
-        --bf-badge: 50px;
-        --bf-badge-fs: 16px;
         --bf-nut-w: 10px;
-        --bf-spacer-w: 120px;
+        --bf-spacer-w: 62px;
         --bf-card-fs: 14px;
         --bf-card-pad: 20px 22px;
     }
@@ -93,10 +85,8 @@
         --bf-string-h: 88px;
         --bf-label-w: 46px;
         --bf-label-fs: 20px;
-        --bf-badge: 58px;
-        --bf-badge-fs: 18px;
         --bf-nut-w: 11px;
-        --bf-spacer-w: 136px;
+        --bf-spacer-w: 69px;
         --bf-card-fs: 15.5px;
         --bf-card-pad: 24px 26px;
     }
@@ -450,24 +440,8 @@
     flex-shrink: 0;
     margin-right: 8px;
 }
-/* Open string indicator (fret 0) — always "open," matching the
-   reference app's default open-string badge. Purely visual, since
-   this page has no audio engine to mute/unmute. */
-.open-note-badge {
-    width: var(--bf-badge);
-    height: var(--bf-badge);
-    border-radius: 50%;
-    border: 1.5px solid #1d9e75;
-    background: rgba(13,48,40,.55);
-    color: #4dd4a8;
-    font-size: var(--bf-badge-fs);
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* String legend sits directly next to the nut now (open-string badge
+   removed). */
 .nut {
     width: var(--bf-nut-w);
     height: 75%;
@@ -578,8 +552,7 @@
     .fretboard-wrap { min-width: 700px; padding: 14px 10px 14px 0; }
     .string-row { height: 46px; }
     .string-label { width: 26px; font-size: 13px; }
-    .fret-header-spacer, .marker-spacer { width: 74px; }
-    .open-note-badge { width: 28px; height: 28px; font-size: 12px; }
+    .fret-header-spacer, .marker-spacer { width: 44px; }
     .nut { width: 6px; }
     .fret-dot { width: 28px; height: 28px; font-size: 11px; }
     .fret-num { font-size: 11px; }

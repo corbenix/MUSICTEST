@@ -4,25 +4,216 @@
 
 :root { --tool-rgb: var(--guitar-rgb); --tool-light-rgb: var(--guitar-light-rgb); }
 
-.caged-picker { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.caged-btn {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    color: var(--text2);
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.15s var(--ease);
+.tool-hint { font-size: 13px; color: var(--text2); margin: 0 0 12px; line-height: 1.5; }
+
+.tool-controls-title-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
-.caged-btn:hover { background: var(--glass-md); color: var(--text); }
-.caged-btn[aria-pressed="true"] {
-    background: rgba(var(--tool-rgb), 0.24);
-    border-color: rgba(var(--tool-rgb), 0.55);
+
+/* Scale Explorer — Play/Speed row, sits directly above the fretboard. */
+.scale-playback-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 10px;
+}
+
+/* Scale Explorer — Play button, same gold "hear what's lit up" treatment
+   as the Bass/Keyboard pages' Play buttons, so the control reads the same
+   across every instrument page. */
+.scale-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(160deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
+    border-color: transparent;
+    color: #4a3300;
+}
+.scale-play-btn:hover {
+    color: #4a3300;
+    background: linear-gradient(160deg, #ffeab0 0%, #ffd980 55%, #e6ae3f 100%);
+    border-color: transparent;
+}
+.scale-play-btn.is-playing { animation: sc-play-pulse 0.6s var(--ease) infinite; }
+@keyframes sc-play-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Scale Explorer — Speed toggle, highlighted whenever slowed below 1x. */
+.scale-speed-toggle.active {
     color: var(--text);
+    border-color: rgba(var(--tool-light-rgb), .45);
+    background: rgba(var(--tool-rgb), .20);
 }
+
+/* CAGED — root pills now reuse the shared .tool-controls-card / .ps-row /
+   .root-pill markup (the same card the bass page uses for its Root Note
+   picker, where the root pills are the first and only control in the
+   card). Hover/active states use a coral-tinted accent to match this
+   panel's identity (--guitar-rgb), since these pills use aria-pressed
+   rather than the .active class. The Scale Explorer's root pills
+   (.scale-root-pill) share this same coral treatment — keyed off the
+   .active class instead of aria-pressed, since that's how the Scale
+   Explorer tracks its selected root — so both cards match. */
+.caged-root-pill:hover,
+.scale-root-pill:hover {
+    background: rgba(var(--tool-rgb), .16);
+    border-color: rgba(var(--tool-light-rgb), .40);
+    color: #ffc2cb;
+}
+.caged-root-pill[aria-pressed="true"],
+.scale-root-pill.active {
+    background: linear-gradient(160deg, rgba(255, 190, 200, .32) 0%, rgba(var(--tool-rgb), .78) 45%, rgba(200, 60, 80, .92) 100%);
+    border-color: rgba(var(--tool-light-rgb), .40);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 4px 16px rgba(var(--tool-rgb), .40);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+
+/* CAGED card — slightly more elevated than the generic tool-controls-card,
+   matching the reference app's panel treatment (deeper drop shadow + inset
+   highlight, on top of the shared coral tint already set via --tool-rgb).
+   Applied to the Scale Explorer's card too, so both panels on the guitar
+   page share one consistent card style. */
+#panel-caged .tool-controls-card,
+#panel-scale .tool-controls-card {
+    border-color: rgba(var(--tool-light-rgb), .28);
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, .45),
+        0 2px 8px rgba(0, 0, 0, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        0 0 34px rgba(var(--tool-rgb), .10);
+}
+
+/* ── Sharp/flat spelling toggle + accidental pills — copied from the
+   bass page's Root Note pills. Sharp = blue, flat = amber. ─────────── */
+.sf-sep {
+    display: inline-block;
+    width: 1.5px;
+    height: 22px;
+    background: var(--border2);
+    border-radius: 2px;
+    align-self: center;
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+.sf-acc-pill[data-mode="sharp"]:hover {
+    background: rgba(0, 150, 255, .14);
+    border-color: rgba(125, 223, 255, .40);
+    color: #fff;
+}
+.sf-acc-pill[data-mode="flat"]:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
+}
+.sf-acc-pill[aria-pressed="true"][data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .70));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-acc-pill[aria-pressed="true"][data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+
+/* CAGED — universal #/♭ toggle, sits at the far right of the card title */
+.caged-note-toggle[data-mode="sharp"],
+.scale-note-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.caged-note-toggle[data-mode="flat"],
+.scale-note-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+
+/* CAGED — color legend (hidden until a root is picked; JS toggles display) */
+.caged-legend {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border2);
+}
+.caged-legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); }
+.caged-legend-swatch { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.caged-fret-range-label { font-size: 11px; color: var(--text3); margin-left: 2px; }
+.caged-legend-info {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .05);
+    border: 1.5px solid rgba(255, 255, 255, .14);
+    color: var(--text3);
+    font-size: 10px;
+    font-weight: 700;
+    font-style: normal;
+    font-family: inherit;
+    cursor: default;
+    flex-shrink: 0;
+    margin-left: 4px;
+    vertical-align: middle;
+    transition: border-color .15s var(--ease), color .15s var(--ease);
+}
+.caged-legend-info:hover {
+    border-color: var(--purple-l);
+    color: var(--purple-l);
+}
+.caged-legend-info[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1830;
+    color: var(--text2);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--border2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+    pointer-events: none;
+    z-index: 20;
+    line-height: 1.5;
+}
+@media (max-width: 600px) {
+    .caged-legend-info[data-tooltip]:hover::after { display: none; }
+}
+
+#caged-auto-label { margin: 8px 2px 4px; }
+
+/* CAGED per-shape colors now live in css/fretboard.css (.gtr-fret-dot--shape.caged-X) */
+.caged-legend-swatch.caged-C { background: #e07040; }
+.caged-legend-swatch.caged-A { background: #3a7fd4; }
+.caged-legend-swatch.caged-G { background: #28a858; }
+.caged-legend-swatch.caged-E { background: #cc2828; }
+.caged-legend-swatch.caged-D { background: #b89000; }
 
 .chord-lib-grid {
     display: grid;
@@ -59,6 +250,14 @@
     border-radius: var(--radius-sm);
     padding: 10px 6px;
     text-align: center;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+}
+.capo-result:hover { background: var(--glass-md); }
+.capo-result[aria-selected="true"] {
+    background: rgba(var(--tool-rgb), 0.18);
+    border-color: rgba(var(--tool-rgb), 0.6);
+    box-shadow: 0 0 12px rgba(var(--tool-rgb), 0.25);
 }
 .capo-result-fret { font-size: 11px; color: var(--text3); }
 .capo-result-note { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-top: 2px; }

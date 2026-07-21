@@ -16,27 +16,65 @@
 /* Scale Explorer — frets are clickable (manual note finder, same as the
    Bass page): clicking any fret toggles a highlight on that specific
    note, independent of the Scale Explorer's own root/type picker.
-   Copied straight from the reference app's .fret-cell.active treatment
-   (solid var(--purple) fill) — a distinct hue from the rose scale-match
-   and gold root-ring above, and — like the reference — it wins over
-   both via !important when a fret is both clicked and part of the
-   active scale. */
+   The reference app uses the shared purple "active" dot everywhere
+   EXCEPT the Guitar Scale fretboard, where it's overridden to a flat
+   coral fill matching that panel's own identity color (--guitar-rgb) —
+   copied here instead of the generic purple. Like the reference, it
+   wins over the rose scale-match / gold root-ring via !important. */
 #scale-fretboard .gtr-fret-cell { cursor: pointer; }
 #scale-fretboard .gtr-fret-cell:hover .gtr-fret-dot { transform: scale(1.08); }
 .gtr-fret-cell.gtr-user-picked .gtr-fret-dot {
-    background: var(--purple) !important;
-    border-color: var(--purple-l) !important;
+    background: #a5182f !important;
+    border-color: #e6455f !important;
     color: #fff !important;
-    box-shadow: 0 0 14px rgba(124, 111, 224, .8) !important;
+    box-shadow: 0 0 12px rgba(var(--guitar-rgb), .55) !important;
 }
 
-/* Scale Explorer — Play/Speed row, sits directly above the fretboard. */
-.scale-playback-row {
+/* Scale Explorer — Play, Speed, fret-count selector (12/15/24) and
+   Clear Fretboard, all on one line directly above the board. Fret-count
+   group copied from the reference app's fret-toggle-g buttons; the
+   active segment uses this page's coral identity (--guitar-rgb)
+   instead of the reference's shared purple, matching the coral "active
+   fret" treatment above. Pushed to the right of Play/Speed via
+   margin-left: auto on the fret-count group so the row reads as one
+   clean line instead of two separate clusters. */
+.scale-fretboard-controls-row {
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 14px 0 10px;
+    flex-wrap: wrap;
 }
+.scale-fretboard-controls-row .scale-note-toggle {
+    margin-left: auto;
+}
+.scale-fret-toggle-group {
+    display: flex;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.scale-fret-toggle {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.scale-fret-toggle:not(.active):hover {
+    background: rgba(var(--guitar-rgb), .18);
+    color: #ffc2cb;
+}
+.scale-fret-toggle.active {
+    background: linear-gradient(160deg, rgba(255, 170, 180, .40) 0%, rgba(var(--guitar-rgb), .80) 45%, rgba(200, 60, 80, .92) 100%);
+    color: #fff;
+}
+.scale-clear-btn { font-size: 12px; padding: 6px 14px; }
 
 /* Scale Explorer — Play button, same gold "hear what's lit up" treatment
    as the Bass/Keyboard pages' Play buttons, so the control reads the same
@@ -53,6 +91,13 @@
     color: #4a3300;
     background: linear-gradient(160deg, #ffeab0 0%, #ffd980 55%, #e6ae3f 100%);
     border-color: transparent;
+}
+.scale-play-btn:disabled {
+    background: var(--glass-md);
+    border-color: rgba(var(--tool-light-rgb), .22);
+    color: var(--text2);
+    opacity: .45;
+    cursor: not-allowed;
 }
 .scale-play-btn.is-playing { animation: sc-play-pulse 0.6s var(--ease) infinite; }
 @keyframes sc-play-pulse {
@@ -143,9 +188,119 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 
-/* CAGED — universal #/♭ toggle, sits at the far right of the card title */
+/* ── Chord Finder (Chord Library tab) — now themed to match the Capo
+   Explorer panel instead of running its own green identity: plain
+   tool-controls-card (page's shared coral tint) with the shared purple
+   accent for active pills/dots, same as everywhere else that doesn't
+   have a dedicated color identity (CAGED/Scale keep coral+shape colors,
+   Capo/Chord Finder share this plain purple-accented look). ── */
+.gcv-root-pills .root-pill:hover {
+    background: var(--purple-dim);
+    border-color: rgba(194, 182, 255, .40);
+    color: #fff;
+}
+.gcv-root-pills .root-pill.active {
+    background: linear-gradient(160deg, rgba(194, 182, 255, .40) 0%, var(--purple) 45%, #4a3fa0 100%);
+    border-color: var(--purple-l);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(124, 111, 224, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+.gcv-type-pills .type-pill-btn:hover {
+    background: var(--purple-dim);
+    border-color: rgba(194, 182, 255, .40);
+    color: #fff;
+}
+.gcv-type-pills .type-pill-btn.active {
+    background: linear-gradient(160deg, rgba(194, 182, 255, .40) 0%, var(--purple) 45%, #4a3fa0 100%);
+    border-color: var(--purple-l);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(124, 111, 224, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+.gcv-card {
+    /* No special background/border override — falls back to the plain
+       .tool-controls-card (page coral tint), same as Capo Explorer's
+       card. */
+}
+.gcv-display {
+    background: var(--purple-dim);
+    border: 1px solid rgba(194, 182, 255, .30);
+}
+.gcv-display-name.has-chord { color: var(--purple-l); }
+
+.gcv-voicings-section {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border2);
+}
+.gcv-voicings-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 8px;
+}
+.gcv-voicings-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.gcv-voicing-chip {
+    background: var(--bg3);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
+    padding: 7px 9px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 64px;
+    font-family: inherit;
+    color: var(--text2);
+    transition: transform .22s cubic-bezier(0.22, 1, 0.36, 1),
+                background .18s var(--ease),
+                border-color .18s var(--ease),
+                box-shadow .22s var(--ease),
+                color .14s var(--ease);
+}
+.gcv-voicing-chip svg { display: block; }
+.gcv-voicing-chip:hover {
+    border-color: var(--purple-l);
+    background: var(--purple-dim);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .28);
+    color: #fff;
+}
+.gcv-voicing-chip.active {
+    border-color: var(--purple-l);
+    background: rgba(124, 111, 224, .30);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 3px 12px rgba(124, 111, 224, .40);
+    color: #fff;
+}
+.gcv-voicing-chip-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    white-space: nowrap;
+}
+.gcv-shape-badge {
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    letter-spacing: .3px;
+}
+@media (max-width: 600px) {
+    .gcv-voicings-row { gap: 6px; }
+    .gcv-voicing-chip { min-width: 54px; padding: 6px 7px; }
+    .gcv-voicing-chip-label { font-size: 9px; }
+}
 .caged-note-toggle[data-mode="sharp"],
-.scale-note-toggle[data-mode="sharp"] {
+.scale-note-toggle[data-mode="sharp"],
+.chordlib-note-toggle[data-mode="sharp"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
     border-color: rgba(125, 223, 255, .55);
     color: #fff;
@@ -153,7 +308,8 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 .caged-note-toggle[data-mode="flat"],
-.scale-note-toggle[data-mode="flat"] {
+.scale-note-toggle[data-mode="flat"],
+.chordlib-note-toggle[data-mode="flat"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
     border-color: rgba(255, 209, 102, .55);
     color: #fff;
@@ -246,7 +402,7 @@
     transition: all 0.15s var(--ease);
 }
 .chord-lib-card:hover { background: var(--glass-md); }
-.chord-lib-card[aria-selected="true"] { border-color: rgba(var(--tool-rgb), 0.5); background: rgba(var(--tool-rgb), 0.1); }
+.chord-lib-card[aria-selected="true"] { border-color: var(--purple-l); background: var(--purple-dim); }
 .chord-lib-card-name {
     font-family: var(--font-display);
     font-weight: 700;
@@ -254,6 +410,10 @@
     text-align: center;
     margin-bottom: 6px;
 }
+
+/* Chord Library fretboard — now left at the page's plain default coral
+   board + purple root-dot (same as Capo Explorer's board), instead of
+   its own green identity. */
 
 .capo-result-grid {
     display: grid;

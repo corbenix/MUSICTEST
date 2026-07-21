@@ -259,16 +259,18 @@
 /* Chord Library / CAGED / Capo — explicit shape dots, always gold unless
    overridden by a CAGED per-letter color below. */
 .gtr-fret-dot--shape {
-    background: var(--gold);
+    background: linear-gradient(160deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
     border-color: #fff0c2;
     color: #2a1c00;
     box-shadow: 0 0 12px rgba(255, 209, 102, .6);
 }
 .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
-    background: var(--purple) !important;
+    background:
+        radial-gradient(circle at 32% 28%, rgba(255,255,255,.85) 0%, rgba(255,255,255,0) 40%),
+        linear-gradient(160deg, #e4d9ff 0%, #8a6ff5 40%, #6a3fe0 70%, #45238f 100%) !important;
     border-color: var(--purple-l) !important;
     color: #fff !important;
-    box-shadow: 0 0 14px rgba(124, 111, 224, .8) !important;
+    box-shadow: 0 0 16px rgba(138, 95, 240, .95) !important;
 }
 
 /* CAGED System — each shape gets its own fixed color, independent of page theme */

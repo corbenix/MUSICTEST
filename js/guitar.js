@@ -119,7 +119,12 @@
     const scaleBoard = document.getElementById('scale-fretboard');
     const scalePlayBtn = document.getElementById('scale-play-btn');
     const scaleSpeedToggle = document.getElementById('scale-speed-toggle');
-    let scaleRootNote = 'C';
+    const scaleFretToggle12 = document.getElementById('scale-fret-toggle-12');
+    const scaleFretToggle15 = document.getElementById('scale-fret-toggle-15');
+    const scaleFretToggle24 = document.getElementById('scale-fret-toggle-24');
+    const scaleClearBtn = document.getElementById('scale-clear-btn');
+    let scaleRootNote = '';
+    let scaleFretCount = 12;
 
     Object.keys(MT.SCALES).forEach(name => {
         const opt = document.createElement('option');
@@ -161,8 +166,10 @@
     });
 
     function selectScaleRoot(note) {
-        scaleRootNote = note;
-        scaleRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === note));
+        // Clicking the already-active root deselects it, same as the
+        // CAGED picker below.
+        scaleRootNote = scaleRootNote === note ? '' : note;
+        scaleRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === scaleRootNote));
         stopScalePlayback();
         renderScale();
     }
@@ -224,7 +231,7 @@
         TUNING.forEach((openNote, i) => {
             const openIdx = MT.noteIndex(openNote);
             const openOctave = OPEN_OCTAVES[i];
-            for (let f = 1; f <= 15; f++) {
+            for (let f = 1; f <= scaleFretCount; f++) {
                 const abs = openOctave * 12 + openIdx + f;
                 const pc = abs % 12;
                 if (!scaleSet.has(pc) || seen.has(abs)) continue;
@@ -234,6 +241,12 @@
         });
         timeline.sort((a, b) => a.abs - b.abs);
         return timeline;
+    }
+
+    function updateScalePlayButtonState() {
+        if (!scalePlayBtn) return;
+        scalePlayBtn.disabled = !scaleRootNote;
+        if (!scaleRootNote) stopScalePlayback();
     }
 
     function playScale() {
@@ -259,10 +272,25 @@
         const root = scaleRootNote;
         const type = scaleType.value;
         const preferFlats = scaleNoteDisplayMode === 'flat';
+
+        scaleChips.innerHTML = '';
+
+        if (!root) {
+            // No root picked yet — plain, note-labeled neck with nothing
+            // lit up (matches the CAGED panel's own empty state below).
+            Fretboard.render(scaleBoard, {
+                tuning: TUNING,
+                numFrets: scaleFretCount,
+                preferFlats,
+                openOctaves: OPEN_OCTAVES,
+            });
+            updateScalePlayButtonState();
+            return;
+        }
+
         const notes = MT.scaleNotes(root, type, preferFlats);
         const degrees = MT.scaleDegrees(root, type, preferFlats);
 
-        scaleChips.innerHTML = '';
         degrees.forEach(d => {
             const pill = document.createElement('div');
             pill.className = 'scale-pill' + (d.isRoot ? ' scale-pill--root' : '');
@@ -274,12 +302,42 @@
 
         Fretboard.render(scaleBoard, {
             tuning: TUNING,
-            numFrets: 15,
+            numFrets: scaleFretCount,
             highlight: { notes, root, preferFlats },
             openOctaves: OPEN_OCTAVES,
         });
+        updateScalePlayButtonState();
     }
     scaleType.addEventListener('change', () => { stopScalePlayback(); renderScale(); });
+
+    // ── Fret-count selector (12/15/24) — same segmented-toggle pattern
+    // as the Bass page's own fret-count control. ────────────────────────
+    function setScaleFretCount(n) {
+        scaleFretCount = n;
+        [scaleFretToggle12, scaleFretToggle15, scaleFretToggle24].forEach(b => b && b.classList.remove('active'));
+        ({ 12: scaleFretToggle12, 15: scaleFretToggle15, 24: scaleFretToggle24 })[n].classList.add('active');
+        stopScalePlayback();
+        renderScale();
+    }
+    if (scaleFretToggle12) scaleFretToggle12.addEventListener('click', () => setScaleFretCount(12));
+    if (scaleFretToggle15) scaleFretToggle15.addEventListener('click', () => setScaleFretCount(15));
+    if (scaleFretToggle24) scaleFretToggle24.addEventListener('click', () => setScaleFretCount(24));
+
+    // ── Clear Fretboard — deselects the root (clearing the auto-highlight)
+    // and wipes any manually-clicked frets, same as the Bass page's Clear
+    // button. Re-render already rebuilds the board from scratch (wiping
+    // any gtr-user-picked toggles), so the extra classList cleanup here
+    // is just belt-and-suspenders. ───────────────────────────────────────
+    if (scaleClearBtn) {
+        scaleClearBtn.addEventListener('click', () => {
+            scaleRootNote = '';
+            scaleRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
+            scaleBoard.querySelectorAll('.gtr-fret-cell.gtr-user-picked').forEach(c => c.classList.remove('gtr-user-picked'));
+            stopScalePlayback();
+            renderScale();
+        });
+    }
+
     renderScale();
 
     // Click any fret to toggle its own highlight and hear that fret's
@@ -413,35 +471,283 @@
     renderCaged();
 
     // ── Chord Library ───────────────────────────────────────────────────
-    const chordLibGrid = document.getElementById('chord-lib-grid');
     const chordLibBoard = document.getElementById('chord-lib-fretboard');
-    let activeChordName = 'C';
 
-    Object.keys(GD.OPEN_CHORDS).forEach(name => {
-        const card = document.createElement('button');
-        card.type = 'button';
-        card.className = 'chord-lib-card';
-        card.setAttribute('aria-selected', name === activeChordName ? 'true' : 'false');
-        card.innerHTML = `<div class="chord-lib-card-name">${name}</div>`;
-        card.addEventListener('click', () => {
-            activeChordName = name;
-            chordLibGrid.querySelectorAll('.chord-lib-card').forEach(c => c.setAttribute('aria-selected', c === card ? 'true' : 'false'));
-            renderChordLib();
-        });
-        chordLibGrid.appendChild(card);
-    });
-
+    // No chord picked yet — plain, note-labeled neck with nothing lit up
+    // (matches the Scale Explorer's and CAGED panel's own empty state),
+    // instead of always defaulting to showing the C chord.
     function renderChordLib() {
-        Fretboard.render(chordLibBoard, {
-            tuning: TUNING,
-            numFrets: CAGED_NUM_FRETS,
-            dots: GD.OPEN_CHORDS[activeChordName],
-            showOpenBadge: true,
-        });
+        Fretboard.render(chordLibBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS });
     }
     renderChordLib();
 
+    // ── Chord Finder — ported from the Keyboard page's Chord Finder
+    // (root pill + type pill + chord-name/notes banner), themed after
+    // the original "Guitar Chord Viewer" workspace (violet root pills,
+    // bubblegum-purple type pills, purple banner — see .gcv-* rules in
+    // guitar.css). Unlike the preset grid above, this picks ANY root +
+    // chord type and highlights its tones across the whole neck (the
+    // same highlight mechanic the Scale Explorer uses), rather than a
+    // single fixed open-position shape. ─────────────────────────────────
+    const chordLibRootPills = document.getElementById('chordlib-root-pills');
+    const chordLibTypeRow = document.getElementById('chordlib-type-row');
+    const chordLibTypePills = document.getElementById('chordlib-type-pills');
+    const chordLibNoteToggle = document.getElementById('chordlib-note-toggle');
+    let chordLibRootValue = '';
+    let chordLibTypeValue = 'Major';
+    let chordLibVoicings = [];
+    let chordLibVoicingIndex = -1;
+
+    const VOICING_SHAPE_COLOR = { E: '#a99ef5', A: '#a99ef5', D: '#a99ef5', Open: '#a99ef5' };
+
+    // Builds a small 6-string fret-diagram SVG (mute/open markers on top,
+    // fretted dots below) for a single voicing chip, windowed to the
+    // 4-fret span the shape is actually played in.
+    function voicingChipSvg(dots) {
+        const perString = [0, 1, 2, 3, 4, 5].map(s => {
+            const d = dots.find(x => x.string === s);
+            if (!d) return 'x';
+            return d.muted ? 'x' : d.fret;
+        });
+        const fretted = perString.filter(f => typeof f === 'number' && f > 0);
+        const minFret = fretted.length ? Math.min(...fretted) : 0;
+        const start = Math.max(1, minFret);
+        const rowH = 12;
+        let svg = '<svg width="52" height="58" viewBox="0 0 52 58" xmlns="http://www.w3.org/2000/svg">';
+        svg += '<line x1="6" y1="14" x2="46" y2="14" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>';
+        for (let r = 1; r <= 4; r++) {
+            svg += `<line x1="6" y1="${14 + r * rowH}" x2="46" y2="${14 + r * rowH}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>`;
+        }
+        for (let s = 0; s < 6; s++) {
+            const x = 6 + s * 8;
+            svg += `<line x1="${x}" y1="14" x2="${x}" y2="${14 + 4 * rowH}" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>`;
+            const f = perString[s];
+            if (f === 'x') svg += `<text x="${x}" y="9" text-anchor="middle" font-size="8" font-weight="700" fill="#f07070">×</text>`;
+            else if (f === 0) svg += `<circle cx="${x}" cy="9" r="2.8" fill="none" stroke="#4dd4a8" stroke-width="1.1"/>`;
+        }
+        perString.forEach((f, s) => {
+            if (typeof f !== 'number' || f === 0) return;
+            if (f < start || f > start + 3) return;
+            const x = 6 + s * 8;
+            const y = 14 + (f - start + 0.5) * rowH;
+            svg += `<circle cx="${x}" cy="${y}" r="4" fill="#7c6fe0" stroke="#a99ef5" stroke-width="1"/>`;
+        });
+        svg += '</svg>';
+        return svg;
+    }
+
+    const CHORD_FINDER_TYPE_GROUPS = [
+        [['Major', 'Maj'], ['Minor', 'Min'], ['Sus2', 'Sus2'], ['Sus4', 'Sus4'], ['Diminished', 'Dim'], ['Augmented', 'Aug']],
+        [['Dominant 7', 'Dom7'], ['Major 7', 'Maj7'], ['Minor 7', 'Min7']],
+        [['5th', '5th']],
+    ];
+
+    const chordLibAccidentalPills = [];
+
+    NATURALS.forEach(note => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'root-pill';
+        pill.textContent = note;
+        pill.dataset.sharp = note;
+        pill.addEventListener('click', () => selectChordLibRoot(note));
+        chordLibRootPills.appendChild(pill);
+    });
+
+    const chordLibSep = document.createElement('span');
+    chordLibSep.className = 'sf-sep';
+    chordLibRootPills.appendChild(chordLibSep);
+
+    MT.NOTES_SHARP.forEach((sharpVal, i) => {
+        if (!sharpVal.includes('#')) return;
+        const flatVal = MT.NOTES_FLAT[i].replace('b', '♭');
+        const sharpLabel = sharpVal.replace('#', '♯');
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'root-pill sf-acc-pill';
+        pill.dataset.sharp = sharpVal;
+        pill.addEventListener('click', () => selectChordLibRoot(sharpVal));
+        chordLibAccidentalPills.push({ el: pill, sharp: sharpVal, sharpLabel: sharpLabel, flatLabel: flatVal });
+        chordLibRootPills.appendChild(pill);
+    });
+
+    CHORD_FINDER_TYPE_GROUPS.forEach((group, gi) => {
+        if (gi > 0) {
+            const sep = document.createElement('div');
+            sep.className = 'pill-sep' + (gi === 1 ? ' pill-sep-break' : '');
+            chordLibTypePills.appendChild(sep);
+        }
+        group.forEach(([name, label]) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'type-pill-btn';
+            btn.textContent = label;
+            btn.dataset.type = name;
+            btn.classList.toggle('active', name === chordLibTypeValue);
+            btn.addEventListener('click', () => selectChordLibType(name));
+            chordLibTypePills.appendChild(btn);
+        });
+    });
+
+    let chordLibNoteDisplayMode = window.NoteDisplay.getMode();
+    function refreshChordLibAccidentalPills() {
+        chordLibAccidentalPills.forEach(p => {
+            p.el.dataset.mode = chordLibNoteDisplayMode;
+            p.el.textContent = chordLibNoteDisplayMode === 'sharp' ? p.sharpLabel : p.flatLabel;
+        });
+    }
+    refreshChordLibAccidentalPills();
+    window.NoteDisplay.bindToggle(chordLibNoteToggle, mode => {
+        chordLibNoteDisplayMode = mode;
+        refreshChordLibAccidentalPills();
+        renderChordFinder();
+    });
+
+    function selectChordLibRoot(note) {
+        chordLibRootValue = chordLibRootValue === note ? '' : note;
+        chordLibRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === chordLibRootValue));
+        chordLibTypeRow.classList.toggle('ps-visible', !!chordLibRootValue);
+        renderChordFinder();
+    }
+
+    function selectChordLibType(name) {
+        chordLibTypeValue = name;
+        chordLibTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === chordLibTypeValue));
+        renderChordFinder();
+    }
+
+    const chordLibVoicingsSection = document.getElementById('chordlib-voicings-section');
+    const chordLibVoicingsRow = document.getElementById('chordlib-voicings-row');
+    const chordLibPlayBtn = document.getElementById('chordlib-play-btn');
+    const chordLibClearBtn = document.getElementById('chordlib-clear-btn');
+
+    // ── Play button — strums the currently displayed voicing's actual
+    // fretted/open notes, low string to high, mirroring the Scale
+    // Explorer's Play button (same is-playing pulse, same disabled state
+    // when nothing is selected). ─────────────────────────────────────────
+    let chordLibPlayTimeouts = [];
+    function stopChordLibPlayback() {
+        chordLibPlayTimeouts.forEach(id => clearTimeout(id));
+        chordLibPlayTimeouts = [];
+        if (chordLibPlayBtn) chordLibPlayBtn.classList.remove('is-playing');
+    }
+
+    function playChordVoicing() {
+        if (chordLibVoicingIndex < 0) return;
+        const dots = chordLibVoicings[chordLibVoicingIndex].dots;
+        const notes = dots
+            .filter(d => !d.muted)
+            .sort((a, b) => a.string - b.string)
+            .map(d => ({ note: MT.noteName(MT.noteIndex(TUNING[d.string]) + d.fret, false), octave: Math.floor((OPEN_OCTAVES[d.string] * 12 + MT.noteIndex(TUNING[d.string]) + d.fret) / 12) }));
+        if (!notes.length) return;
+        stopChordLibPlayback();
+        const strumDelay = 45;
+        chordLibPlayBtn.classList.add('is-playing');
+        notes.forEach((item, i) => {
+            const id = setTimeout(() => {
+                playTone(item.note, item.octave);
+                if (i === notes.length - 1) {
+                    const doneId = setTimeout(() => chordLibPlayBtn.classList.remove('is-playing'), 500);
+                    chordLibPlayTimeouts.push(doneId);
+                }
+            }, i * strumDelay);
+            chordLibPlayTimeouts.push(id);
+        });
+    }
+    if (chordLibPlayBtn) chordLibPlayBtn.addEventListener('click', playChordVoicing);
+
+    if (chordLibClearBtn) {
+        chordLibClearBtn.addEventListener('click', () => {
+            stopChordLibPlayback();
+            resetChordFinder();
+        });
+    }
+
+    function renderVoicingChips() {
+        chordLibVoicingsRow.innerHTML = '';
+        if (chordLibVoicings.length === 0) {
+            chordLibVoicingsSection.hidden = true;
+            return;
+        }
+        chordLibVoicingsSection.hidden = false;
+        chordLibVoicings.forEach((v, i) => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'gcv-voicing-chip' + (i === chordLibVoicingIndex ? ' active' : '');
+            const color = VOICING_SHAPE_COLOR[v.shape] || '#7c6fe0';
+            chip.innerHTML = `${voicingChipSvg(v.dots)}<span class="gcv-voicing-chip-label">${v.label}</span>` +
+                `<span class="gcv-shape-badge" style="background:${color}22;color:${color};border:1px solid ${color}66;">${v.shape}-shape</span>`;
+            chip.addEventListener('click', () => selectVoicing(i));
+            chordLibVoicingsRow.appendChild(chip);
+        });
+    }
+
+    function selectVoicing(i) {
+        if (i < 0 || i >= chordLibVoicings.length) return;
+        chordLibVoicingIndex = i;
+        stopChordLibPlayback();
+        const preferFlats = chordLibNoteDisplayMode === 'flat';
+        Fretboard.render(chordLibBoard, {
+            tuning: TUNING,
+            numFrets: CAGED_NUM_FRETS,
+            dots: chordLibVoicings[i].dots,
+            preferFlats,
+            showOpenBadge: true,
+        });
+        if (chordLibPlayBtn) chordLibPlayBtn.disabled = false;
+        renderVoicingChips();
+    }
+
+    function resetChordFinder() {
+        chordLibRootValue = '';
+        chordLibTypeValue = 'Major';
+        chordLibVoicings = [];
+        chordLibVoicingIndex = -1;
+        stopChordLibPlayback();
+        if (chordLibPlayBtn) chordLibPlayBtn.disabled = true;
+        chordLibRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
+        chordLibTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === 'Major'));
+        chordLibTypeRow.classList.remove('ps-visible');
+        const displayName = document.querySelector('#chordlib-display .chord-display-name');
+        const displayNotes = document.querySelector('#chordlib-display .chord-display-notes');
+        displayName.textContent = 'Select a chord';
+        displayName.classList.remove('has-chord');
+        displayNotes.textContent = '';
+        renderVoicingChips();
+        renderChordLib();
+    }
+
+    function renderChordFinder() {
+        const root = chordLibRootValue;
+        const displayName = document.querySelector('#chordlib-display .chord-display-name');
+        const displayNotes = document.querySelector('#chordlib-display .chord-display-notes');
+        if (!root) {
+            displayName.textContent = 'Select a chord';
+            displayName.classList.remove('has-chord');
+            displayNotes.textContent = '';
+            chordLibVoicings = [];
+            chordLibVoicingIndex = -1;
+            renderVoicingChips();
+            renderChordLib();
+            return;
+        }
+        const type = chordLibTypeValue;
+        const preferFlats = chordLibNoteDisplayMode === 'flat';
+        const notes = MT.chordNotes(root, type, preferFlats);
+        const typeLabel = type === 'Major' ? 'Major' : type;
+        displayName.textContent = `${MT.noteName(MT.noteIndex(root), preferFlats)} ${typeLabel}`;
+        displayName.classList.add('has-chord');
+        displayNotes.textContent = notes.join(' · ');
+        chordLibVoicings = GD.chordVoicings(root, type, CAGED_NUM_FRETS);
+        if (chordLibVoicings.length === 0) {
+            const fallback = (GD.chordFingering(root, type, TUNING, CAGED_NUM_FRETS) || []).map(d => d.muted ? d : { ...d, isRoot: true });
+            chordLibVoicings = [{ label: 'Shape', shape: 'Open', barreFret: 0, dots: fallback }];
+        }
+        selectVoicing(0);
+    }
+
     // ── Capo Explorer ───────────────────────────────────────────────────
+
     const capoOpenChord = document.getElementById('capo-open-chord');
     const capoResults = document.getElementById('capo-results');
     const capoBoard = document.getElementById('capo-fretboard');

@@ -103,15 +103,213 @@ window.GuitarData = (function () {
 
     // Common open chord shapes (for the chord diagram library), independent of CAGED.
     const OPEN_CHORDS = {
-        'C':  [{string:4,fret:3,isRoot:true},{string:3,fret:2},{string:2,fret:0},{string:1,fret:1},{string:0,fret:0,muted:true},{string:5,fret:0}],
-        'A':  [{string:4,fret:0,isRoot:true},{string:3,fret:2},{string:2,fret:2},{string:1,fret:2},{string:5,fret:0},{string:0,fret:0,muted:true}],
-        'G':  [{string:0,fret:3,isRoot:true},{string:4,fret:2},{string:3,fret:0},{string:2,fret:0},{string:1,fret:0},{string:5,fret:3}],
-        'E':  [{string:0,fret:0,isRoot:true},{string:4,fret:2},{string:3,fret:2},{string:2,fret:1},{string:1,fret:0},{string:5,fret:0}],
-        'D':  [{string:3,fret:0,isRoot:true},{string:2,fret:2},{string:1,fret:3},{string:5,fret:2},{string:4,fret:0,muted:true},{string:0,fret:0,muted:true}],
-        'Am': [{string:4,fret:0,isRoot:true},{string:3,fret:2},{string:2,fret:2},{string:1,fret:1},{string:5,fret:0},{string:0,fret:0,muted:true}],
-        'Em': [{string:0,fret:0,isRoot:true},{string:4,fret:2},{string:3,fret:2},{string:2,fret:0},{string:1,fret:0},{string:5,fret:0}],
-        'Dm': [{string:3,fret:0,isRoot:true},{string:2,fret:2},{string:1,fret:3},{string:5,fret:1},{string:4,fret:0,muted:true},{string:0,fret:0,muted:true}],
+        'C':  [{string:0,fret:0,muted:true},{string:1,fret:3,isRoot:true},{string:2,fret:2},{string:3,fret:0},{string:4,fret:1},{string:5,fret:0}],
+        'A':  [{string:0,fret:0,muted:true},{string:1,fret:0,isRoot:true},{string:2,fret:2},{string:3,fret:2},{string:4,fret:2},{string:5,fret:0}],
+        'G':  [{string:0,fret:3,isRoot:true},{string:1,fret:2},{string:2,fret:0},{string:3,fret:0},{string:4,fret:0},{string:5,fret:3}],
+        'E':  [{string:0,fret:0,isRoot:true},{string:1,fret:2},{string:2,fret:2},{string:3,fret:1},{string:4,fret:0},{string:5,fret:0}],
+        'D':  [{string:0,fret:0,muted:true},{string:1,fret:0,muted:true},{string:2,fret:0,isRoot:true},{string:3,fret:2},{string:4,fret:3},{string:5,fret:2}],
+        'Am': [{string:0,fret:0,muted:true},{string:1,fret:0,isRoot:true},{string:2,fret:2},{string:3,fret:2},{string:4,fret:1},{string:5,fret:0}],
+        'Em': [{string:0,fret:0,isRoot:true},{string:1,fret:2},{string:2,fret:2},{string:3,fret:0},{string:4,fret:0},{string:5,fret:0}],
+        'Dm': [{string:0,fret:0,muted:true},{string:1,fret:0,muted:true},{string:2,fret:0,isRoot:true},{string:3,fret:2},{string:4,fret:3},{string:5,fret:1}],
     };
 
-    return { CAGED_SHAPES, cagedShapeDots, cagedAllShapeDots, OPEN_CHORDS };
+    // Standard movable barre-chord templates, verified against the
+    // well-known OPEN E and OPEN A chord families (the same shapes every
+    // chord chart uses). 'b' is the barre fret — the fret the shape's
+    // root note lands on. String 0 = low E, string 1 = A ('x' = muted).
+    // E-SHAPE: root on the low-E string (open E family: E,Em,E7,Emaj7,Em7).
+    // A-SHAPE: root on the A string (open A family: A,Am,A7,Amaj7,Am7).
+    const E_SHAPE = {
+        'Major':      [0, 2, 2, 1, 0, 0],
+        'Minor':      [0, 2, 2, 0, 0, 0],
+        'Dominant 7': [0, 2, 0, 1, 0, 0],
+        'Major 7':    [0, 2, 1, 1, 0, 0],
+        'Minor 7':    [0, 2, 0, 0, 0, 0],
+        '5th':        [0, 2, 2, 'x', 'x', 'x'],
+        'Sus2':       [0, 2, 2, 'x', 0, 2],
+        'Sus4':       [0, 0, 2, 2, 0, 0],
+        'Diminished': [0, 1, 2, 0, 'x', 0],
+        'Augmented':  [0, 3, 2, 1, 1, 0],
+    };
+    const A_SHAPE = {
+        'Major':      ['x', 0, 2, 2, 2, 0],
+        'Minor':      ['x', 0, 2, 2, 1, 0],
+        'Dominant 7': ['x', 0, 2, 0, 2, 0],
+        'Major 7':    ['x', 0, 2, 1, 2, 0],
+        'Minor 7':    ['x', 0, 2, 0, 1, 0],
+        '5th':        ['x', 0, 2, 2, 'x', 'x'],
+        'Sus2':       ['x', 0, 2, 2, 0, 0],
+        'Sus4':       ['x', 0, 0, 2, 3, 0],
+        'Diminished': ['x', 0, 1, 2, 1, 'x'],
+        'Augmented':  ['x', 0, 3, 2, 2, 1],
+    };
+
+    // D-SHAPE: root on the D string (open D family: D,Dm,D7,Dmaj7,Dm7,
+    // Dsus2, Dsus4). Only the top 4 strings are used (low E and A muted).
+    const D_SHAPE = {
+        'Major':      ['x', 'x', 0, 2, 3, 2],
+        'Minor':      ['x', 'x', 0, 2, 3, 1],
+        'Dominant 7': ['x', 'x', 0, 2, 1, 2],
+        'Major 7':    ['x', 'x', 0, 2, 2, 2],
+        'Minor 7':    ['x', 'x', 0, 2, 1, 1],
+        'Sus2':       ['x', 'x', 0, 2, 3, 0],
+        'Sus4':       ['x', 'x', 0, 2, 3, 3],
+    };
+
+    const SHAPE_TEMPLATES = { E: E_SHAPE, A: A_SHAPE, D: D_SHAPE };
+    const SHAPE_OPEN_NOTE = { E: 'E', A: 'A', D: 'D' };
+    const SHAPE_ROOT_STRING = { E: 0, A: 1, D: 2 };
+
+    // Transposes an E-shape or A-shape template so its root lands on
+    // targetRoot, returning per-string {fret, isRoot, muted}, or null if
+    // the barre would fall below the nut.
+    function transposeShape(template, rootString, targetRootIdx) {
+        const openIdx = rootString === 0 ? MT.noteIndex('E') : MT.noteIndex('A');
+        const b = ((targetRootIdx - openIdx) % 12 + 12) % 12;
+        return template.map((v, s) => {
+            if (v === 'x') return { string: s, fret: -1, muted: true };
+            return { string: s, fret: v + b, isRoot: s === rootString };
+        });
+    }
+
+    // Builds every playable voicing for root+chordType across the neck:
+    // the open-position shape (if one exists for this exact root, from
+    // OPEN_CHORDS) plus the E-shape/A-shape/D-shape movable templates
+    // transposed up the neck, deduped and sorted by fret position —
+    // mirroring the reference tool's "Available Voicings" chip row.
+    function chordVoicings(root, chordType, numFrets = 15) {
+        const rootIdx = MT.noteIndex(root);
+        const voicings = [];
+        const seen = new Set();
+
+        const openKey = chordType === 'Major' ? root : chordType === 'Minor' ? root + 'm' : null;
+        if (openKey && OPEN_CHORDS[openKey]) {
+            const frets = OPEN_CHORDS[openKey];
+            const dots = frets.map(f => f.muted ? f : { ...f, isRoot: true });
+            voicings.push({ label: 'Open', shape: 'Open', barreFret: 0, dots });
+            seen.add(frets.map(f => f.muted ? 'x' : f.fret).join(','));
+        }
+
+        ['E', 'A', 'D'].forEach(letter => {
+            const template = SHAPE_TEMPLATES[letter][chordType];
+            if (!template) return;
+            const rootString = SHAPE_ROOT_STRING[letter];
+            const openIdx = MT.noteIndex(SHAPE_OPEN_NOTE[letter]);
+            const barre = ((rootIdx - openIdx) % 12 + 12) % 12;
+            const dots = template.map((v, s) => {
+                if (v === 'x') return { string: s, fret: -1, muted: true };
+                // Every fretted note is marked isRoot so the fretboard
+                // renders it with the plain purple "active" highlight
+                // (all dots the same color), rather than only the true
+                // root note being purple and the rest defaulting gold.
+                return { string: s, fret: v + barre, isRoot: true, label: s === rootString ? root : '' };
+            });
+            if (dots.some(d => !d.muted && d.fret > numFrets)) return;
+
+            const sig = dots.map(d => d.muted ? 'x' : d.fret).join(',');
+            if (seen.has(sig)) return;
+            seen.add(sig);
+
+            voicings.push({
+                label: barre === 0 ? 'Open' : `Pos. ${barre}`,
+                shape: letter,
+                barreFret: barre,
+                dots,
+            });
+        });
+
+        voicings.sort((a, b) => a.barreFret - b.barreFret);
+        return voicings;
+    }
+
+    // Picks whichever of the E-shape / A-shape templates lands the barre
+    // closer to the nut (matching how real chord charts present the
+    // lowest, most commonly-played position for a given root).
+    function movableShapeFingering(root, chordType) {
+        const eTemplate = E_SHAPE[chordType];
+        const aTemplate = A_SHAPE[chordType];
+        if (!eTemplate && !aTemplate) return null;
+        const rootIdx = MT.noteIndex(root);
+
+        const candidates = [];
+        if (eTemplate) candidates.push({ shape: transposeShape(eTemplate, 0, rootIdx), barre: ((rootIdx - MT.noteIndex('E')) % 12 + 12) % 12 });
+        if (aTemplate) candidates.push({ shape: transposeShape(aTemplate, 1, rootIdx), barre: ((rootIdx - MT.noteIndex('A')) % 12 + 12) % 12 });
+
+        candidates.sort((a, b) => a.barre - b.barre);
+        return candidates[0].shape;
+    }
+
+    // Builds ONE playable fingering for an arbitrary root + chord type —
+    // used by the Chord Finder (Chord Library panel) so it lights up a
+    // real, single hand position on the neck (like a chord diagram)
+    // instead of every occurrence of each chord tone across the whole
+    // fretboard. For Major/Minor/Dominant7/Major7/Minor7/5th, this uses
+    // the standard movable E-shape/A-shape barre templates above (the
+    // same shapes on every chord chart). For chord types without a
+    // universal textbook shape (Sus2, Sus4, Diminished, Augmented),
+    // it falls back to searching every 4-fret hand span (plus open
+    // strings, only usable when the hand is actually at the nut), and
+    // keeps the best-covering, lowest, fullest-sounding shape that
+    // actually contains the root note.
+    function chordFingering(root, chordType, tuning, numFrets) {
+        const movable = movableShapeFingering(root, chordType);
+        if (movable) return movable;
+        return searchShapeFingering(root, chordType, tuning, numFrets);
+    }
+
+    function searchShapeFingering(root, chordType, tuning, numFrets) {
+        const rootIdx = MT.noteIndex(root);
+        const intervals = MT.CHORD_FORMULAS[chordType];
+        if (rootIdx === -1 || !intervals) return null;
+
+        const chordTones = Array.from(new Set(intervals.map(iv => ((rootIdx + iv) % 12 + 12) % 12)));
+        const openIdx = tuning.map(n => MT.noteIndex(n));
+        const numStrings = tuning.length;
+        const maxStart = Math.max(0, numFrets - 3);
+
+        function bestShape(minUsed) {
+            let best = null;
+            for (let start = 0; start <= maxStart; start++) {
+                const lo = start;
+                // Open strings (fret 0) need no hand position at all, so
+                // they're only valid when the hand is actually down at the
+                // nut. For any higher position, only frets within reach of
+                // that one hand span are candidates — otherwise we'd produce
+                // "shapes" that mix an open string with frets 7+ away, which
+                // no hand can physically play.
+                const candidateFrets = lo === 0 ? [0, 1, 2, 3] : [lo, lo + 1, lo + 2, lo + 3];
+                const perString = [];
+                for (let s = 0; s < numStrings; s++) {
+                    let chosen = null;
+                    for (const f of candidateFrets) {
+                        if (f > numFrets) continue;
+                        const pc = (openIdx[s] + f) % 12;
+                        if (chordTones.includes(pc)) { chosen = { fret: f, pc }; break; }
+                    }
+                    perString.push(chosen);
+                }
+                const used = perString.filter(Boolean);
+                if (used.length < minUsed || !used.some(u => u.pc === rootIdx)) continue;
+
+                const coverage = new Set(used.map(u => u.pc)).size;
+                const candidate = { coverage, usedCount: used.length, start, perString };
+                if (!best
+                    || candidate.coverage > best.coverage
+                    || (candidate.coverage === best.coverage && candidate.usedCount > best.usedCount)
+                    || (candidate.coverage === best.coverage && candidate.usedCount === best.usedCount && candidate.start < best.start)) {
+                    best = candidate;
+                }
+            }
+            return best;
+        }
+
+        const best = bestShape(4) || bestShape(3) || bestShape(1);
+        if (!best) return null;
+
+        return best.perString.map((c, s) => c
+            ? { string: s, fret: c.fret, isRoot: c.pc === rootIdx }
+            : { string: s, fret: -1, muted: true });
+    }
+
+    return { CAGED_SHAPES, cagedShapeDots, cagedAllShapeDots, OPEN_CHORDS, chordFingering, movableShapeFingering, searchShapeFingering, chordVoicings };
 })();

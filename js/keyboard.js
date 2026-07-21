@@ -258,6 +258,7 @@
         refreshChordAccidentalPills();
         renderChord();
         renderInversionCards();
+        renderScaleChips();
     });
 
     // Tracks whichever notes are currently highlighted (scale or chord,
@@ -474,9 +475,32 @@
         const root = scaleRootValue;
         const type = scaleType.value;
         const preferFlats = root && MT.PREFERS_FLATS.has(root);
-        if (!root) { applyHighlight(null, null, false); return; }
+        if (!root) { applyHighlight(null, null, false); renderScaleChips(); return; }
         const notes = MT.scaleNotes(root, type, preferFlats);
         applyHighlight(notes, root, false);
+        renderScaleChips();
+    }
+
+    // Scale Notes card — sits below the piano keys, mirrors the
+    // Guitar/Bass pages' version, styled in the keyboard (sky-cyan)
+    // theme automatically via --tool-rgb.
+    const kbScaleChips = document.getElementById('kb-scale-chips');
+    function renderScaleChips() {
+        if (!kbScaleChips) return;
+        kbScaleChips.innerHTML = '';
+        const root = scaleRootValue;
+        if (!root) return;
+        const type = scaleType.value;
+        const preferFlats = noteDisplayMode === 'flat';
+        const degrees = MT.scaleDegrees(root, type, preferFlats);
+        degrees.forEach(d => {
+            const pill = document.createElement('div');
+            pill.className = 'scale-pill' + (d.isRoot ? ' scale-pill--root' : '');
+            pill.innerHTML =
+                '<span class="scale-pill-degree">' + d.degree + '</span>' +
+                '<span class="scale-pill-note">' + d.note + '</span>';
+            kbScaleChips.appendChild(pill);
+        });
     }
     scaleType.addEventListener('change', renderScale);
 

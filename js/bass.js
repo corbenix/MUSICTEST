@@ -35,9 +35,27 @@
     const bassRootPillRow = document.getElementById('bass-root-pills');
     const rootPillRows = [scalevisPillRow, bassRootPillRow];
     const scaleSelect = document.getElementById('bass-scale-select');
+    const scaleChips = document.getElementById('bass-scale-chips');
 
-    // Scale Notes card removed — the Circle of Fifths widget above now
-    // serves as the at-a-glance scale reference for the selected root.
+    // Scale Notes card — sits under the fretboard, mirrors the Guitar
+    // page's version but styled in the bass (teal) theme via --tool-rgb.
+    // The Circle of Fifths widget above still gives an at-a-glance
+    // reference too; this adds the same degree-by-degree pill row.
+    function renderScaleChips() {
+        if (!scaleChips) return;
+        scaleChips.innerHTML = '';
+        if (!scaleVisRoot || !activeScale) return;
+        const preferFlats = noteDisplayMode === 'flat';
+        const degrees = MT.scaleDegrees(scaleVisRoot, activeScale, preferFlats);
+        degrees.forEach(d => {
+            const pill = document.createElement('div');
+            pill.className = 'scale-pill' + (d.isRoot ? ' scale-pill--root' : '');
+            pill.innerHTML =
+                '<span class="scale-pill-degree">' + d.degree + '</span>' +
+                '<span class="scale-pill-note">' + d.note + '</span>';
+            scaleChips.appendChild(pill);
+        });
+    }
 
     // ── Audio — real bass samples from audio/bass, pitch-shifted (same
     // approach as the Keyboard page) to cover every note from the
@@ -411,6 +429,7 @@
             dot.textContent = MT.noteName(pc, preferFlats);
         });
 
+        renderScaleChips();
         updatePlayButtonState();
     }
 

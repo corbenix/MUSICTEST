@@ -1,0 +1,424 @@
+/* ==========================================================================
+   TOOL PAGE — shared layout for guitar / bass / keyboard / other-tools pages.
+   Each page sets --tool-rgb / --tool-light-rgb before this cascades.
+   ========================================================================== */
+
+.tool-header {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 16px;
+    text-align: center;
+}
+.tool-header-titlerow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.tool-header-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: rgba(var(--tool-rgb), 0.16);
+    border: 1px solid rgba(var(--tool-rgb), 0.32);
+    flex-shrink: 0;
+}
+.tool-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 4vw, 34px);
+    margin: 0;
+}
+.tool-header p {
+    color: var(--text2);
+    font-size: 14.5px;
+    max-width: 640px;
+    margin: 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 640px) {
+    .tool-header p { white-space: normal; overflow: visible; text-overflow: clip; }
+}
+
+.tool-tabs {
+    max-width: 900px;
+    margin: 22px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.tool-tab {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+}
+.tool-tab:hover { background: var(--glass-md); color: var(--text); }
+.tool-tab[aria-selected="true"] {
+    background: rgba(var(--tool-rgb), 0.22);
+    border-color: rgba(var(--tool-rgb), 0.5);
+    color: var(--text);
+}
+
+.tool-panel { max-width: 1200px; margin: 24px auto 80px; padding: 0 24px; }
+.tool-panel[hidden] { display: none; }
+
+.controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.control-field { display: flex; flex-direction: column; gap: 6px; }
+.control-field label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text3);
+}
+.control-field select,
+.control-field input[type="range"],
+.control-field input[type="number"] {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    min-width: 150px;
+}
+.control-field select:focus-visible { border-color: var(--purple-l); }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+.chip {
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(var(--tool-rgb), 0.14);
+    border: 1px solid rgba(var(--tool-rgb), 0.3);
+    color: var(--text);
+}
+.chip--root { background: var(--gold); color: #0a0714; border-color: var(--gold); }
+
+.reset-btn {
+    background: var(--glass-md);
+    border: 1px solid rgba(var(--tool-light-rgb), .22);
+    color: var(--text2);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s var(--ease);
+}
+.reset-btn:hover { color: var(--text); border-color: rgba(var(--tool-light-rgb), 0.32); background: rgba(var(--tool-rgb), 0.16); }
+
+.chord-display {
+    text-align: center;
+    background: rgba(var(--tool-rgb), 0.08);
+    border: 1px solid rgba(var(--tool-rgb), 0.25);
+    border-radius: 10px;
+    padding: 9px 12px;
+    margin: 14px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+}
+.chord-display-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text3);
+}
+.chord-display-name.has-chord { color: rgb(var(--tool-light-rgb)); }
+.chord-display-notes {
+    color: var(--text2);
+    min-height: 0;
+    line-height: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.chord-display-notes:not(:empty) { margin-top: 4px; }
+
+.tool-note { font-size: 13px; color: var(--text2); margin: 10px 2px 0; line-height: 1.5; }
+
+/* ── Root-pill row + scale-select — exact copy of the bass page's
+   controls (.ps-row / .root-pill / .scale-select), moved here so any
+   tool page can use the identical markup/style, not just bass. ── */
+.ps-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ps-micro-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--text3);
+    flex-shrink: 0;
+}
+.root-pill-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.root-pill {
+    background: rgba(255, 255, 255, .045);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    line-height: 1.6;
+    cursor: pointer;
+    min-width: 42px;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+}
+.root-pill:hover {
+    background: rgba(var(--tool-rgb), .16);
+    border-color: rgba(var(--tool-light-rgb), 0.40);
+    color: #fff;
+}
+.root-pill.active {
+    background: linear-gradient(160deg, rgba(150, 240, 225, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 95, .92) 100%);
+    border-color: rgba(var(--tool-light-rgb), .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(var(--tool-rgb), .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+@media (max-width: 480px) {
+    .root-pill { font-size: 11px; padding: 5px 10px; }
+}
+.root-pill:active { transform: scale(0.93); transition-duration: 0.08s; }
+
+.ps-block { display: flex; flex-direction: column; gap: 8px; }
+.ps-type-row { display: none; }
+.ps-type-row.ps-visible { display: flex; }
+.ps-pills { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.type-pill-btn {
+    background: rgba(255, 255, 255, .045);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    line-height: 1.6;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+}
+.type-pill-btn:hover {
+    background: rgba(var(--tool-rgb), .16);
+    border-color: rgba(var(--tool-light-rgb), 0.40);
+    color: #fff;
+}
+.type-pill-btn.active {
+    background: linear-gradient(160deg, rgba(150, 240, 225, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 95, .92) 100%);
+    border-color: rgba(var(--tool-light-rgb), .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(var(--tool-rgb), .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+.pill-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; margin: 0 3px; }
+.type-pill-btn:active { transform: scale(0.93); transition-duration: 0.08s; }
+@media (max-width: 480px) {
+    .type-pill-btn { font-size: 11px; padding: 4px 10px; }
+    .ps-type-pills .pill-sep-break { flex-basis: 100%; width: 0; height: 0; margin: 0; }
+}
+
+.scale-select {
+    background-color: rgba(6, 4, 20, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: var(--font-body, inherit);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 30px 8px 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236ee6d7' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    cursor: pointer;
+    min-width: 90px;
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.scale-select:hover { border-color: rgba(var(--tool-light-rgb), .40); }
+.tool-controls-card .scale-select { width: 100%; margin-top: 10px; }
+.tool-controls-card .tool-controls-desc {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 14px;
+}
+
+:root {
+    --tc-card-fs: 12px;
+    --tc-card-pad: 16px 18px;
+}
+@media (min-width: 601px) and (max-width: 1099px) {
+    :root { --tc-card-fs: 11.5px; --tc-card-pad: 14px 16px; }
+}
+@media (min-width: 1920px) {
+    :root { --tc-card-fs: 13px; --tc-card-pad: 18px 20px; }
+}
+@media (min-width: 2560px) {
+    :root { --tc-card-fs: 14px; --tc-card-pad: 20px 22px; }
+}
+@media (min-width: 3840px) {
+    :root { --tc-card-fs: 15.5px; --tc-card-pad: 24px 26px; }
+}
+
+/* ── Generic controls card — exact copy of the bass page's panel-card
+   style (.bass-controls-panel / .bass-panel-title / .bass-panel-desc),
+   generalized to --tool-rgb so any tool page can reuse it verbatim. ── */
+.tool-controls-card {
+    background:
+        linear-gradient(160deg, rgba(var(--tool-rgb), .13), rgba(var(--tool-rgb), .02)),
+        linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
+    border: 1px solid rgba(var(--tool-light-rgb), .26);
+    border-radius: var(--radius-lg);
+    padding: var(--tc-card-pad);
+    margin-bottom: 16px;
+    box-shadow: 0 0 20px rgba(var(--tool-rgb), .10);
+}
+.tool-controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+.tool-controls-header .tool-controls-desc { margin-bottom: 0; }
+.tool-controls-header .reset-btn { flex-shrink: 0; margin-top: 2px; }
+.tool-controls-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(var(--tc-card-fs) + 3px);
+    color: rgb(var(--tool-light-rgb));
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tool-controls-desc { color: var(--text2); font-size: var(--tc-card-fs); margin: 0 0 10px; }
+.tool-controls-card .controls-row { margin-bottom: 0; }
+.tool-controls-card .scale-card,
+.tool-controls-card .chip-row { margin-bottom: 0; }
+
+/* ── Scale Notes pill card — degree number over each note, root picked
+   out in gold, matching the "Scale Viewer" card from the original app ──
+   Revamped: neon-outline pills (transparent so the tone-on-tone glow
+   pops instead of a filled tile) sitting on a gradient-tinted card. ── */
+.scale-card {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(155deg, rgba(var(--tool-rgb), .20) 0%, rgba(var(--tool-rgb), .04) 55%, transparent 100%),
+        #0b0818;
+    border: 1px solid rgba(var(--tool-rgb), .35);
+    border-radius: var(--radius-lg);
+    padding: 16px 16px 18px;
+    margin: 14px 0;
+    box-shadow: 0 0 24px rgba(var(--tool-rgb), .10), inset 0 0 0 1px rgba(var(--tool-rgb), .06);
+}
+.scale-card-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    color: rgb(var(--tool-light-rgb));
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(var(--tool-rgb), .6);
+}
+.scale-card-label::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 6px 1px rgba(255, 209, 102, .7);
+}
+.scale-pill-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    width: 100%;
+}
+.scale-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+.scale-pill-degree {
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(var(--tool-light-rgb), .65);
+    letter-spacing: .4px;
+    transition: color .15s ease;
+}
+.scale-pill--root .scale-pill-degree {
+    color: var(--gold);
+    text-shadow: 0 0 8px rgba(255, 209, 102, .5);
+}
+.scale-pill-note {
+    display: block;
+    padding: 8px 4px 7px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 800;
+    background: transparent;
+    color: rgb(var(--tool-light-rgb));
+    border: 1.5px solid rgba(var(--tool-rgb), .55);
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 0 8px rgba(var(--tool-rgb), .35), inset 0 0 8px rgba(var(--tool-rgb), .12);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.scale-pill:hover .scale-pill-note {
+    transform: translateY(-2px);
+    border-color: rgba(var(--tool-light-rgb), .8);
+    box-shadow: 0 0 12px rgba(var(--tool-rgb), .5), inset 0 0 10px rgba(var(--tool-rgb), .18);
+}
+.scale-pill--root .scale-pill-note {
+    background: transparent;
+    color: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 12px rgba(255, 209, 102, .55), inset 0 0 8px rgba(255, 209, 102, .2);
+}
+.scale-pill--root:hover .scale-pill-note {
+    transform: translateY(-2px);
+    box-shadow: 0 0 16px rgba(255, 209, 102, .7), inset 0 0 10px rgba(255, 209, 102, .28);
+}
+@media (max-width: 480px) {
+    .scale-pill-note { font-size: 11.5px; padding: 7px 2px 6px; }
+    .scale-pill-degree { font-size: 8px; }
+}

@@ -1,0 +1,342 @@
+/* ==========================================================================
+   SHARED TOKENS + BASE
+   Loaded on every page. Instrument-specific pages add their own stylesheet
+   on top of this one.
+   ========================================================================== */
+
+:root {
+    --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --font-body:    'Nunito', 'Inter', system-ui, sans-serif;
+
+    --bg:           #060414;
+    --bg2:          rgba(18, 14, 42, 0.55);
+    --bg3:          rgba(35, 28, 72, 0.50);
+    --border:       rgba(255, 255, 255, 0.07);
+    --border2:      rgba(255, 255, 255, 0.12);
+    --text:         #f2eeff;
+    --text2:        #aea8d0;
+    --text3:        #625e88;
+
+    --purple:       #7c6fe0;
+    --purple-l:     #c2b6ff;
+    --purple-dim:   rgba(124, 111, 224, 0.18);
+    --gold:         #ffd166;
+
+    --glass:        rgba(255, 255, 255, 0.042);
+    --glass-md:     rgba(255, 255, 255, 0.065);
+    --glass-border: rgba(255, 255, 255, 0.096);
+    --glass-hi:     rgba(255, 255, 255, 0.15);
+    --glass-purple: rgba(124, 111, 224, 0.15);
+
+    --shadow-deep:  0 12px 40px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.075);
+    --shadow-card:  0 4px 22px rgba(0, 0, 0, 0.38);
+    --shadow-glow:  0 0 28px rgba(124, 111, 224, 0.22);
+
+    --blur-sm:      blur(10px);
+    --blur-md:      blur(18px);
+    --blur-lg:      blur(28px);
+    --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius-lg:    18px;
+    --radius-md:    13px;
+    --radius-sm:    10px;
+
+    /* Per-tool accent colors — used on the hub cards, nav highlights,
+       and inside each tool's own page. Keep any given tool's color the
+       same across every file it appears in. */
+    --guitar-rgb:        239, 95, 111;   /* Coral */
+    --guitar-light-rgb:  255, 150, 165;
+    --bass-rgb:          46, 196, 182;   /* Teal */
+    --bass-light-rgb:    110, 230, 215;
+    --keyboard-rgb:      56, 189, 248;   /* Sky Cyan */
+    --keyboard-light-rgb: 130, 220, 255;
+    --chordbuilder-rgb:       232, 121, 185; /* Magenta */
+    --chordbuilder-light-rgb: 250, 170, 215;
+    --tools-rgb:         124, 141, 176;  /* Slate — Other Tools */
+    --tools-light-rgb:   170, 185, 215;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+    outline: 2px solid var(--purple-l);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ── Ambient ombre background ─────────────────────────────────────────── */
+.cn-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.cn-bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+}
+
+.cn-bg-glow--1 {
+    width: 520px; height: 520px;
+    top: -160px; left: -120px;
+    background: radial-gradient(circle, rgba(124,111,224,0.55), transparent 70%);
+}
+
+.cn-bg-glow--2 {
+    width: 620px; height: 620px;
+    bottom: -220px; right: -160px;
+    background: radial-gradient(circle, rgba(56,189,248,0.30), transparent 70%);
+}
+
+.cn-bg-orbit {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 900px; height: 900px;
+    transform: translate(-50%, -50%);
+    opacity: 0.15;
+}
+
+.cn-orbit-ring {
+    fill: none;
+    stroke: var(--purple-l);
+    stroke-width: 1;
+}
+
+.cn-orbit-ring--1 { animation: cn-spin 90s linear infinite; }
+.cn-orbit-ring--2 { animation: cn-spin 140s linear infinite reverse; }
+
+@keyframes cn-spin {
+    to { transform: rotate(360deg); }
+}
+
+.cn-bg-sparkles i {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--purple-l);
+    opacity: 0.5;
+    animation: cn-twinkle 4s ease-in-out infinite;
+}
+.cn-bg-sparkles i:nth-child(1)  { top: 12%; left: 18%; animation-delay: 0s; }
+.cn-bg-sparkles i:nth-child(2)  { top: 24%; left: 76%; animation-delay: .4s; }
+.cn-bg-sparkles i:nth-child(3)  { top: 60%; left: 8%;  animation-delay: .8s; }
+.cn-bg-sparkles i:nth-child(4)  { top: 72%; left: 88%; animation-delay: 1.2s; }
+.cn-bg-sparkles i:nth-child(5)  { top: 40%; left: 44%; animation-delay: 1.6s; }
+.cn-bg-sparkles i:nth-child(6)  { top: 85%; left: 52%; animation-delay: 2s; }
+.cn-bg-sparkles i:nth-child(7)  { top: 8%;  left: 60%; animation-delay: 2.4s; }
+.cn-bg-sparkles i:nth-child(8)  { top: 50%; left: 92%; animation-delay: 2.8s; }
+.cn-bg-sparkles i:nth-child(9)  { top: 30%; left: 30%; animation-delay: 3.2s; }
+.cn-bg-sparkles i:nth-child(10) { top: 66%; left: 68%; animation-delay: 3.6s; }
+.cn-bg-sparkles i:nth-child(11) { top: 18%; left: 50%; animation-delay: 1s; }
+.cn-bg-sparkles i:nth-child(12) { top: 92%; left: 20%; animation-delay: 2.2s; }
+
+@keyframes cn-twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50%      { opacity: 0.8;  transform: scale(1.6); }
+}
+
+.cn-trail-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--purple-l);
+    opacity: 0.5;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+    pointer-events: none;
+}
+.cn-trail-dot--fade { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+.nclg-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: rgba(6, 4, 20, 0.72);
+    backdrop-filter: var(--blur-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.nclg-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nclg-nav-logo { width: 34px; height: 34px; border-radius: 8px; }
+
+.nclg-nav-wordmark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    font-family: var(--font-display);
+}
+.nclg-nav-wordmark strong { font-size: 14px; letter-spacing: 0.06em; color: var(--text); }
+.nclg-nav-wordmark span   { font-size: 11px; letter-spacing: 0.22em; color: var(--purple-l); }
+
+.nclg-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nclg-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-pill, 999px);
+    color: var(--text2);
+    transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+.nclg-nav-icon {
+    font-size: 18px;
+    line-height: 1;
+    filter: grayscale(1) brightness(1.6) opacity(0.75);
+    transition: filter 0.15s var(--ease);
+}
+.nclg-nav-icon--img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+.nclg-nav-link:hover { background: var(--glass); color: var(--text); }
+.nclg-nav-link:hover .nclg-nav-icon { filter: none; }
+.nclg-nav-link--text {
+    width: auto;
+    height: auto;
+    padding: 8px 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.nclg-nav-link[aria-current="page"] {
+    color: var(--text);
+    background: var(--glass-md);
+}
+.nclg-nav-link[aria-current="page"] .nclg-nav-icon { filter: none; }
+
+/* ── Section nav card (in-page tool switcher) ────────────────────────── */
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.section-nav-card {
+    width: fit-content;
+    max-width: 100%;
+    margin: 28px auto 0;
+    padding: 6px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill, 999px);
+    backdrop-filter: var(--blur-md);
+    position: relative;
+    z-index: 1;
+}
+
+.section-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 9px 14px;
+    border-radius: var(--radius-pill, 999px);
+    color: var(--text2);
+    white-space: nowrap;
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 1;
+    transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+.section-nav-icon {
+    font-size: 15px;
+    line-height: 1;
+    filter: grayscale(1) brightness(1.6) opacity(0.75);
+    transition: filter 0.15s var(--ease);
+}
+.section-nav-icon--img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+.section-nav-btn:hover { background: var(--glass-md); color: var(--text); }
+.section-nav-btn:hover .section-nav-icon { filter: none; }
+.section-nav-btn[aria-current="page"] {
+    color: var(--text);
+    background: var(--purple, #7c5cff);
+}
+.section-nav-btn[aria-current="page"] .section-nav-icon { filter: none; }
+
+/* Shrink padding/font before dropping labels, so all 5 items always fit
+   on one line without scrolling or clipping. */
+@media (max-width: 640px) {
+    .section-nav-card { margin: 20px 16px 0; }
+    .section-nav-btn { padding: 8px 10px; gap: 4px; font-size: 13.5px; }
+}
+
+@media (max-width: 460px) {
+    .section-nav-label { display: none; }
+    .section-nav-btn { padding: 10px; }
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+.site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 28px 20px 36px;
+    color: var(--text3);
+    font-size: 12.5px;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+}
+.site-footer-logo { width: 20px; height: 20px; border-radius: 5px; opacity: 0.8; }
+.site-footer-tagline { color: var(--text3); }
+.site-footer-tagline::before { content: "·"; margin-right: 10px; }

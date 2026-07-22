@@ -172,20 +172,51 @@
         </section>
 
         <section id="panel-capo" class="tool-panel" role="tabpanel" hidden>
-            <div class="controls-row">
-                <div class="control-field">
-                    <label for="capo-open-chord">Chord shape you're playing</label>
-                    <select id="capo-open-chord">
-                        <option value="C">C shape</option>
-                        <option value="A">A shape</option>
-                        <option value="G">G shape</option>
-                        <option value="D">D shape</option>
-                        <option value="E">E shape</option>
-                    </select>
+            <div class="tool-controls-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/capo_logo.png" alt="" /> Capo Explorer</div>
+                </div>
+                <p class="tool-controls-desc">Select a capo position, then choose a chord shape to see the sounding chord.</p>
+
+                <div class="capo-slider" id="capo-slider">
+                    <div class="capo-slider-controls">
+                        <button type="button" class="capo-slider-btn capo-slider-btn-minus" data-step="-1" aria-label="Move capo down one fret">–</button>
+                        <div class="capo-slider-fret">
+                            <span class="capo-slider-fret-word" id="capo-slider-word"></span>
+                            <span class="capo-slider-fret-num" id="capo-slider-num"></span>
+                        </div>
+                        <button type="button" class="capo-slider-btn capo-slider-btn-plus" data-step="1" aria-label="Move capo up one fret">+</button>
+                    </div>
+                    <div class="capo-slider-track" id="capo-slider-track" role="slider" tabindex="0"
+                         aria-label="Capo fret" aria-valuemin="0" aria-valuemax="9">
+                        <div class="capo-slider-track-fill" id="capo-slider-fill"></div>
+                        <div class="capo-slider-track-dot" id="capo-slider-dot"></div>
+                    </div>
+                    <div class="capo-slider-divider"></div>
+                    <div class="capo-shape-row" id="capo-shape-row">
+                        <span class="capo-shape-row-label">Shape:</span>
+                        <div class="root-pill-row" id="capo-shape-chips"></div>
+                        <button type="button" id="capo-note-toggle" class="capo-note-toggle" aria-label="Toggle sharp/flat spelling" data-mode="sharp">♯</button>
+                        <button type="button" id="capo-all-shapes-btn" class="capo-all-shapes-btn">All Shapes</button>
+                    </div>
                 </div>
             </div>
-            <p class="tool-note">Shows what chord actually sounds at each capo position, for the shape you're fretting. Select a position to see it on the fretboard.</p>
-            <div id="capo-results" class="capo-result-grid"></div>
+
+            <div class="capo-card-grid" id="capo-card-grid"></div>
+
+            <div id="capo-sounding-card" class="capo-sounding-card" hidden>
+                <div class="capo-sounding-top">
+                    <span class="capo-sounding-label">Shape played</span>
+                    <span id="capo-shape-badge" class="capo-shape-badge"></span>
+                </div>
+                <div class="capo-sounding-body">
+                    <span id="capo-shape-name" class="capo-shape-name"></span>
+                    <span class="capo-sounding-arrow">→</span>
+                    <span id="capo-sounding-chord" class="capo-sounding-chord"></span>
+                    <span id="capo-sounding-quality" class="capo-sounding-quality"></span>
+                </div>
+            </div>
+
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="capo-fretboard"></div>
             </div>

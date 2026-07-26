@@ -479,9 +479,12 @@
 
     // No chord picked yet — plain, note-labeled neck with nothing lit up
     // (matches the Scale Explorer's and CAGED panel's own empty state),
-    // instead of always defaulting to showing the C chord.
+    // instead of always defaulting to showing the C chord. Reads the mode
+    // straight from window.NoteDisplay (rather than the page-local
+    // chordLibNoteDisplayMode, which isn't initialized yet the first time
+    // this runs) so it starts in the right sharp/flat spelling too.
     function renderChordLib() {
-        Fretboard.render(chordLibBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS });
+        Fretboard.render(chordLibBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, preferFlats: window.NoteDisplay.getMode() === 'flat', showOpenBadge: true });
     }
     renderChordLib();
 
@@ -636,6 +639,15 @@
     // Explorer's Play button (same is-playing pulse, same disabled state
     // when nothing is selected). ─────────────────────────────────────────
     let chordLibPlayTimeouts = [];
+    let chordLibSingleNoteMode = true;
+    const chordLibSingleNoteToggle = document.getElementById('chordlib-single-note-toggle');
+    if (chordLibSingleNoteToggle) {
+        chordLibSingleNoteToggle.addEventListener('click', () => {
+            chordLibSingleNoteMode = !chordLibSingleNoteMode;
+            chordLibSingleNoteToggle.setAttribute('aria-pressed', String(chordLibSingleNoteMode));
+            chordLibSingleNoteToggle.classList.toggle('active', chordLibSingleNoteMode);
+        });
+    }
     function stopChordLibPlayback() {
         chordLibPlayTimeouts.forEach(id => clearTimeout(id));
         chordLibPlayTimeouts = [];
@@ -651,7 +663,11 @@
             .map(d => ({ note: MT.noteName(MT.noteIndex(TUNING[d.string]) + d.fret, false), octave: Math.floor((OPEN_OCTAVES[d.string] * 12 + MT.noteIndex(TUNING[d.string]) + d.fret) / 12) }));
         if (!notes.length) return;
         stopChordLibPlayback();
-        const strumDelay = 45;
+        // Strummed mode overlaps notes with a short 45ms stagger; single-
+        // note mode spaces them out past each tone's ~0.9s decay so only
+        // one note is ever sounding at a time, like plucking through the
+        // shape instead of strumming it.
+        const strumDelay = chordLibSingleNoteMode ? 420 : 45;
         chordLibPlayBtn.classList.add('is-playing');
         notes.forEach((item, i) => {
             const id = setTimeout(() => {
@@ -829,15 +845,20 @@
     // reference's gc-capo-pill-row + gc-shape-chip + sounding-chord card.
 
     const capoShapeChips = document.getElementById('capo-shape-chips');
+    const capoControlsCard = document.getElementById('capo-controls-card');
     const capoSoundingCard = document.getElementById('capo-sounding-card');
     const capoShapeBadge = document.getElementById('capo-shape-badge');
     const capoShapeNameEl = document.getElementById('capo-shape-name');
+    const capoFretPillEl = document.getElementById('capo-fret-pill');
     const capoSoundingChordEl = document.getElementById('capo-sounding-chord');
     const capoSoundingQualityEl = document.getElementById('capo-sounding-quality');
+    const capoSoundingNotesEl = document.getElementById('capo-sounding-notes');
     const capoBoard = document.getElementById('capo-fretboard');
     const capoCardGrid = document.getElementById('capo-card-grid');
     const capoAllShapesBtn = document.getElementById('capo-all-shapes-btn');
     const capoNoteToggle = document.getElementById('capo-note-toggle');
+    const capoPlayBtn = document.getElementById('capo-play-btn');
+    const capoClearBtn = document.getElementById('capo-clear-btn');
 
     const CAPO_SHAPES = ['C', 'A', 'G', 'E', 'D'];
     const CAPO_SHAPE_COLORS = { C: '#e07040', A: '#3a7fd4', G: '#28a858', E: '#cc2828', D: '#b89000' };
@@ -852,6 +873,12 @@
         '': 'Major', m: 'Minor', 7: 'Dom 7th', maj7: 'Major 7th', m7: 'Minor 7th',
         sus4: 'Sus4', 5: 'Power Chord', sus2: 'Sus2', dim: 'Diminished', aug: 'Augmented',
     };
+    // Maps a capo quality key to the chord-formula name MT.chordNotes()
+    // expects, so the sounding-chord card can list real chord tones.
+    const CAPO_QUALITY_CHORDNAME = {
+        '': 'Major', m: 'Minor', 7: 'Dominant 7', maj7: 'Major 7', m7: 'Minor 7',
+        sus4: 'Sus4', 5: '5th', sus2: 'Sus2', dim: 'Diminished', aug: 'Augmented',
+    };
     const CAPO_QUALITY_COLOR = {
         '': 'var(--gold)', m: 'var(--purple-l)', 7: '#f07090', maj7: '#60c8f0',
         m7: '#c090f0', sus4: '#70d4b0', dim: '#f07070',
@@ -861,7 +888,7 @@
     let capoSelectedShape = null;   // which CAGED chip is highlighted ('C'|'A'|'G'|'E'|'D'|null)
     let capoShowAllShapes = false;  // "All Shapes" toggled — renders all 5 groups at once
     let capoActiveKey = null;       // the specific card that's selected, e.g. "Cm7"
-    let capoNoteMode = 'sharp';     // 'sharp' | 'flat' — spelling used for sounding-chord names
+    let capoNoteMode = window.NoteDisplay.getMode();     // 'sharp' | 'flat' — spelling used for sounding-chord names
 
     function capoNoteName(semitoneIdx) {
         return MT.noteName(semitoneIdx, capoNoteMode === 'flat');
@@ -935,6 +962,18 @@
             c.setAttribute('aria-pressed', active ? 'true' : 'false');
         });
         capoAllShapesBtn.classList.toggle('active', capoShowAllShapes);
+        // Tint the controls card (slider + shape pills) to match whichever
+        // CAGED shape is currently active, so the card itself reads as
+        // "orange" for C, "blue" for A, etc. — same palette as the shape
+        // chips/cards elsewhere on this panel. Falls back to the neutral
+        // theme when nothing (or "All Shapes") is selected.
+        if (capoControlsCard) {
+            if (capoSelectedShape && !capoShowAllShapes) {
+                capoControlsCard.dataset.shape = capoSelectedShape;
+            } else {
+                delete capoControlsCard.dataset.shape;
+            }
+        }
     }
 
     CAPO_SHAPES.forEach(shape => {
@@ -961,12 +1000,12 @@
     });
 
     // Sharp/flat spelling toggle for every sounding-chord name in the
-    // grid, result card, and fretboard — ported from the reference
-    // app's ♮/♯/♭ toggle (simplified to a 2-state sharp↔flat cycle).
-    capoNoteToggle.addEventListener('click', () => {
-        capoNoteMode = capoNoteMode === 'flat' ? 'sharp' : 'flat';
-        capoNoteToggle.textContent = capoNoteMode === 'flat' ? '♭' : '♯';
-        capoNoteToggle.dataset.mode = capoNoteMode;
+    // grid, result card, and fretboard — now the same universal, shared
+    // ♯/♭ toggle used by Scale Explorer / CAGED / Chord Library (synced
+    // + persisted across the whole site via window.NoteDisplay), instead
+    // of a separate local toggle just for this panel.
+    window.NoteDisplay.bindToggle(capoNoteToggle, mode => {
+        capoNoteMode = mode;
         renderCapo();
     });
 
@@ -1042,16 +1081,71 @@
         });
     }
 
+    let capoCurrentDots = [];
+
     function renderCapoBoard() {
+        const preferFlats = capoNoteMode === 'flat';
         if (!capoActiveKey) {
-            Fretboard.render(capoBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, dots: [], capo: capoSelectedFret });
+            capoCurrentDots = [];
+            Fretboard.render(capoBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, dots: [], capo: capoSelectedFret, preferFlats, showOpenBadge: true, openOctaves: OPEN_OCTAVES });
+            if (capoPlayBtn) capoPlayBtn.disabled = true;
             return;
         }
         const shape = capoActiveKey[0];
         const quality = capoActiveKey.slice(1);
         const targetRoot = capoNoteName(MT.noteIndex(shape) + capoSelectedFret);
         const dots = GD.capoChordDots(shape, quality, capoSelectedFret, targetRoot);
-        Fretboard.render(capoBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, dots, capo: capoSelectedFret });
+        capoCurrentDots = dots;
+        Fretboard.render(capoBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, dots, capo: capoSelectedFret, preferFlats, showOpenBadge: true, openOctaves: OPEN_OCTAVES });
+        if (capoPlayBtn) capoPlayBtn.disabled = !dots.some(d => !d.muted);
+    }
+
+    // ── Play button — strums the sounding chord's fretted/open notes,
+    // low string to high, same pattern as the Chord Library's Play. ──────
+    let capoPlayTimeouts = [];
+    function stopCapoPlayback() {
+        capoPlayTimeouts.forEach(id => clearTimeout(id));
+        capoPlayTimeouts = [];
+        if (capoPlayBtn) capoPlayBtn.classList.remove('is-playing');
+    }
+
+    function playCapoChord() {
+        if (!capoCurrentDots || !capoCurrentDots.length) return;
+        const notes = capoCurrentDots
+            .filter(d => !d.muted)
+            .sort((a, b) => a.string - b.string)
+            .map(d => ({ note: MT.noteName(MT.noteIndex(TUNING[d.string]) + d.fret, false), octave: Math.floor((OPEN_OCTAVES[d.string] * 12 + MT.noteIndex(TUNING[d.string]) + d.fret) / 12) }));
+        if (!notes.length) return;
+        stopCapoPlayback();
+        const strumDelay = 45;
+        capoPlayBtn.classList.add('is-playing');
+        notes.forEach((item, i) => {
+            const id = setTimeout(() => {
+                playTone(item.note, item.octave);
+                if (i === notes.length - 1) {
+                    const doneId = setTimeout(() => capoPlayBtn.classList.remove('is-playing'), 500);
+                    capoPlayTimeouts.push(doneId);
+                }
+            }, i * strumDelay);
+            capoPlayTimeouts.push(id);
+        });
+    }
+    if (capoPlayBtn) capoPlayBtn.addEventListener('click', playCapoChord);
+
+    // ── Clear Fretboard — resets the capo back to Open and deselects any
+    // shape/chord picked, same "wipe it all" behaviour as the other
+    // panels' Clear buttons. ─────────────────────────────────────────────
+    if (capoClearBtn) {
+        capoClearBtn.addEventListener('click', () => {
+            stopCapoPlayback();
+            capoSelectedFret = 0;
+            capoActiveKey = null;
+            capoSelectedShape = null;
+            capoShowAllShapes = false;
+            capoSyncChipStates();
+            renderCapoSlider();
+            renderCapo();
+        });
     }
 
     function renderCapo() {
@@ -1068,17 +1162,26 @@
             const shape = capoActiveKey[0];
             const quality = capoActiveKey.slice(1);
             const soundingRoot = capoNoteName(MT.noteIndex(shape) + capoSelectedFret);
-            const targetName = soundingRoot + quality;
-            const qColor = CAPO_QUALITY_COLOR[quality] || 'var(--gold)';
+            const preferFlats = capoNoteMode === 'flat';
 
             capoSoundingCard.className = `capo-sounding-card caged-${shape}`;
             capoSoundingCard.hidden = false;
-            capoShapeBadge.className = `capo-shape-badge caged-${shape}`;
-            capoShapeBadge.textContent = shape;
-            capoShapeNameEl.textContent = `${shape}${quality} shape at fret ${capoSelectedFret}`;
-            capoSoundingChordEl.textContent = targetName;
-            capoSoundingChordEl.style.color = qColor;
+            capoShapeBadge.textContent = shape + quality;
+            capoShapeNameEl.textContent = `${shape} ${CAPO_QUALITY_LABEL[quality]}`;
+            capoFretPillEl.textContent = `Capo ${capoSelectedFret}`;
+            capoSoundingChordEl.textContent = soundingRoot + quality;
+            capoSoundingChordEl.style.color = CAPO_QUALITY_COLOR[quality] || 'var(--text)';
             capoSoundingQualityEl.textContent = CAPO_QUALITY_LABEL[quality];
+
+            const chordFormula = CAPO_QUALITY_CHORDNAME[quality] || 'Major';
+            const notes = MT.chordNotes(soundingRoot, chordFormula, preferFlats);
+            capoSoundingNotesEl.innerHTML = '';
+            notes.forEach(n => {
+                const pill = document.createElement('span');
+                pill.className = 'capo-sounding-note-pill';
+                pill.textContent = n;
+                capoSoundingNotesEl.appendChild(pill);
+            });
         }
         renderCapoCards();
         renderCapoBoard();

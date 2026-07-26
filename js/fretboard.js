@@ -57,7 +57,11 @@ window.Fretboard = (function () {
 
             const label = document.createElement('div');
             label.className = 'gtr-string-label';
-            label.textContent = openNote;
+            // Reference app displays the highest (thinnest) string as
+            // lowercase "e" — a standard guitar-tab convention — while
+            // still using the real (uppercase) note name for pitch/note
+            // lookups everywhere else. Display-only, cosmetic.
+            label.textContent = (s === numStrings - 1 && openNote === 'E') ? 'e' : openNote;
             row.appendChild(label);
 
             // Open string indicator (fret 0) — only rendered for callers
@@ -72,34 +76,60 @@ window.Fretboard = (function () {
                 if (openOctave !== null) badge.dataset.abs = openOctave * 12 + openIdx;
                 if (isDiagram) {
                     const isMuted = dots.some(d => d.string === s && d.muted);
-                    const isOpen = dots.some(d => d.string === s && d.fret === 0 && !d.muted);
+                    // A string "sounds open" for badge purposes either when
+                    // it's a literal fret-0 dot (Chord Library, no capo) or
+                    // when the capo itself is fretting it (capoChordDots
+                    // stores those at fret === capoFret with viaCapo: true,
+                    // not fret 0) — the capo bar presses the string just
+                    // like a finger would, so its badge should show that
+                    // note+octave the same way. Strings with a real finger
+                    // planted somewhere else on the neck (a normal fretted
+                    // dot, not viaCapo) are left as the blank placeholder
+                    // here since that note is already shown at its own fret.
+                    const openMatch = dots.find(d => d.string === s && !d.muted && (d.fret === 0 || d.viaCapo));
                     if (isMuted) { badge.classList.add('is-mute'); badge.textContent = 'X'; }
-                    else if (isOpen) { badge.classList.add('is-open'); badge.textContent = 'O'; }
-                    else { badge.classList.add('is-blank'); badge.textContent = '•'; }
+                    else if (openMatch && openMatch.viaCapo) {
+                        // Sounding because the capo bars it, not because a
+                        // finger presses it. The badge is a *source* legend
+                        // ("Capo, fret 1"), not a pitch readout — it stays
+                        // "C1" no matter what actual note that particular
+                        // string rings out at that fret. No root ring here:
+                        // that emphasis belongs to the fretboard note dots,
+                        // not this legend.
+                        badge.classList.add('is-open', 'is-capo');
+                        badge.textContent = `C${capo}`;
+                    }
+                    else if (openMatch) {
+                        // A genuinely open string with no capo involved —
+                        // plain open-string indicator, no root ring.
+                        badge.classList.add('is-open');
+                        badge.textContent = 'O';
+                    }
+                    else { badge.classList.add('is-blank'); badge.textContent = '·'; }
                 } else {
                     // Highlight mode (e.g. Scale Explorer): the open string
-                    // (fret 0) is a real note too, so it should light up
-                    // exactly like a fretted cell does — only when its note
-                    // is actually part of the current highlight — instead
-                    // of always claiming "O".
+                    // always shows "O" (matching the reference app's
+                    // unconditional badge label), and additionally lights
+                    // up with the scale-match/root styling when its note
+                    // is actually part of the current highlight.
                     const preferFlatsCell = highlight ? !!highlight.preferFlats : preferFlats;
                     const openNoteName = MT.noteName(openIdx, preferFlatsCell);
                     const isHighlighted = highlight && highlight.notes.includes(openNoteName);
                     const isRootNote = highlight && MT.noteIndex(highlight.root) === openIdx;
+                    badge.textContent = 'O';
                     if (isHighlighted) {
                         badge.classList.add('is-open');
                         badge.classList.toggle('gtr-root-match', !!isRootNote);
-                        badge.textContent = 'O';
                     } else {
-                        badge.classList.add('is-blank');
-                        badge.textContent = '•';
+                        badge.classList.add('is-open-neutral');
                     }
+
                 }
                 row.appendChild(badge);
             }
 
             const nut = document.createElement('div');
-            nut.className = 'gtr-nut';
+            nut.className = 'gtr-nut' + (isDiagram && capo > 0 ? ' gtr-capo-adjacent' : '');
             row.appendChild(nut);
 
             const fretsRow = document.createElement('div');
@@ -118,10 +148,26 @@ window.Fretboard = (function () {
                         if (showOpenBadge) { cell.dataset.string = s; cell.dataset.fret = f; }
                         const match = dots.find(d => d.string === s && d.fret === f && !d.muted);
                         const dot = document.createElement('div');
-                        if (match) {
+                        if (match && match.viaCapo) {
+                            // This note sounds because the capo bars it, not
+                            // because a finger is pressing it — draw it as
+                            // part of the capo bar itself (flush, no
+                            // "press me" affordance) instead of the raised
+                            // finger-shape dot used elsewhere.
+                            if (match.isRoot) cell.classList.add('active');
+                            cell.classList.add('gtr-capo-sounded');
+                            dot.className = 'gtr-fret-dot gtr-fret-dot--capo' + (match.cagedLetter ? ` caged-${match.cagedLetter}` : '');
+                            dot.textContent = match.label ? MT.noteName(MT.noteIndex(match.label), preferFlats) : MT.noteName(noteIdx, preferFlats);
+                        } else if (match) {
                             if (match.isRoot) cell.classList.add('active');
                             dot.className = 'gtr-fret-dot gtr-fret-dot--shape' + (match.cagedLetter ? ` caged-${match.cagedLetter}` : '');
-                            dot.textContent = match.label || MT.noteName(noteIdx, preferFlats);
+                            // Labels are always a note name (e.g. the chord's
+                            // root), baked in whatever spelling was current
+                            // when the shape was built. Re-spell it through
+                            // the *current* preferFlats every render so the
+                            // sharp/flat toggle actually updates these dots
+                            // instead of freezing them at their original text.
+                            dot.textContent = match.label ? MT.noteName(MT.noteIndex(match.label), preferFlats) : MT.noteName(noteIdx, preferFlats);
                         } else {
                             dot.className = 'gtr-fret-dot';
                             dot.textContent = MT.noteName(noteIdx, preferFlats);

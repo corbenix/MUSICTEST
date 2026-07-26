@@ -346,6 +346,12 @@ window.GuitarData = (function () {
                 muted: false,
                 label: string === rootString ? targetRoot : '',
                 cagedLetter: shapeLetter,
+                // f === 0 means this string was open in the CAGED shape —
+                // with the capo on, that note now sounds from the capo's
+                // own barre, not from a finger. Flag it so the fretboard
+                // renderer can draw it as "handled by the capo" instead
+                // of a normal press-here finger dot.
+                viaCapo: f === 0,
             };
         });
     }

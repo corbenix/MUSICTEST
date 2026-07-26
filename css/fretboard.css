@@ -114,13 +114,17 @@
     -webkit-overflow-scrolling: touch;
 }
 
-/* Warm wood neck, coral-tinted to match this page's guitar accent —
-   distinct from the Bass page's blue board (css/bass.css #0d2430),
-   matching the reference tool's guitar/bass color split. */
+/* Neck "background" — the reference app's .fretboard-wrap uses
+   `background: var(--fretboard-brown)`, but --fretboard-brown is never
+   actually defined anywhere in its CSS. With no fallback, that makes
+   the whole background computed-value-invalid, so it silently resolves
+   to transparent — letting the panel's own dark indigo/purple gradient
+   (.gtr-fretboard-panel above) show through instead of a solid brown
+   fill. That's the real, current look of the reference app, so it's
+   replicated here rather than "fixing" a bug the reference doesn't
+   actually have fixed. */
 .gtr-fretboard-wrap {
-    background:
-        linear-gradient(160deg, rgba(var(--tool-rgb), .12), rgba(var(--tool-rgb), .02)),
-        #241510;
+    background: transparent;
     min-width: var(--gf-wrap-minw);
     padding: 18px 16px 18px 0;
     border-radius: var(--radius-lg);
@@ -190,6 +194,15 @@
     background: rgba(0, 0, 0, .35);
     font-size: calc(var(--gf-badge-fs) * .55);
 }
+/* Scale Explorer / CAGED idle "O" badge (open string, not currently
+   part of the highlighted scale) — same neutral colors as is-blank,
+   but at full text size since it displays "O" rather than a small
+   placeholder dot. */
+.gtr-open-note-badge.is-open-neutral {
+    color: #8a9a94;
+    border-color: var(--border2);
+    background: rgba(0, 0, 0, .35);
+}
 .gtr-open-note-badge.gtr-root-match {
     box-shadow: 0 0 0 2px #1e110c, 0 0 0 4.12px rgba(255, 255, 255, .65);
 }
@@ -202,6 +215,13 @@
     flex-shrink: 0;
     box-shadow: 1px 1px 3px #00000080;
     z-index: 3;
+}
+/* When a capo is on the board at all, tint the nut too so the shaded
+   capo region reads as one continuous clamp starting at the nut,
+   rather than the bar appearing to float mid-board. */
+.gtr-nut.gtr-capo-adjacent {
+    background: linear-gradient(180deg, #f0e6be, var(--capo-gold));
+    box-shadow: 0 0 6px var(--capo-gold), 1px 1px 3px #00000080;
 }
 
 .gtr-frets-row { display: flex; flex: 1; height: 100%; position: relative; }
@@ -286,22 +306,65 @@
 .gtr-fret-dot--shape.caged-E { background: #cc2828 !important; border-color: #f06060 !important; color: #fff !important; box-shadow: 0 0 12px #cc282899; }
 .gtr-fret-dot--shape.caged-D { background: #b89000 !important; border-color: #f0d040 !important; color: #fff !important; box-shadow: 0 0 12px #b8900099; }
 
-/* Capo Explorer highlight (still supported if dots ever include it) */
-/* Capo bar — a slim gold bar at the front edge of the barred fret,
-   echoing the nut's shape/language instead of tinting the whole cell
-   (keeps the board reading identical to the other panels). */
-.gtr-fret-cell.gtr-capo-active { position: relative; }
-.gtr-fret-cell.gtr-capo-active::before {
+/* Capo bar — ported from the reference app's .fret-cell.capo-active:
+   a solid purple bar through the middle of every string's cell at the
+   barred fret, so stacked string rows read as one continuous bar
+   spanning the whole fretboard, plus a faint full-cell tint. */
+.gtr-fret-cell.gtr-capo-active {
+    position: relative;
+    background: #d4af3726;
+}
+.gtr-fret-cell.gtr-capo-active::after {
     content: "";
     position: absolute;
-    left: -1px;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(255, 209, 102, .55);
-    z-index: 3;
+    top: 8%;
+    bottom: 8%;
+    /* Full cell width (not just a sliver through the middle) so the
+       bar visually clamps down over whatever note dot is sitting at
+       this fret, the way a real capo presses across the whole fret
+       rather than floating beside it. */
+    left: 0;
+    right: 0;
+    border-radius: 5px;
+    background: var(--capo-gold);
+    opacity: .55;
+    z-index: 1;
+}
+/* The note dot itself stays above the bar (z-index 2 vs 1) so its
+   label is still readable, but the bar's tint shows through behind
+   it — the dot reads as "sitting under the capo" rather than the
+   capo being a separate stripe next to it. */
+
+/* Notes sounded *by the capo itself* (strings that were open in the
+   CAGED shape) — these need no finger at all, so they must not read
+   like the raised, "press me" finger dots used everywhere else. The
+   whole cell is washed in the capo's gold so it visually belongs to
+   the bar rather than to a fingering, and the dot inside is flattened
+   into a flush tag sitting on top of it. */
+.gtr-fret-cell.gtr-capo-sounded {
+    background: linear-gradient(90deg, rgba(255, 209, 102, .22), rgba(255, 209, 102, .05));
+}
+.gtr-fret-dot--capo {
+    width: calc(var(--gf-dot) - 6px);
+    height: calc(var(--gf-dot) - 6px);
+    border-radius: 50%;
+    background: rgba(255, 228, 154, .22);
+    border: 1px dashed rgba(255, 224, 150, .75);
+    color: #ffe9b8;
+    box-shadow: none;
+    font-weight: 600;
+}
+.gtr-fret-dot--capo.caged-C,
+.gtr-fret-dot--capo.caged-A,
+.gtr-fret-dot--capo.caged-G,
+.gtr-fret-dot--capo.caged-E,
+.gtr-fret-dot--capo.caged-D {
+    /* Keep these legible without adopting the solid, raised fill the
+       fingered dots use — still "no press needed here". */
+    background: rgba(255, 255, 255, .08);
+    border-style: dashed;
+    color: #fff;
+    box-shadow: none;
 }
 
 /* ── Fret-inlay markers (dots below the board at frets 3,5,7,9,12,15,17,
@@ -325,4 +388,108 @@
 }
 @media (min-width: 900px) {
     .gtr-scroll-hint { display: none; }
+}
+
+/* ==========================================================================
+   Chord Library (#chord-lib-fretboard) / Capo Explorer (#capo-fretboard)
+   note-dot identity — violet, kept by request. Same pattern as Scale
+   Explorer's rose highlight: only the actual note/shape dots carry the
+   accent color. The neck wash, idle dots, and fret-number markers stay
+   neutral/gold, matching what the reference app does everywhere else
+   (it never re-tints the whole board per tab).
+   ========================================================================== */
+#chord-lib-fretboard,
+#capo-fretboard {
+    --gf-violet: #8a5cf5;
+    --gf-violet-l: #b79bff;
+    --gf-violet-d: #4a2a9e;
+}
+
+/* Shape dots (the actual chord-tone fingerings) — violet gradient instead of gold */
+#chord-lib-fretboard .gtr-fret-dot--shape,
+#capo-fretboard .gtr-fret-dot--shape {
+    background: linear-gradient(160deg, #d8c6ff 0%, var(--gf-violet) 55%, var(--gf-violet-d) 100%);
+    border-color: #e6d9ff;
+    color: #1c0f3d;
+    box-shadow: 0 0 12px rgba(138, 92, 245, .65);
+}
+#chord-lib-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]),
+#capo-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
+    background: linear-gradient(160deg, #f0e8ff 0%, #b79bff 40%, #8a5cf5 70%, #4a2a9e 100%) !important;
+    border-color: #fff !important;
+    box-shadow: 0 0 18px rgba(183, 155, 255, 1) !important;
+}
+#chord-lib-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot,
+#capo-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot {
+    background: linear-gradient(160deg, #e4d9ff 0%, var(--gf-violet) 55%, var(--gf-violet-d) 100%);
+    border-color: #fff0ff;
+    color: #1c0f3d;
+    box-shadow: 0 0 18px rgba(183, 155, 255, .9);
+}
+
+/* Capo bar — violet clamp instead of gold (kept, same "identity color"
+   role as the note dots above, not board-wide theming) */
+#chord-lib-fretboard .gtr-fret-cell.gtr-capo-active,
+#capo-fretboard .gtr-fret-cell.gtr-capo-active {
+    background: #8a5cf526;
+}
+#chord-lib-fretboard .gtr-fret-cell.gtr-capo-active::after,
+#capo-fretboard .gtr-fret-cell.gtr-capo-active::after {
+    background: var(--gf-violet);
+}
+#chord-lib-fretboard .gtr-nut.gtr-capo-adjacent,
+#capo-fretboard .gtr-nut.gtr-capo-adjacent {
+    background: linear-gradient(180deg, #e6d9ff, var(--gf-violet));
+    box-shadow: 0 0 6px var(--gf-violet), 1px 1px 3px #00000080;
+}
+#chord-lib-fretboard .gtr-fret-cell.gtr-capo-sounded,
+#capo-fretboard .gtr-fret-cell.gtr-capo-sounded {
+    background: linear-gradient(90deg, rgba(183, 155, 255, .25), rgba(183, 155, 255, .05));
+}
+#chord-lib-fretboard .gtr-fret-dot--capo,
+#capo-fretboard .gtr-fret-dot--capo {
+    background: rgba(216, 198, 255, .22);
+    border-color: rgba(216, 198, 255, .75);
+    color: #ecdfff;
+}
+
+/* Fret-0 open/muted/blank string badges are intentionally left out of
+   the violet re-theme — they keep the original green "open" / red
+   "muted" styling with no ring. Only the actual fretboard note dots
+   (the finger positions) get the violet highlight in this panel. */
+
+/* ==========================================================================
+   Scale Explorer (#scale-fretboard) note highlights — ported verbatim
+   from the reference app's Scale Visualizer (.guitar-scale-match /
+   .scale-root-ring in 1.css). The reference app does NOT re-theme the
+   rest of the board (neck wash, fret markers, idle dots, open-string
+   badges, capo bar) per tab — those all stay the same neutral wood/gold
+   look used everywhere else in the app. So only the matched-note and
+   root-note dot rules live here; everything else falls through to the
+   shared .gtr-fret-dot / .gtr-fret-num.marker / etc. defaults above,
+   same as CAGED System.
+   ========================================================================== */
+#scale-fretboard .gtr-fret-cell.gtr-scale-match .gtr-fret-dot {
+    background: linear-gradient(160deg, rgba(255,150,165,.95) 0%, rgba(224,50,72,.95) 45%, rgba(158,25,42,1) 100%);
+    border-color: rgba(255,150,165,.75);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(255, 60, 90, 1);
+}
+/* The root note is *always* also part of the scale, so this combined
+   state — not the .gtr-root-match:not(.gtr-scale-match) rule below —
+   is what actually renders for a real root dot: same scale-match dot,
+   plus a ring, exactly as the reference's scale-root-ring does. */
+#scale-fretboard .gtr-fret-cell.gtr-scale-match.gtr-root-match .gtr-fret-dot {
+    box-shadow: 0 0 14px rgba(255,60,90,.85), 0 0 0 2px #1e110c, 0 0 0 4px rgba(255,255,255,.65) !important;
+}
+
+/* Open/root note that's a root but somehow not flagged as in-scale
+   (shouldn't normally happen since the root is always in its own
+   scale, but kept as a safe fallback) — same gold root treatment the
+   reference uses everywhere else, not a coral variant. */
+#scale-fretboard .gtr-fret-cell.gtr-root-match:not(.gtr-scale-match) .gtr-fret-dot {
+    background: var(--gold);
+    border-color: #fff0c2;
+    color: #2a1c00;
+    box-shadow: 0 0 18px rgba(255, 209, 102, .85);
 }

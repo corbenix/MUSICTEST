@@ -4,6 +4,19 @@
 
 :root { --tool-rgb: var(--guitar-rgb); --tool-light-rgb: var(--guitar-light-rgb); }
 
+/* Match every panel card's width to the Circle of Fifths card above it
+   (same fix already used on the Bass/Keyboard pages): .tool-panel's own
+   24px side padding was shrinking .gtr-fretboard-panel/.tool-controls-card
+   ~48px narrower than .circle-section. Drop that padding and drive the
+   panel's max-width off the same responsive tiers .circle-section uses,
+   so Scale Explorer, CAGED, Chord Library, and Capo Explorer all line up
+   flush with the circle instead of sitting narrower than it. */
+:root { --gtr-panel-maxw: 1200px; }
+@media (min-width: 601px) and (max-width: 1099px) { :root { --gtr-panel-maxw: 100%; } }
+@media (min-width: 2560px) { :root { --gtr-panel-maxw: 1440px; } }
+@media (min-width: 3840px) { :root { --gtr-panel-maxw: 1800px; } }
+.tool-panel { width: 100%; max-width: var(--gtr-panel-maxw); padding-left: 0; padding-right: 0; }
+
 .tool-hint { font-size: 13px; color: var(--text2); margin: 0 0 12px; line-height: 1.5; }
 
 .tool-controls-title-icon {
@@ -26,20 +39,22 @@
 #scale-fretboard .gtr-open-note-badge { cursor: pointer; }
 #scale-fretboard .gtr-open-note-badge:hover { transform: scale(1.08); }
 .gtr-open-note-badge.gtr-user-picked {
-    background: rgba(13, 48, 40, .55) !important;
-    border-color: #1d9e75 !important;
-    color: #4dd4a8 !important;
-    box-shadow: 0 0 12px rgba(29, 158, 117, .55) !important;
+    background: #a5182f !important;
+    border-color: #e6455f !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px rgba(var(--guitar-rgb), .55) !important;
 }
 
 /* Scale Explorer — clicking a regular fret (not just the fret-0 badge)
-   uses the same manual-preview highlight, so keep it the same green
-   "played" color as the badge above, not the red/mute color. */
+   uses the same manual-preview highlight: a flat coral fill matching
+   the Guitar Scale identity, copied verbatim from the reference app's
+   #ws-guitar .fret-cell.active .fret-dot (not the embossed gradient
+   used for CAGED/Chord Library shape dots elsewhere). */
 .gtr-fret-cell.gtr-user-picked .gtr-fret-dot {
-    background: rgba(13, 48, 40, .55) !important;
-    border-color: #1d9e75 !important;
-    color: #4dd4a8 !important;
-    box-shadow: 0 0 12px rgba(29, 158, 117, .55) !important;
+    background: #a5182f !important;
+    border-color: #e6455f !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px rgba(var(--guitar-rgb), .55) !important;
 }
 
 /* Chord Library board is editable once a chord is picked — every fretted
@@ -95,6 +110,11 @@
 }
 .scale-clear-btn { font-size: 12px; padding: 6px 14px; }
 
+/* Clear Fretboard sits on the same line as Play (Scale Explorer, Chord
+   Library, Capo Explorer), pushed to the right end of that row so it
+   reads as the top-right control of the fretboard section below it. */
+.fretboard-clear-btn { font-size: 12px; padding: 6px 14px; margin-left: auto; }
+
 /* Scale Explorer — Play button, same gold "hear what's lit up" treatment
    as the Bass/Keyboard pages' Play buttons, so the control reads the same
    across every instrument page. */
@@ -126,6 +146,15 @@
 
 /* Scale Explorer — Speed toggle, highlighted whenever slowed below 1x. */
 .scale-speed-toggle.active {
+    color: var(--text);
+    border-color: rgba(var(--tool-light-rgb), .45);
+    background: rgba(var(--tool-rgb), .20);
+}
+
+/* Chord Library — Single Note playback toggle, same treatment as the
+   Scale Explorer speed toggle above (this panel's --tool-rgb is already
+   re-themed purple, so it picks that up automatically). */
+.chordlib-single-note-toggle.active {
     color: var(--text);
     border-color: rgba(var(--tool-light-rgb), .45);
     background: rgba(var(--tool-rgb), .20);
@@ -207,12 +236,21 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 
-/* ── Chord Finder (Chord Library tab) — now themed to match the Capo
-   Explorer panel instead of running its own green identity: plain
-   tool-controls-card (page's shared coral tint) with the shared purple
-   accent for active pills/dots, same as everywhere else that doesn't
-   have a dedicated color identity (CAGED/Scale keep coral+shape colors,
-   Capo/Chord Finder share this plain purple-accented look). ── */
+/* ── Chord Library + Capo Explorer — re-themed purple ─────────────────
+   Both panels borrow the generic .tool-controls-card / fretboard shell
+   that's driven by --tool-rgb / --tool-light-rgb (page coral by
+   default). Overriding those two vars just inside these two panels
+   flips every card background, border, glow, and title color to the
+   shared purple identity, without touching the rest of the guitar page
+   (CAGED / Scale Explorer keep their coral + per-shape colors). ────── */
+#panel-chords,
+#panel-capo {
+    --tool-rgb: 124, 111, 224;
+    --tool-light-rgb: 194, 182, 255;
+}
+
+/* Capo Explorer fretboard — CAGED shape dots keep each letter's own
+   color, matching the pills and chord-quality cards above the board. */
 .gcv-root-pills .root-pill:hover {
     background: var(--purple-dim);
     border-color: rgba(194, 182, 255, .40);
@@ -319,7 +357,8 @@
 }
 .caged-note-toggle[data-mode="sharp"],
 .scale-note-toggle[data-mode="sharp"],
-.chordlib-note-toggle[data-mode="sharp"] {
+.chordlib-note-toggle[data-mode="sharp"],
+.capo-note-toggle[data-mode="sharp"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
     border-color: rgba(125, 223, 255, .55);
     color: #fff;
@@ -328,7 +367,8 @@
 }
 .caged-note-toggle[data-mode="flat"],
 .scale-note-toggle[data-mode="flat"],
-.chordlib-note-toggle[data-mode="flat"] {
+.chordlib-note-toggle[data-mode="flat"],
+.capo-note-toggle[data-mode="flat"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
     border-color: rgba(255, 209, 102, .55);
     color: #fff;
@@ -401,6 +441,18 @@
 #caged-auto-label { margin: 8px 2px 4px; }
 
 /* CAGED per-shape colors now live in css/fretboard.css (.gtr-fret-dot--shape.caged-X) */
+
+/* Capo Explorer fretboard — the shared .gtr-fret-dot--shape.caged-X rule
+   above gives every panel a flat, unembossed fill per CAGED letter. Chord
+   Library's own dots use an embossed gradient instead (see
+   #chord-lib-fretboard .gtr-fret-dot--shape in fretboard.css). Capo
+   Explorer gets that same embossed treatment here, keeping each letter's
+   own color rather than switching to Chord Library's violet. */
+#capo-fretboard .gtr-fret-dot--shape.caged-C { background: linear-gradient(160deg, #ffd4b8 0%, #e07040 55%, #9c4d20 100%) !important; border-color: #f0a070 !important; color: #fff !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 12px #e0704099 !important; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+#capo-fretboard .gtr-fret-dot--shape.caged-A { background: linear-gradient(160deg, #c9e0ff 0%, #3a7fd4 55%, #1c4a86 100%) !important; border-color: #70b0f5 !important; color: #fff !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 12px #3a7fd499 !important; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+#capo-fretboard .gtr-fret-dot--shape.caged-G { background: linear-gradient(160deg, #c2f0d2 0%, #28a858 55%, #14622f 100%) !important; border-color: #60d880 !important; color: #fff !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 12px #28a85899 !important; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+#capo-fretboard .gtr-fret-dot--shape.caged-E { background: linear-gradient(160deg, #ffc9c9 0%, #cc2828 55%, #7a1414 100%) !important; border-color: #f06060 !important; color: #fff !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 12px #cc282899 !important; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+#capo-fretboard .gtr-fret-dot--shape.caged-D { background: linear-gradient(160deg, #fff0b8 0%, #b89000 55%, #6b5400 100%) !important; border-color: #f0d040 !important; color: #fff !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 12px #b8900099 !important; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
 .caged-legend-swatch.caged-C { background: #e07040; }
 .caged-legend-swatch.caged-A { background: #3a7fd4; }
 .caged-legend-swatch.caged-G { background: #28a858; }
@@ -430,6 +482,15 @@
     margin-bottom: 6px;
 }
 
+/* Chord Library / Capo Explorer — Clear Fretboard button hover uses the
+   panel's purple identity instead of the page's default coral. */
+#panel-chords .fretboard-clear-btn:hover,
+#panel-capo .fretboard-clear-btn:hover {
+    color: #fff;
+    border-color: rgba(194, 182, 255, .40);
+    background: rgba(124, 111, 224, .18);
+}
+
 /* Chord Library fretboard — now left at the page's plain default coral
    board + purple root-dot (same as Capo Explorer's board), instead of
    its own green identity. */
@@ -440,60 +501,164 @@
    mirroring the reference app's gc-capo-pill-row / gc-shape-chip /
    sounding-chord card. */
 .capo-shape-chip { font-weight: 700; }
-.capo-shape-chip.caged-C { border-color: rgba(224,112,64,.45); color: #e07040; }
-.capo-shape-chip.caged-C.active { background: rgba(224,112,64,.28); border-color: #e07040; color: #fff; box-shadow: 0 0 12px rgba(224,112,64,.55); }
-.capo-shape-chip.caged-A { border-color: rgba(58,127,212,.45); color: #3a7fd4; }
-.capo-shape-chip.caged-A.active { background: rgba(58,127,212,.28); border-color: #3a7fd4; color: #fff; box-shadow: 0 0 12px rgba(58,127,212,.55); }
-.capo-shape-chip.caged-G { border-color: rgba(40,168,88,.45); color: #28a858; }
-.capo-shape-chip.caged-G.active { background: rgba(40,168,88,.28); border-color: #28a858; color: #fff; box-shadow: 0 0 12px rgba(40,168,88,.55); }
-.capo-shape-chip.caged-E { border-color: rgba(204,40,40,.45); color: #cc2828; }
-.capo-shape-chip.caged-E.active { background: rgba(204,40,40,.28); border-color: #cc2828; color: #fff; box-shadow: 0 0 12px rgba(204,40,40,.55); }
-.capo-shape-chip.caged-D { border-color: rgba(184,144,0,.45); color: #b89000; }
-.capo-shape-chip.caged-D.active { background: rgba(184,144,0,.28); border-color: #b89000; color: #fff; box-shadow: 0 0 12px rgba(184,144,0,.55); }
+.capo-shape-chip.caged-C:hover { background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(224,112,64,.22)); border-color: rgba(224,112,64,.45); color: #fff; }
+.capo-shape-chip.caged-C.active { background: linear-gradient(160deg, rgba(240,160,112,.40) 0%, #e07040 45%, #9c4d20 100%); border-color: #f0a070; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 12px rgba(224,112,64,.55); text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+.capo-shape-chip.caged-A:hover { background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(58,127,212,.22)); border-color: rgba(58,127,212,.45); color: #fff; }
+.capo-shape-chip.caged-A.active { background: linear-gradient(160deg, rgba(112,176,245,.40) 0%, #3a7fd4 45%, #1c4a86 100%); border-color: #70b0f5; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 12px rgba(58,127,212,.55); text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+.capo-shape-chip.caged-G:hover { background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(40,168,88,.22)); border-color: rgba(40,168,88,.45); color: #fff; }
+.capo-shape-chip.caged-G.active { background: linear-gradient(160deg, rgba(96,216,128,.40) 0%, #28a858 45%, #14622f 100%); border-color: #60d880; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 12px rgba(40,168,88,.55); text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+.capo-shape-chip.caged-E:hover { background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(204,40,40,.22)); border-color: rgba(204,40,40,.45); color: #fff; }
+.capo-shape-chip.caged-E.active { background: linear-gradient(160deg, rgba(240,96,96,.40) 0%, #cc2828 45%, #7a1414 100%); border-color: #f06060; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 12px rgba(204,40,40,.55); text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+.capo-shape-chip.caged-D:hover { background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(184,144,0,.22)); border-color: rgba(184,144,0,.45); color: #fff; }
+.capo-shape-chip.caged-D.active { background: linear-gradient(160deg, rgba(240,208,64,.40) 0%, #b89000 45%, #6b5400 100%); border-color: #f0d040; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 12px rgba(184,144,0,.55); text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+
+/* Capo controls card — purple by default (panel's identity), but tints
+   to match whichever CAGED shape pill is currently active, same as the
+   pills/cards below it. Falls back to purple again when no shape (or
+   "All Shapes") is selected. */
+#capo-controls-card {
+    transition: background .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+#capo-controls-card[data-shape="C"] {
+    border-color: rgba(224,112,64,.55);
+    background: linear-gradient(160deg, rgba(224,112,64,.16), rgba(224,112,64,.02)), linear-gradient(165deg, rgba(24,21,46,.58), rgba(10,8,22,.66));
+    box-shadow: 0 0 28px rgba(224,112,64,.14);
+}
+#capo-controls-card[data-shape="A"] {
+    border-color: rgba(58,127,212,.55);
+    background: linear-gradient(160deg, rgba(58,127,212,.16), rgba(58,127,212,.02)), linear-gradient(165deg, rgba(24,21,46,.58), rgba(10,8,22,.66));
+    box-shadow: 0 0 28px rgba(58,127,212,.14);
+}
+#capo-controls-card[data-shape="G"] {
+    border-color: rgba(40,168,88,.55);
+    background: linear-gradient(160deg, rgba(40,168,88,.16), rgba(40,168,88,.02)), linear-gradient(165deg, rgba(24,21,46,.58), rgba(10,8,22,.66));
+    box-shadow: 0 0 28px rgba(40,168,88,.14);
+}
+#capo-controls-card[data-shape="E"] {
+    border-color: rgba(204,40,40,.55);
+    background: linear-gradient(160deg, rgba(204,40,40,.16), rgba(204,40,40,.02)), linear-gradient(165deg, rgba(24,21,46,.58), rgba(10,8,22,.66));
+    box-shadow: 0 0 28px rgba(204,40,40,.14);
+}
+#capo-controls-card[data-shape="D"] {
+    border-color: rgba(184,144,0,.55);
+    background: linear-gradient(160deg, rgba(184,144,0,.16), rgba(184,144,0,.02)), linear-gradient(165deg, rgba(24,21,46,.58), rgba(10,8,22,.66));
+    box-shadow: 0 0 28px rgba(184,144,0,.14);
+}
+#capo-controls-card[data-shape] .capo-slider-track-fill,
+#capo-controls-card[data-shape] .capo-slider-track-dot { transition: background .25s var(--ease), box-shadow .25s var(--ease); }
+#capo-controls-card[data-shape="C"] .capo-slider-track-fill, #capo-controls-card[data-shape="C"] .capo-slider-track-dot { background: #e07040; }
+#capo-controls-card[data-shape="A"] .capo-slider-track-fill, #capo-controls-card[data-shape="A"] .capo-slider-track-dot { background: #3a7fd4; }
+#capo-controls-card[data-shape="G"] .capo-slider-track-fill, #capo-controls-card[data-shape="G"] .capo-slider-track-dot { background: #28a858; }
+#capo-controls-card[data-shape="E"] .capo-slider-track-fill, #capo-controls-card[data-shape="E"] .capo-slider-track-dot { background: #cc2828; }
+#capo-controls-card[data-shape="D"] .capo-slider-track-fill, #capo-controls-card[data-shape="D"] .capo-slider-track-dot { background: #b89000; }
 
 .capo-sounding-card {
-    margin-top: 14px;
-    background: var(--glass);
+    margin-top: 18px;
+    background:
+        radial-gradient(120% 160% at 50% 0%, rgba(139,124,240,.10), transparent 60%),
+        var(--glass);
     border: 1px solid var(--glass-border);
-    border-left: 4px solid var(--text3);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
+    border-radius: var(--radius-lg);
+    padding: 18px 22px 16px;
 }
-.capo-sounding-card.caged-C { border-left-color: #e07040; }
-.capo-sounding-card.caged-A { border-left-color: #3a7fd4; }
-.capo-sounding-card.caged-G { border-left-color: #28a858; }
-.capo-sounding-card.caged-E { border-left-color: #cc2828; }
-.capo-sounding-card.caged-D { border-left-color: #b89000; }
-.capo-sounding-top {
+.capo-sounding-card.caged-C .capo-shape-big,
+.capo-sounding-card.caged-A .capo-shape-big,
+.capo-sounding-card.caged-G .capo-shape-big,
+.capo-sounding-card.caged-E .capo-shape-big,
+.capo-sounding-card.caged-D .capo-shape-big,
+.capo-sounding-card.caged-C .capo-fret-pill,
+.capo-sounding-card.caged-A .capo-fret-pill,
+.capo-sounding-card.caged-G .capo-fret-pill,
+.capo-sounding-card.caged-E .capo-fret-pill,
+.capo-sounding-card.caged-D .capo-fret-pill { color: var(--purple-l); }
+.capo-sounding-card.caged-C .capo-fret-pill,
+.capo-sounding-card.caged-A .capo-fret-pill,
+.capo-sounding-card.caged-G .capo-fret-pill,
+.capo-sounding-card.caged-E .capo-fret-pill,
+.capo-sounding-card.caged-D .capo-fret-pill { border-color: rgba(194, 182, 255, .55); }
+
+.capo-sounding-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    gap: 18px;
+    flex-wrap: wrap;
 }
-.capo-sounding-label { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text3); }
-.capo-shape-badge {
-    display: inline-flex;
+.capo-sounding-col { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+.capo-sounding-col-left { align-items: center; text-align: center; }
+.capo-sounding-col-right { align-items: center; text-align: center; }
+.capo-sounding-col-mid {
+    flex: 1;
+    align-items: center;
+    text-align: center;
+    min-width: 140px;
+    gap: 2px;
+    position: relative;
+}
+.capo-sounding-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+}
+.capo-shape-big {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1.1;
+    color: var(--gold);
+}
+.capo-shape-sub { font-size: 12px; color: var(--text2); }
+.capo-sounding-chord-big {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1.1;
+    color: var(--gold);
+}
+.capo-sounding-quality { font-size: 12px; color: var(--text2); }
+.capo-sounding-link {
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 13px;
-    border: 1px solid var(--glass-border);
-    background: var(--glass-md);
-    color: var(--text2);
+    gap: 8px;
+    width: 100%;
 }
-.capo-shape-badge.caged-C { background: rgba(224,112,64,.22); color: #e07040; border-color: rgba(224,112,64,.55); }
-.capo-shape-badge.caged-A { background: rgba(58,127,212,.22); color: #3a7fd4; border-color: rgba(58,127,212,.55); }
-.capo-shape-badge.caged-G { background: rgba(40,168,88,.22); color: #28a858; border-color: rgba(40,168,88,.55); }
-.capo-shape-badge.caged-E { background: rgba(204,40,40,.22); color: #cc2828; border-color: rgba(204,40,40,.55); }
-.capo-shape-badge.caged-D { background: rgba(184,144,0,.22); color: #b89000; border-color: rgba(184,144,0,.55); }
-.capo-sounding-body { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.capo-shape-name { font-size: 14px; color: var(--text2); font-weight: 600; }
-.capo-sounding-arrow { color: var(--text3); }
-.capo-sounding-chord { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--gold); }
-.capo-sounding-quality { font-size: 12px; color: var(--text3); }
+.capo-sounding-link-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139,124,240,.55));
+    max-width: 60px;
+}
+.capo-sounding-col-mid .capo-sounding-link-line:last-child { background: linear-gradient(90deg, rgba(139,124,240,.55), transparent); }
+.capo-fret-pill {
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--capo-gold, #e0a838);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    background: rgba(255,255,255,.03);
+    white-space: nowrap;
+}
+.capo-sounding-sounds-like { font-size: 11px; color: var(--text3); }
+.capo-sounding-link-arrow { font-size: 13px; color: var(--text3); }
+.capo-sounding-divider { height: 1px; background: var(--glass-border); margin: 14px 0 12px; }
+.capo-sounding-notes { display: flex; flex-wrap: wrap; gap: 8px; }
+.capo-sounding-note-pill {
+    background: rgba(139,124,240,.14);
+    border: 1px solid rgba(139,124,240,.35);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
 
 /* ── Capo slider (stepper) — ported directly from the reference app's
    .gc-capo-mobile-stepper. It has NO card/background of its own — it
@@ -622,22 +787,6 @@
     letter-spacing: .05em;
     flex-shrink: 0;
 }
-.capo-note-toggle {
-    flex-shrink: 0;
-    background: rgba(255, 255, 255, .045);
-    border: 1px solid var(--border2);
-    border-radius: 20px;
-    color: var(--text2);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 11px;
-    line-height: 1.6;
-    cursor: pointer;
-    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease);
-}
-.capo-note-toggle:hover { color: #fff; border-color: var(--capo-gold); background: rgba(139,124,240,.14); }
-.capo-note-toggle[data-mode="flat"] { color: var(--capo-gold); border-color: rgba(139,124,240,.5); background: rgba(139,124,240,.14); }
 .capo-all-shapes-btn {
     flex-shrink: 0;
     background: rgba(255, 255, 255, .045);
@@ -847,25 +996,47 @@
     box-shadow: 0 0 0 1px var(--capo-card-accent, rgba(212, 175, 55, .3));
 }
 
-/* Card-style tab selector (Chord Library / Capo / Scale / CAGED) */
+/* Card-style tab selector (Chord Library / Capo / Scale / CAGED).
+   Widened/enlarged to match the panel/circle cards below it (those run
+   up to --gtr-panel-maxw / 1200px, but .tool-tabs caps at 900px by
+   default) and given more room to breathe. */
 .tool-tabs--cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    max-width: var(--gtr-panel-maxw);
+    gap: 14px;
+    margin-top: 28px;
 }
 .tool-tabs--cards .tool-tab {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
     text-align: left;
-    padding: 12px 14px;
-    border-radius: 12px;
+    padding: 18px 20px;
+    border-radius: 16px;
     background: var(--glass);
     border: 1px solid var(--glass-border);
     color: var(--text2);
     font-family: var(--font-display);
     cursor: pointer;
     transition: all 0.15s var(--ease);
+}
+.tool-tabs--cards .tool-tab-icon {
+    font-size: 24px;
+}
+.tool-tabs--cards .tool-tab-icon--img {
+    width: 26px;
+    height: 26px;
+}
+.tool-tabs--cards .tool-tab-label {
+    font-size: 15px;
+}
+.tool-tabs--cards .tool-tab-desc {
+    font-size: 12.5px;
+}
+@media (max-width: 720px) {
+    .tool-tabs--cards { gap: 10px; }
+    .tool-tabs--cards .tool-tab { padding: 14px 16px; gap: 10px; }
 }
 .tool-tabs--cards .tool-tab:hover {
     background: var(--glass-md);
@@ -876,6 +1047,15 @@
     border-color: rgba(var(--tool-rgb), 0.6);
     color: var(--text);
 }
+/* Chord Library / Capo Explorer tabs live outside #panel-chords / #panel-capo,
+   so they don't inherit the scoped purple --tool-rgb override above.
+   Set it explicitly here so their active highlight matches their panels. */
+.tool-tab[data-panel="panel-chords"],
+.tool-tab[data-panel="panel-capo"] {
+    --tool-rgb: 124, 111, 224;
+    --tool-light-rgb: 194, 182, 255;
+}
+
 .tool-tab-icon {
     flex-shrink: 0;
     font-size: 20px;
@@ -915,5 +1095,161 @@
 @media (max-width: 720px) {
     .tool-tabs--cards {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ================================================================
+   CAPO EXPLORER — GLASS · FROSTED · ELEGANT
+   Adapted from the reference app's #gc-capo-panel treatment
+   (backdrop blur, corner sheen, layered soft shadows, glowing
+   active states) onto this page's own capo class names. Purely
+   additive on top of #panel-capo's existing purple identity —
+   nothing removed, nothing renamed.
+   ================================================================ */
+
+/* ── Panel shell: frosted glass slab with corner sheen ─────────── */
+#panel-capo .tool-controls-card {
+    position: relative;
+    backdrop-filter: var(--blur-lg) saturate(150%);
+    -webkit-backdrop-filter: var(--blur-lg) saturate(150%);
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, .45),
+        0 2px 8px rgba(0, 0, 0, .25),
+        inset 0 1px 0 rgba(255, 255, 255, .10),
+        inset 0 0 0 1px rgba(255, 255, 255, .03);
+    overflow: hidden;
+}
+#panel-capo .tool-controls-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 90% at 6% -12%, rgba(255, 255, 255, .12), transparent 55%);
+    z-index: 0;
+}
+#panel-capo .tool-controls-card::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+    pointer-events: none;
+    z-index: 0;
+}
+#panel-capo .tool-controls-card > * { position: relative; z-index: 1; }
+
+/* ── Capo-fret pills (reuse .root-pill) — frosted, glowing when active ── */
+#panel-capo .root-pill {
+    background: transparent;
+    border-radius: 7px;
+}
+#panel-capo .root-pill.active,
+#panel-capo .root-pill[aria-pressed="true"] {
+    background: linear-gradient(160deg, rgba(255, 255, 255, .30) 0%, rgba(151, 137, 245, .78) 42%, rgba(107, 91, 214, .92) 100%) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .50),
+        inset 0 -8px 12px rgba(0, 0, 0, .16),
+        0 4px 18px rgba(124, 111, 224, .45);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+}
+#panel-capo .root-pill:not(.active):not([aria-pressed="true"]):hover {
+    background: rgba(255, 255, 255, .07);
+    color: var(--purple-l);
+}
+
+/* ── Shape chips: frosted glass pills, per-letter glow kept intact ── */
+.capo-shape-chip {
+    background: rgba(255, 255, 255, .04);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, .10);
+}
+.capo-shape-chip.active {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .35),
+        0 3px 12px rgba(124, 111, 224, .45);
+}
+
+/* ── Capo controls card: same frosted treatment, per-shape tint kept ── */
+#capo-controls-card {
+    position: relative;
+    backdrop-filter: var(--blur-md) saturate(140%);
+    -webkit-backdrop-filter: var(--blur-md) saturate(140%);
+    overflow: hidden;
+}
+#capo-controls-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 90% at 6% -12%, rgba(255, 255, 255, .10), transparent 55%);
+    z-index: 0;
+}
+#capo-controls-card > * { position: relative; z-index: 1; }
+
+/* ── Slider buttons: glassy, glow on the plus/active button ── */
+.capo-slider-btn {
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+}
+.capo-slider-btn-plus {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .35),
+        0 3px 12px rgba(124, 111, 224, .45);
+}
+
+/* ── Sounding-chord result card: glass card with corner sheen ──── */
+.capo-sounding-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .015)),
+                radial-gradient(120% 160% at 50% 0%, rgba(139, 124, 240, .10), transparent 60%);
+    backdrop-filter: var(--blur-md) saturate(140%);
+    -webkit-backdrop-filter: var(--blur-md) saturate(140%);
+    box-shadow:
+        0 12px 34px rgba(0, 0, 0, .35),
+        inset 0 1px 0 rgba(255, 255, 255, .12);
+    overflow: hidden;
+}
+.capo-sounding-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(100% 100% at 0% 0%, rgba(255, 255, 255, .09), transparent 60%);
+    pointer-events: none;
+}
+.capo-sounding-card > * { position: relative; z-index: 1; }
+.capo-shape-big,
+.capo-sounding-chord-big {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+}
+
+/* ── Fret pill + note pills: frosted, subtle sheen ──────────────── */
+.capo-fret-pill {
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+}
+.capo-sounding-note-pill {
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10);
+}
+
+/* ── Divider: subtle glass hairline ─────────────────────────────── */
+.capo-sounding-divider,
+#panel-capo .capo-slider-divider {
+    background: rgba(255, 255, 255, .10);
+}
+
+/* Respect reduced-motion / avoid heavy blur repaint on low-power scroll */
+@media (prefers-reduced-motion: reduce) {
+    #panel-capo .tool-controls-card,
+    #capo-controls-card,
+    .capo-shape-chip,
+    .capo-slider-btn,
+    .capo-sounding-card,
+    .capo-fret-pill,
+    .capo-sounding-note-pill {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 }

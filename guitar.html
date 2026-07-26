@@ -53,7 +53,7 @@
         <div id="circle-of-fifths-mount"></div>
 
         <div class="tool-tabs tool-tabs--cards" role="tablist">
-            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-chords">
+            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-chords">
                 <img class="tool-tab-icon tool-tab-icon--img" src="assets/icons/gchord_lib.png" alt="" />
                 <span class="tool-tab-text">
                     <span class="tool-tab-label">Chord Library</span>
@@ -67,7 +67,7 @@
                     <span class="tool-tab-desc">Find capo positions</span>
                 </span>
             </button>
-            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-scale">
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-scale">
                 <img class="tool-tab-icon tool-tab-icon--img" src="assets/icons/gscale_exp.png" alt="" />
                 <span class="tool-tab-text">
                     <span class="tool-tab-label">Scale Explorer</span>
@@ -83,10 +83,11 @@
             </button>
         </div>
 
-        <section id="panel-scale" class="tool-panel" role="tabpanel">
+        <section id="panel-scale" class="tool-panel" role="tabpanel" hidden>
             <div class="tool-controls-card">
                 <div class="tool-controls-header">
                     <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/gscale_exp.png" alt="" /> Scale Explorer</div>
+                    <button type="button" id="scale-note-toggle" class="reset-btn scale-note-toggle" title="Switch note names between sharps and flats">♯</button>
                 </div>
                 <p class="tool-controls-desc">Pick a root and scale to see it mapped across the fretboard.</p>
                 <div class="ps-row">
@@ -105,8 +106,7 @@
                     <button type="button" id="scale-fret-toggle-15" class="scale-fret-toggle">15</button>
                     <button type="button" id="scale-fret-toggle-24" class="scale-fret-toggle">24</button>
                 </div>
-                <button type="button" id="scale-note-toggle" class="reset-btn scale-note-toggle" title="Switch note names between sharps and flats">♯</button>
-                <button type="button" id="scale-clear-btn" class="reset-btn scale-clear-btn">Clear Fretboard</button>
+                <button type="button" id="scale-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
             </div>
             <div class="gtr-fretboard-panel">
                 <div id="scale-fretboard"></div>
@@ -136,7 +136,7 @@
             </div>
         </section>
 
-        <section id="panel-chords" class="tool-panel" role="tabpanel" hidden>
+        <section id="panel-chords" class="tool-panel" role="tabpanel">
             <div class="tool-controls-card gcv-card">
                 <div class="tool-controls-header">
                     <div class="tool-controls-title">🎵 Chord Finder</div>
@@ -164,7 +164,8 @@
             </div>
             <div class="scale-fretboard-controls-row">
                 <button type="button" id="chordlib-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶ Play</button>
-                <button type="button" id="chordlib-clear-btn" class="reset-btn scale-clear-btn">Clear Fretboard</button>
+                <button type="button" id="chordlib-single-note-toggle" class="reset-btn chordlib-single-note-toggle" aria-pressed="false" title="Play notes one at a time instead of strumming">Single Note</button>
+                <button type="button" id="chordlib-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
             </div>
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="chord-lib-fretboard"></div>
@@ -172,9 +173,10 @@
         </section>
 
         <section id="panel-capo" class="tool-panel" role="tabpanel" hidden>
-            <div class="tool-controls-card">
+            <div class="tool-controls-card" id="capo-controls-card">
                 <div class="tool-controls-header">
                     <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/capo_logo.png" alt="" /> Capo Explorer</div>
+                    <button type="button" id="capo-note-toggle" class="reset-btn capo-note-toggle" title="Switch note names between sharps and flats" data-mode="sharp">♯</button>
                 </div>
                 <p class="tool-controls-desc">Select a capo position, then choose a chord shape to see the sounding chord.</p>
 
@@ -196,7 +198,6 @@
                     <div class="capo-shape-row" id="capo-shape-row">
                         <span class="capo-shape-row-label">Shape:</span>
                         <div class="root-pill-row" id="capo-shape-chips"></div>
-                        <button type="button" id="capo-note-toggle" class="capo-note-toggle" aria-label="Toggle sharp/flat spelling" data-mode="sharp">♯</button>
                         <button type="button" id="capo-all-shapes-btn" class="capo-all-shapes-btn">All Shapes</button>
                     </div>
                 </div>
@@ -204,21 +205,38 @@
 
             <div class="capo-card-grid" id="capo-card-grid"></div>
 
-            <div id="capo-sounding-card" class="capo-sounding-card" hidden>
-                <div class="capo-sounding-top">
-                    <span class="capo-sounding-label">Shape played</span>
-                    <span id="capo-shape-badge" class="capo-shape-badge"></span>
-                </div>
-                <div class="capo-sounding-body">
-                    <span id="capo-shape-name" class="capo-shape-name"></span>
-                    <span class="capo-sounding-arrow">→</span>
-                    <span id="capo-sounding-chord" class="capo-sounding-chord"></span>
-                    <span id="capo-sounding-quality" class="capo-sounding-quality"></span>
-                </div>
+            <div class="scale-fretboard-controls-row">
+                <button type="button" id="capo-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶ Play</button>
+                <button type="button" id="capo-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
             </div>
-
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="capo-fretboard"></div>
+            </div>
+
+            <div id="capo-sounding-card" class="capo-sounding-card" hidden>
+                <div class="capo-sounding-row">
+                    <div class="capo-sounding-col capo-sounding-col-left">
+                        <span class="capo-sounding-eyebrow">Finger Shape</span>
+                        <span id="capo-shape-badge" class="capo-shape-big"></span>
+                        <span id="capo-shape-name" class="capo-shape-sub"></span>
+                    </div>
+                    <div class="capo-sounding-col capo-sounding-col-mid">
+                        <div class="capo-sounding-link">
+                            <span class="capo-sounding-link-line"></span>
+                            <span id="capo-fret-pill" class="capo-fret-pill"></span>
+                            <span class="capo-sounding-link-line"></span>
+                        </div>
+                        <span class="capo-sounding-sounds-like">sounds like</span>
+                        <span class="capo-sounding-link-arrow">→</span>
+                    </div>
+                    <div class="capo-sounding-col capo-sounding-col-right">
+                        <span class="capo-sounding-eyebrow">Real Sounding Chord</span>
+                        <span id="capo-sounding-chord" class="capo-sounding-chord-big"></span>
+                        <span id="capo-sounding-quality" class="capo-sounding-quality"></span>
+                    </div>
+                </div>
+                <div class="capo-sounding-divider"></div>
+                <div id="capo-sounding-notes" class="capo-sounding-notes"></div>
             </div>
         </section>
     </main>

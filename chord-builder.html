@@ -9,9 +9,11 @@
     <link rel="canonical" href="https://chordex.pages.dev/chord-builder.html" />
 
     <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/metronome-widget.css" />
+    <link rel="stylesheet" href="css/coffee-widget.css" />
     <link rel="stylesheet" href="css/circle-of-fifths.css" />
     <link rel="stylesheet" href="css/tool.css" />
-    <link rel="stylesheet" href="css/chord-builder.css" />
+    <link rel="stylesheet" href="css/chord-builder.css?v=2" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -51,25 +53,98 @@
         <div id="circle-of-fifths-mount"></div>
 
         <section class="tool-panel">
-            <div class="controls-row">
-                <div class="control-field">
-                    <label for="key-root">Key</label>
-                    <select id="key-root"></select>
-                </div>
-                <div class="control-field">
-                    <label for="key-mode">Mode</label>
-                    <select id="key-mode">
-                        <option value="major">Major</option>
-                        <option value="minor">Minor</option>
-                    </select>
+            <div class="tool-controls-card global-sound-card">
+                <div class="ps-row">
+                    <span class="ps-micro-label">Sound (applies to both sections below)</span>
+                    <div id="global-sound-pills" class="ps-pills"></div>
                 </div>
             </div>
 
-            <h2 class="section-heading">Diatonic chords — click to hear</h2>
-            <div id="diatonic-grid" class="diatonic-grid"></div>
+            <div class="tool-controls-card cpb-card" id="cpb-card">
+                <div class="tool-controls-header" id="cpb-header-toggle">
+                    <div class="tool-controls-title">🎹 Chord Progression Builder</div>
+                    <div class="tool-controls-header-actions">
+                        <button type="button" id="cpb-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                        <button type="button" id="cpb-collapse-btn" class="card-toggle-btn" aria-label="Collapse Chord Progression Builder">▾</button>
+                    </div>
+                </div>
+                <p class="tool-controls-desc">Pick a root · pick a quality · add to your sequence · play it back</p>
+
+                <div class="card-body-outer" id="cpb-body-outer">
+                <div class="card-body">
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Root Note</span>
+                        <div id="cpb-root-pills" class="root-pill-row"></div>
+                    </div>
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Quality</span>
+                        <div id="cpb-quality-pills" class="ps-pills"></div>
+                    </div>
+                </div>
+
+                <button type="button" id="cpb-add-btn" class="cpb-add-btn">+ Add to Sequence</button>
+
+                <div class="cpb-seq-header">
+                    <span class="ps-micro-label">Sequence</span>
+                    <span id="cpb-seq-count" class="cpb-seq-count">0 / 8 chords</span>
+                </div>
+                <div id="cpb-sequence" class="cpb-sequence">
+                    <div class="cpb-seq-empty">↑ Pick a root and quality above, then hit Add</div>
+                </div>
+
+                <div class="cpb-transport">
+                    <div class="cpb-transport-buttons">
+                        <button type="button" id="cpb-play-btn" class="cpb-tbtn cpb-tbtn--play">▶ Play</button>
+                        <button type="button" id="cpb-stop-btn" class="cpb-tbtn">■ Stop</button>
+                        <button type="button" id="cpb-clear-btn" class="cpb-tbtn">🗑 Clear</button>
+                        <button type="button" id="cpb-copy-btn" class="cpb-tbtn">📋 Copy</button>
+                    </div>
+                    <div class="cpb-transport-settings">
+                        <span class="ps-micro-label">BPM</span>
+                        <input type="number" id="cpb-bpm" class="cpb-bpm-input" min="40" max="240" value="80" />
+                        <span class="ps-micro-label">Beats</span>
+                        <div id="cpb-beats-pills" class="pill-group"></div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tool-controls-card cbk-card" id="cbk-card">
+                <div class="tool-controls-header" id="cbk-header-toggle">
+                    <div class="tool-controls-title">🎼 Chords by Key</div>
+                    <div class="tool-controls-header-actions">
+                        <button type="button" id="key-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                        <button type="button" id="cbk-collapse-btn" class="card-toggle-btn" aria-label="Collapse Chords by Key">▾</button>
+                    </div>
+                </div>
+                <p class="tool-controls-desc">Pick a key and mode to see its diatonic chords and common progressions.</p>
+                <div class="card-body-outer" id="cbk-body-outer">
+                <div class="card-body">
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Key</span>
+                        <div id="key-root-pills" class="root-pill-row"></div>
+                    </div>
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Mode</span>
+                        <div id="key-mode-pills" class="ps-pills"></div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                </div>
+            </div>
 
             <h2 class="section-heading">Common progressions</h2>
-            <div id="progression-list" class="progression-list"></div>
+            <div class="progression-select-row">
+                <span class="ps-micro-label">Progression:</span>
+                <select id="progression-select" class="progression-select"></select>
+                <button type="button" id="progression-play-btn" class="progression-play-btn">▶ Play</button>
+            </div>
+            <p id="progression-desc" class="progression-desc"></p>
+            <div id="progression-cards" class="diatonic-grid progression-cards"></div>
         </section>
     </main>
 
@@ -79,10 +154,16 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <script src="js/metronome-core.js"></script>
     <script src="js/music-theory.js"></script>
-    <script src="js/chord-builder-data.js"></script>
-    <script src="js/chord-builder.js"></script>
+    <script src="js/note-display.js"></script>
+    <script src="js/chord-builder-data.js?v=2"></script>
+    <script src="js/instrument-sound.js?v=2"></script>
+    <script src="js/chord-builder.js?v=2"></script>
+    <script src="js/chord-progression-builder.js?v=2"></script>
     <script src="js/background.js"></script>
+    <script src="js/metronome-widget.js"></script>
+    <script src="js/coffee-widget.js"></script>
     <script src="js/circle-of-fifths.js"></script>
 </body>
 </html>

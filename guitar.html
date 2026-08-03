@@ -9,6 +9,8 @@
     <link rel="canonical" href="https://chordex.pages.dev/guitar.html" />
 
     <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/metronome-widget.css" />
+    <link rel="stylesheet" href="css/coffee-widget.css" />
     <link rel="stylesheet" href="css/circle-of-fifths.css" />
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/fretboard.css" />
@@ -164,8 +166,15 @@
             </div>
             <div class="scale-fretboard-controls-row">
                 <button type="button" id="chordlib-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶ Play</button>
-                <button type="button" id="chordlib-single-note-toggle" class="reset-btn chordlib-single-note-toggle" aria-pressed="false" title="Play notes one at a time instead of strumming">Single Note</button>
+                <button type="button" id="chordlib-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
+                    <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
+                    <span class="chordlib-single-note-pill-label">Arpeggio</span>
+                </button>
                 <button type="button" id="chordlib-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
+            </div>
+            <div class="pedalboard-panel">
+                <div class="pedalboard-panel-label">Effects</div>
+                <div class="pedalboard" id="chordlib-pedalboard"></div>
             </div>
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="chord-lib-fretboard"></div>
@@ -207,7 +216,15 @@
 
             <div class="scale-fretboard-controls-row">
                 <button type="button" id="capo-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶ Play</button>
+                <button type="button" id="capo-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
+                    <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
+                    <span class="chordlib-single-note-pill-label">Arpeggio</span>
+                </button>
                 <button type="button" id="capo-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
+            </div>
+            <div class="pedalboard-panel">
+                <div class="pedalboard-panel-label">Effects</div>
+                <div class="pedalboard" id="capo-pedalboard"></div>
             </div>
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="capo-fretboard"></div>
@@ -247,12 +264,22 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <script src="js/metronome-core.js"></script>
     <script src="js/music-theory.js"></script>
     <script src="js/note-display.js"></script>
     <script src="js/fretboard.js"></script>
     <script src="js/guitar-data.js"></script>
+    <script src="js/guitar-effects.js"></script>
     <script src="js/guitar.js"></script>
     <script src="js/background.js"></script>
+    <script src="js/metronome-widget.js"></script>
+    <script src="js/coffee-widget.js"></script>
     <script src="js/circle-of-fifths.js"></script>
+    <script>
+        if (window.GuitarEffects) {
+            window.GuitarEffects.renderPedalboard(document.getElementById('chordlib-pedalboard'));
+            window.GuitarEffects.renderPedalboard(document.getElementById('capo-pedalboard'));
+        }
+    </script>
 </body>
 </html>

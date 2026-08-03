@@ -287,24 +287,24 @@
 /* Chord Library / CAGED / Capo — explicit shape dots, always gold unless
    overridden by a CAGED per-letter color below. */
 .gtr-fret-dot--shape {
-    background: linear-gradient(160deg, #ffe49a 0%, var(--gold) 55%, #e0a838 100%);
-    border-color: #fff0c2;
+    background: linear-gradient(160deg, #e8c67e 0%, var(--gold) 55%, #b8862c 100%);
+    border-color: #e0c98e;
     color: #2a1c00;
-    box-shadow: 0 0 12px rgba(255, 209, 102, .6);
+    box-shadow: 0 0 6px rgba(255, 209, 102, .35);
 }
 .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
-    background: linear-gradient(160deg, #e4d9ff 0%, #8a6ff5 40%, #6a3fe0 70%, #45238f 100%) !important;
-    border-color: var(--purple-l) !important;
+    background: linear-gradient(160deg, #b6a6e8 0%, #6d54c9 40%, #52309e 70%, #301959 100%) !important;
+    border-color: #8a6ff5 !important;
     color: #fff !important;
-    box-shadow: 0 0 16px rgba(138, 95, 240, .95) !important;
+    box-shadow: 0 0 8px rgba(138, 95, 240, .55) !important;
 }
 
 /* CAGED System — each shape gets its own fixed color, independent of page theme */
-.gtr-fret-dot--shape.caged-C { background: #e07040 !important; border-color: #f0a070 !important; color: #fff !important; box-shadow: 0 0 12px #e0704099; }
-.gtr-fret-dot--shape.caged-A { background: #3a7fd4 !important; border-color: #70b0f5 !important; color: #fff !important; box-shadow: 0 0 12px #3a7fd499; }
-.gtr-fret-dot--shape.caged-G { background: #28a858 !important; border-color: #60d880 !important; color: #fff !important; box-shadow: 0 0 12px #28a85899; }
-.gtr-fret-dot--shape.caged-E { background: #cc2828 !important; border-color: #f06060 !important; color: #fff !important; box-shadow: 0 0 12px #cc282899; }
-.gtr-fret-dot--shape.caged-D { background: #b89000 !important; border-color: #f0d040 !important; color: #fff !important; box-shadow: 0 0 12px #b8900099; }
+.gtr-fret-dot--shape.caged-C { background: #c94812 !important; border-color: #e06830 !important; color: #fff !important; box-shadow: 0 0 6px #e0704060; }
+.gtr-fret-dot--shape.caged-A { background: #2b5f9e !important; border-color: #5288c0 !important; color: #fff !important; box-shadow: 0 0 6px #3a7fd460; }
+.gtr-fret-dot--shape.caged-G { background: #1e7d40 !important; border-color: #48a862 !important; color: #fff !important; box-shadow: 0 0 6px #28a85860; }
+.gtr-fret-dot--shape.caged-E { background: #971e1e !important; border-color: #c04848 !important; color: #fff !important; box-shadow: 0 0 6px #cc282860; }
+.gtr-fret-dot--shape.caged-D { background: #8a6c00 !important; border-color: #c0a020 !important; color: #fff !important; box-shadow: 0 0 6px #b8900060; }
 
 /* Capo bar — ported from the reference app's .fret-cell.capo-active:
    a solid purple bar through the middle of every string's cell at the
@@ -408,23 +408,34 @@
 /* Shape dots (the actual chord-tone fingerings) — violet gradient instead of gold */
 #chord-lib-fretboard .gtr-fret-dot--shape,
 #capo-fretboard .gtr-fret-dot--shape {
-    background: linear-gradient(160deg, #d8c6ff 0%, var(--gf-violet) 55%, var(--gf-violet-d) 100%);
-    border-color: #e6d9ff;
-    color: #1c0f3d;
-    box-shadow: 0 0 12px rgba(138, 92, 245, .65);
+    background: linear-gradient(160deg, #a894d6 0%, var(--gf-violet-d) 55%, #35205e 100%);
+    border-color: #a894d6;
+    color: #e8e0ff;
+    box-shadow: 0 0 6px rgba(138, 92, 245, .35);
 }
 #chord-lib-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]),
 #capo-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
-    background: linear-gradient(160deg, #f0e8ff 0%, #b79bff 40%, #8a5cf5 70%, #4a2a9e 100%) !important;
-    border-color: #fff !important;
-    box-shadow: 0 0 18px rgba(183, 155, 255, 1) !important;
+    background: linear-gradient(160deg, #c4b2ea 0%, #8a5cf5 40%, #4a2a9e 70%, #2a1859 100%) !important;
+    border-color: #b79bff !important;
+    box-shadow: 0 0 9px rgba(183, 155, 255, .6) !important;
 }
 #chord-lib-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot,
 #capo-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot {
-    background: linear-gradient(160deg, #e4d9ff 0%, var(--gf-violet) 55%, var(--gf-violet-d) 100%);
-    border-color: #fff0ff;
+    background: linear-gradient(160deg, #b8a6e0 0%, var(--gf-violet-d) 55%, #2a1859 100%);
+    border-color: #d8c8ff;
     color: #1c0f3d;
-    box-shadow: 0 0 18px rgba(183, 155, 255, .9);
+    box-shadow: 0 0 9px rgba(183, 155, 255, .5);
+}
+
+/* Capo Explorer only — a bit more glow than Chord Library on the same dots */
+#capo-fretboard .gtr-fret-dot--shape {
+    box-shadow: 0 0 16px rgba(138, 92, 245, .75);
+}
+#capo-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
+    box-shadow: 0 0 22px rgba(183, 155, 255, 1) !important;
+}
+#capo-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot {
+    box-shadow: 0 0 22px rgba(183, 155, 255, .9);
 }
 
 /* Capo bar — violet clamp instead of gold (kept, same "identity color"

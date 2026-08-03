@@ -64,11 +64,24 @@
     cursor: pointer;
     transition: all 0.15s var(--ease);
 }
-.tool-tab:hover { background: var(--glass-md); color: var(--text); }
-.tool-tab[aria-selected="true"] {
-    background: rgba(var(--tool-rgb), 0.22);
-    border-color: rgba(var(--tool-rgb), 0.5);
+.tool-tab:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%);
     color: var(--text);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+.tool-tab[aria-selected="true"] {
+    color: var(--text);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%),
+        rgba(var(--tool-rgb), 0.16);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 2px solid rgba(var(--tool-rgb), 0.9);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 3px 10px rgba(var(--tool-rgb), 0.22);
+    transform: translateY(-0.5px);
 }
 
 .tool-panel { max-width: 1200px; margin: 24px auto 80px; padding: 0 24px; }
@@ -196,11 +209,19 @@
     color: #fff;
 }
 .root-pill.active {
-    background: linear-gradient(160deg, rgba(150, 240, 225, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 95, .92) 100%);
-    border-color: rgba(var(--tool-light-rgb), .55);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),
+        radial-gradient(130% 160% at 50% 105%, rgba(var(--tool-rgb), 0.75) 0%, rgba(var(--tool-rgb), 0.38) 55%, rgba(var(--tool-rgb), 0.18) 100%);
+    backdrop-filter: blur(14px) saturate(200%);
+    -webkit-backdrop-filter: blur(14px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid rgba(var(--tool-light-rgb), 1);
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(var(--tool-rgb), .45);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -4px 8px -3px rgba(var(--tool-rgb), 0.4),
+        0 2px 8px rgba(var(--tool-rgb), 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 @media (max-width: 480px) {
     .root-pill { font-size: 11px; padding: 5px 10px; }
@@ -234,17 +255,102 @@
     color: #fff;
 }
 .type-pill-btn.active {
-    background: linear-gradient(160deg, rgba(150, 240, 225, .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(15, 110, 95, .92) 100%);
-    border-color: rgba(var(--tool-light-rgb), .55);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),
+        radial-gradient(130% 160% at 50% 105%, rgba(var(--tool-rgb), 0.75) 0%, rgba(var(--tool-rgb), 0.38) 55%, rgba(var(--tool-rgb), 0.18) 100%);
+    backdrop-filter: blur(14px) saturate(200%);
+    -webkit-backdrop-filter: blur(14px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid rgba(var(--tool-light-rgb), 1);
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(var(--tool-rgb), .45);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -4px 8px -3px rgba(var(--tool-rgb), 0.4),
+        0 2px 8px rgba(var(--tool-rgb), 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .pill-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; margin: 0 3px; }
 .type-pill-btn:active { transform: scale(0.93); transition-duration: 0.08s; }
 @media (max-width: 480px) {
     .type-pill-btn { font-size: 11px; padding: 4px 10px; }
     .ps-type-pills .pill-sep-break { flex-basis: 100%; width: 0; height: 0; margin: 0; }
+}
+
+/* ── Sharp/flat spelling — single shared source of truth for every tool
+   page (Guitar, Bass, Keyboard, Chord Builder). Any button using class
+   ".note-toggle-btn" (plus the legacy per-page aliases below, kept for
+   markup that still uses them) and any accidental pill using class
+   ".sf-acc-pill" gets the identical blue(sharp)/amber(flat) treatment
+   everywhere, driven by window.NoteDisplay's shared localStorage state. ── */
+.sf-sep {
+    display: inline-block;
+    width: 1.5px;
+    height: 22px;
+    background: var(--border2);
+    border-radius: 2px;
+    align-self: center;
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+.sf-acc-pill[data-hidden="1"] { display: none !important; }
+.sf-acc-pill[data-mode="sharp"]:hover {
+    background: rgba(0, 150, 255, .14);
+    border-color: rgba(125, 223, 255, .40);
+    color: #fff;
+}
+.sf-acc-pill[data-mode="flat"]:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
+}
+.sf-acc-pill.active[data-mode="sharp"],
+.sf-acc-pill[aria-pressed="true"][data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .70));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 2px 6px rgba(0, 150, 255, .2);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-acc-pill.active[data-mode="flat"],
+.sf-acc-pill[aria-pressed="true"][data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 2px 6px rgba(255, 209, 102, .2);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+
+/* The sharp/flat toggle button itself — every page's toggle (however
+   it's classed: .chordlib-note-toggle, .caged-note-toggle,
+   .scale-note-toggle, .capo-note-toggle) shares this same look. */
+.chordlib-note-toggle[data-mode="sharp"],
+.caged-note-toggle[data-mode="sharp"],
+.scale-note-toggle[data-mode="sharp"],
+.capo-note-toggle[data-mode="sharp"],
+.sf-toggle[data-mode="sharp"],
+#note-display-toggle[data-mode="sharp"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
+    border-color: rgba(125, 223, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.chordlib-note-toggle[data-mode="flat"],
+.caged-note-toggle[data-mode="flat"],
+.scale-note-toggle[data-mode="flat"],
+.capo-note-toggle[data-mode="flat"],
+.sf-toggle[data-mode="flat"],
+#note-display-toggle[data-mode="flat"] {
+    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
+    border-color: rgba(255, 209, 102, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+}
+.sf-toggle:hover {
+    background: rgba(255, 209, 102, .14);
+    border-color: rgba(255, 209, 102, .40);
+    color: #fff;
 }
 
 .scale-select {
@@ -421,4 +527,43 @@
 @media (max-width: 480px) {
     .scale-pill-note { font-size: 11.5px; padding: 7px 2px 6px; }
     .scale-pill-degree { font-size: 8px; }
+}
+
+/* Arpeggio playback toggle — shared pill chip used next to the Play
+   button on Guitar (Chord Library + Capo Explorer) and Keyboard, so its
+   on/off state reads clearly and looks consistent across tools. */
+.chordlib-single-note-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--glass);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+}
+.chordlib-single-note-pill-icon { font-size: 13px; line-height: 1; }
+.chordlib-single-note-pill:hover {
+    background: rgba(124, 111, 224, .16);
+    border-color: rgba(194, 182, 255, .40);
+    color: #fff;
+}
+.chordlib-single-note-pill:active { transform: scale(0.95); transition-duration: 0.08s; }
+.chordlib-single-note-pill[aria-pressed="true"] {
+    background: linear-gradient(160deg, rgba(216, 198, 255, .40) 0%, rgba(124, 111, 224, .80) 45%, rgba(74, 42, 158, .92) 100%);
+    border-color: rgba(194, 182, 255, .55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(124, 111, 224, .45);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+}
+@media (max-width: 480px) {
+    .chordlib-single-note-pill-label { display: none; }
+    .chordlib-single-note-pill { padding: 8px 11px; }
 }

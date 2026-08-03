@@ -4,43 +4,87 @@
 
     document.documentElement.style.setProperty('--fret-accent-rgb', getComputedStyle(document.documentElement).getPropertyValue('--chordbuilder-rgb'));
 
-    let audioCtx = null;
-    function playChord(notes) {
-        try {
-            audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-            notes.forEach((n, i) => {
-                const semitone = MT.noteIndex(n);
-                const freq = 261.63 * Math.pow(2, semitone / 12);
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.9);
-                osc.connect(gain).connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.9);
-            });
-        } catch (e) { /* audio unavailable */ }
-    }
+    // ── Audio — playback is delegated to the shared InstrumentSound module
+    // (js/instrument-sound.js) so the guitar/keyboard toggle is shared with
+    // the Chord Progression Builder instead of each widget having its own. ──
+    const playChord = window.InstrumentSound.playChord;
 
-    const keyRoot = document.getElementById('key-root');
-    const keyMode = document.getElementById('key-mode');
-    const diatonicGrid = document.getElementById('diatonic-grid');
-    const progressionList = document.getElementById('progression-list');
+    const keyRootPills = document.getElementById('key-root-pills');
+    const keyModePills = document.getElementById('key-mode-pills');
+    const keyNoteToggle = document.getElementById('key-note-toggle');
     const progressionPlayback = document.getElementById('progression-playback');
 
-    MT.NOTES_SHARP.forEach(n => {
-        const opt = document.createElement('option');
-        opt.value = n; opt.textContent = n;
-        keyRoot.appendChild(opt);
+    const NATURALS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+    let keyRootValue = 'C';
+    let keyModeValue = 'major';
+    const keyAccidentalPills = [];
+
+    function selectKeyRoot(note) {
+        keyRootValue = note;
+        keyRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === keyRootValue));
+        renderDiatonic();
+    }
+
+    NATURALS.forEach(note => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'root-pill';
+        btn.textContent = note;
+        btn.dataset.sharp = note;
+        btn.classList.toggle('active', note === keyRootValue);
+        btn.addEventListener('click', () => selectKeyRoot(note));
+        keyRootPills.appendChild(btn);
     });
-    keyRoot.value = 'C';
+
+    const keySep = document.createElement('span');
+    keySep.className = 'sf-sep';
+    keyRootPills.appendChild(keySep);
+
+    MT.NOTES_SHARP.forEach((sharpVal, i) => {
+        if (!sharpVal.includes('#')) return; // naturals already built above
+        const flatVal = MT.NOTES_FLAT[i].replace('b', '♭');
+        const sharpLabel = sharpVal.replace('#', '♯');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'root-pill sf-acc-pill';
+        btn.dataset.sharp = sharpVal;
+        btn.classList.toggle('active', sharpVal === keyRootValue);
+        btn.addEventListener('click', () => selectKeyRoot(sharpVal));
+        keyAccidentalPills.push({ el: btn, sharp: sharpVal, sharpLabel: sharpLabel, flatLabel: flatVal });
+        keyRootPills.appendChild(btn);
+    });
+
+    let keyNoteDisplayMode = window.NoteDisplay.getMode();
+    function refreshKeyAccidentalPills() {
+        keyAccidentalPills.forEach(p => {
+            p.el.dataset.mode = keyNoteDisplayMode;
+            p.el.textContent = keyNoteDisplayMode === 'sharp' ? p.sharpLabel : p.flatLabel;
+        });
+    }
+    refreshKeyAccidentalPills();
+    window.NoteDisplay.bindToggle(keyNoteToggle, mode => {
+        keyNoteDisplayMode = mode;
+        refreshKeyAccidentalPills();
+    });
+
+    [['major', 'Major'], ['minor', 'Minor']].forEach(([value, label]) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'type-pill-btn';
+        btn.textContent = label;
+        btn.dataset.mode = value;
+        btn.classList.toggle('active', value === keyModeValue);
+        btn.addEventListener('click', () => {
+            keyModeValue = value;
+            keyModePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.mode === keyModeValue));
+            renderDiatonic();
+        });
+        keyModePills.appendChild(btn);
+    });
 
     function diatonicChords() {
-        const root = keyRoot.value;
-        const mode = keyMode.value; // 'major' | 'minor'
+        const root = keyRootValue;
+        const mode = keyModeValue; // 'major' | 'minor'
         const preferFlats = MT.PREFERS_FLATS.has(root);
         const scaleName = mode === 'major' ? 'Major (Ionian)' : 'Natural Minor (Aeolian)';
         const scale = MT.scaleNotes(root, scaleName, preferFlats);
@@ -59,63 +103,67 @@
 
     function renderDiatonic() {
         const chords = diatonicChords();
-        diatonicGrid.innerHTML = '';
-        chords.forEach(c => {
-            const card = document.createElement('button');
-            card.type = 'button';
-            card.className = 'diatonic-card';
-            card.innerHTML = `
-                <div class="diatonic-numeral">${c.numeral}</div>
-                <div class="diatonic-name">${c.root} ${c.quality === 'Major' ? '' : c.quality}</div>
-                <div class="diatonic-notes">${c.notes.join(' · ')}</div>
-            `;
-            card.addEventListener('click', () => playChord(c.notes));
-            diatonicGrid.appendChild(card);
-        });
         renderProgressions(chords);
     }
 
+    const progressionSelect = document.getElementById('progression-select');
+    const progressionDesc = document.getElementById('progression-desc');
+    const progressionCards = document.getElementById('progression-cards');
+    const progressionPlayBtn = document.getElementById('progression-play-btn');
+    let progressionIndex = 0;
+
     function renderProgressions(chords) {
-        const mode = keyMode.value;
-        progressionList.innerHTML = '';
-        CBD.PROGRESSIONS[mode].forEach(prog => {
-            const row = document.createElement('div');
-            row.className = 'progression-row';
+        const mode = keyModeValue;
+        const progs = CBD.PROGRESSIONS[mode];
+        if (progressionIndex >= progs.length) progressionIndex = 0;
 
-            const label = document.createElement('div');
-            label.className = 'progression-label';
-            label.textContent = prog.name;
-            row.appendChild(label);
+        progressionSelect.innerHTML = '';
+        progs.forEach((prog, i) => {
+            const opt = document.createElement('option');
+            opt.value = String(i);
+            opt.textContent = `${prog.name} (${prog.tag})`;
+            progressionSelect.appendChild(opt);
+        });
+        progressionSelect.value = String(progressionIndex);
 
-            const chordsWrap = document.createElement('div');
-            chordsWrap.className = 'progression-chords';
-            prog.degrees.forEach(d => {
-                const c = chords[d];
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'progression-chip';
-                btn.textContent = `${c.root}${c.quality === 'Major' ? '' : (c.quality === 'Minor' ? 'm' : ' ' + c.quality)}`;
-                btn.addEventListener('click', () => playChord(c.notes));
-                chordsWrap.appendChild(btn);
-            });
-            row.appendChild(chordsWrap);
+        renderSelectedProgression(chords);
+    }
 
-            const playBtn = document.createElement('button');
-            playBtn.type = 'button';
-            playBtn.className = 'progression-play-btn';
-            playBtn.textContent = '▶ Play';
-            playBtn.addEventListener('click', () => {
-                prog.degrees.forEach((d, i) => {
-                    setTimeout(() => playChord(chords[d].notes), i * 950);
-                });
-            });
-            row.appendChild(playBtn);
+    function renderSelectedProgression(chords) {
+        const mode = keyModeValue;
+        const prog = CBD.PROGRESSIONS[mode][progressionIndex];
+        progressionDesc.textContent = prog.desc;
 
-            progressionList.appendChild(row);
+        progressionCards.innerHTML = '';
+        prog.degrees.forEach(d => {
+            const c = chords[d];
+            const qClass = c.quality === 'Major' ? 'is-major' : (c.quality === 'Minor' ? 'is-minor' : 'is-dim');
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = `diatonic-card ${qClass}`;
+            card.innerHTML = `
+                <div class="diatonic-numeral">${c.numeral}</div>
+                <div class="diatonic-name">${c.root}${c.quality === 'Major' ? '' : (c.quality === 'Minor' ? 'm' : '°')}</div>
+                <div class="diatonic-quality">${c.quality}</div>
+            `;
+            card.addEventListener('click', () => playChord(c.notes));
+            progressionCards.appendChild(card);
         });
     }
 
-    keyRoot.addEventListener('change', renderDiatonic);
-    keyMode.addEventListener('change', renderDiatonic);
+    progressionSelect.addEventListener('change', () => {
+        progressionIndex = Number(progressionSelect.value);
+        renderSelectedProgression(diatonicChords());
+    });
+
+    progressionPlayBtn.addEventListener('click', () => {
+        const mode = keyModeValue;
+        const prog = CBD.PROGRESSIONS[mode][progressionIndex];
+        const chords = diatonicChords();
+        prog.degrees.forEach((d, i) => {
+            setTimeout(() => playChord(chords[d].notes), i * 950);
+        });
+    });
+
     renderDiatonic();
 })();

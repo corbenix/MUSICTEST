@@ -210,6 +210,7 @@
     const LABEL_MODE_TEXT = { notes: 'Notes', intervals: 'Intervals', off: 'Off' };
     let labelMode = 'notes';
     const labelModeToggle = document.getElementById('label-mode-toggle');
+    labelModeToggle.classList.add('active');
 
     function getActiveRoot() {
         return chordRootValue || scaleRootValue || 'C';
@@ -233,7 +234,7 @@
     labelModeToggle.addEventListener('click', () => {
         labelMode = LABEL_MODES[(LABEL_MODES.indexOf(labelMode) + 1) % LABEL_MODES.length];
         labelModeToggle.textContent = LABEL_MODE_TEXT[labelMode];
-        labelModeToggle.classList.toggle('active', labelMode !== 'notes');
+        labelModeToggle.classList.add('active');
         updateKeyLabels();
     });
 
@@ -328,6 +329,20 @@
         if (keyboardPlayBtn) keyboardPlayBtn.classList.remove('is-playing');
     }
 
+    // ── Arpeggio toggle — chords normally play with a quick 45ms stagger
+    // (near-simultaneous, like a strum); when enabled, notes are spaced
+    // out past each tone's decay so only one note sounds at a time.
+    // Scales already play strictly note-by-note, so this only affects
+    // chord playback. ──────────────────────────────────────────────────
+    let keyboardSingleNoteMode = false;
+    const keyboardSingleNoteToggle = document.getElementById('keyboard-single-note-toggle');
+    if (keyboardSingleNoteToggle) {
+        keyboardSingleNoteToggle.addEventListener('click', () => {
+            keyboardSingleNoteMode = !keyboardSingleNoteMode;
+            keyboardSingleNoteToggle.setAttribute('aria-pressed', String(keyboardSingleNoteMode));
+        });
+    }
+
     // ── Playback speed — cycles .5x → .75x → 1x, shared by scale and
     // chord playback. Divides the per-note step delay, so a lower
     // multiplier plays back slower (more time between notes).
@@ -359,7 +374,7 @@
         stopScheduledPlayback();
         const timeline = activeIsChord ? layOutAscending(activeNotes) : buildScaleTimeline();
         if (!timeline.length) return;
-        const stepDelay = (activeIsChord ? 45 : 230) / playSpeed;
+        const stepDelay = activeIsChord ? (keyboardSingleNoteMode ? 420 : 45) / playSpeed : 230 / playSpeed;
         keyboardPlayBtn.classList.add('is-playing');
         timeline.forEach((item, i) => {
             const id = setTimeout(() => {

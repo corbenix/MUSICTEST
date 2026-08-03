@@ -100,36 +100,17 @@
     });
 
     // ── Metronome ───────────────────────────────────────────────────────
+    // Delegates all state (bpm, active) to window.GlobalMetronome so this
+    // panel stays in sync with the floating play/stop button on every page.
     const bpmDisplay = document.getElementById('metro-bpm');
     const bpmMinus = document.getElementById('metro-minus');
     const bpmPlus = document.getElementById('metro-plus');
     const metroToggle = document.getElementById('metro-toggle');
     const metroDot = document.getElementById('metro-dot');
     const metroSlider = document.getElementById('metro-slider');
-    let bpm = 100;
-    let metroActive = false;
-    let metroTimer = null;
-    let metroAudioCtx = null;
+    const GM = window.GlobalMetronome;
 
-    function clickSound() {
-        metroAudioCtx = metroAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
-        const osc = metroAudioCtx.createOscillator();
-        const gain = metroAudioCtx.createGain();
-        osc.frequency.value = 1000;
-        gain.gain.setValueAtTime(0.2, metroAudioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, metroAudioCtx.currentTime + 0.06);
-        osc.connect(gain).connect(metroAudioCtx.destination);
-        osc.start();
-        osc.stop(metroAudioCtx.currentTime + 0.06);
-    }
-
-    function tick() {
-        clickSound();
-        metroDot.classList.add('metro-dot--flash');
-        setTimeout(() => metroDot.classList.remove('metro-dot--flash'), 100);
-    }
-
-    function updateBpmDisplay() {
+    function updateBpmDisplay(bpm) {
         if (document.activeElement !== bpmDisplay) bpmDisplay.value = bpm;
         if (metroSlider) {
             metroSlider.value = bpm;
@@ -140,11 +121,8 @@
 
     function commitBpmInput() {
         let val = parseInt(bpmDisplay.value, 10);
-        if (isNaN(val)) val = bpm;
-        val = Math.min(300, Math.max(30, val));
-        bpm = val;
-        updateBpmDisplay();
-        if (metroActive) restartMetro();
+        if (isNaN(val)) val = GM.getBpm();
+        GM.setBpm(val);
     }
 
     bpmDisplay.addEventListener('input', () => {
@@ -165,27 +143,23 @@
         return value;
     }
 
-    bpmMinus.addEventListener('click', () => { bpm = Math.max(30, bpm - 5); updateBpmDisplay(); if (metroActive) restartMetro(); });
-    bpmPlus.addEventListener('click', () => { bpm = Math.min(300, bpm + 5); updateBpmDisplay(); if (metroActive) restartMetro(); });
+    bpmMinus.addEventListener('click', () => GM.setBpm(GM.getBpm() - 5));
+    bpmPlus.addEventListener('click', () => GM.setBpm(GM.getBpm() + 5));
     if (metroSlider) {
         metroSlider.addEventListener('input', () => {
-            bpm = applySnap(parseInt(metroSlider.value, 10));
-            updateBpmDisplay();
-            if (metroActive) restartMetro();
+            GM.setBpm(applySnap(parseInt(metroSlider.value, 10)));
         });
     }
 
-    function restartMetro() {
-        clearInterval(metroTimer);
-        metroTimer = setInterval(tick, 60000 / bpm);
-    }
+    metroToggle.addEventListener('click', () => GM.toggle());
 
-    metroToggle.addEventListener('click', () => {
-        metroActive = !metroActive;
-        metroToggle.textContent = metroActive ? 'Stop' : 'Start';
-        if (metroActive) { tick(); restartMetro(); }
-        else clearInterval(metroTimer);
+    GM.subscribe((evt) => {
+        if (evt.type === 'tick') {
+            metroDot.classList.add('metro-dot--flash');
+            setTimeout(() => metroDot.classList.remove('metro-dot--flash'), 100);
+            return;
+        }
+        updateBpmDisplay(evt.bpm);
+        metroToggle.textContent = evt.active ? 'Stop' : 'Start';
     });
-
-    updateBpmDisplay();
 })();

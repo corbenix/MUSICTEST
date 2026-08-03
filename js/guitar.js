@@ -89,7 +89,8 @@
                 const gain = ctx.createGain();
                 gain.gain.value = 0.85;
                 source.connect(gain);
-                gain.connect(ctx.destination);
+                const dest = (window.GuitarEffects && window.GuitarEffects.getInputNode(ctx)) || ctx.destination;
+                gain.connect(dest);
 
                 source.start(0);
                 const stopAt = ctx.currentTime + 0.9;
@@ -483,8 +484,14 @@
     // straight from window.NoteDisplay (rather than the page-local
     // chordLibNoteDisplayMode, which isn't initialized yet the first time
     // this runs) so it starts in the right sharp/flat spelling too.
+    // Passes an (empty) dots array rather than leaving it null so the
+    // board renders in "diagram" mode from the very first paint — that's
+    // what stamps each fret cell with its string/fret position, which is
+    // what lets a click here, before any root/type/voicing has ever been
+    // picked, still add a real note to the shape instead of only
+    // previewing a pitch.
     function renderChordLib() {
-        Fretboard.render(chordLibBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, preferFlats: window.NoteDisplay.getMode() === 'flat', showOpenBadge: true });
+        Fretboard.render(chordLibBoard, { tuning: TUNING, numFrets: CAGED_NUM_FRETS, dots: [], preferFlats: window.NoteDisplay.getMode() === 'flat', showOpenBadge: true, openOctaves: OPEN_OCTAVES });
     }
     renderChordLib();
 
@@ -508,8 +515,11 @@
     // as a clone of whichever preset voicing is selected, but the user can
     // click individual strings/frets on the board to add, move, or remove
     // notes — letting them dial in fingerings/voicings that aren't in the
-    // preset list. null = nothing selected yet (board isn't editable).
-    let chordLibCustomDots = null;
+    // preset list. Starts as an empty array (rather than null) so the
+    // board is always editable, even before any root/type/voicing has
+    // been picked — purely manual clicks build up their own shape and
+    // the banner detects whatever chord it forms.
+    let chordLibCustomDots = [];
 
     const VOICING_SHAPE_COLOR = { E: '#a99ef5', A: '#a99ef5', D: '#a99ef5', Open: '#a99ef5' };
 
@@ -639,13 +649,12 @@
     // Explorer's Play button (same is-playing pulse, same disabled state
     // when nothing is selected). ─────────────────────────────────────────
     let chordLibPlayTimeouts = [];
-    let chordLibSingleNoteMode = true;
+    let chordLibSingleNoteMode = false;
     const chordLibSingleNoteToggle = document.getElementById('chordlib-single-note-toggle');
     if (chordLibSingleNoteToggle) {
         chordLibSingleNoteToggle.addEventListener('click', () => {
             chordLibSingleNoteMode = !chordLibSingleNoteMode;
             chordLibSingleNoteToggle.setAttribute('aria-pressed', String(chordLibSingleNoteMode));
-            chordLibSingleNoteToggle.classList.toggle('active', chordLibSingleNoteMode);
         });
     }
     function stopChordLibPlayback() {
@@ -708,6 +717,56 @@
         });
     }
 
+    // Reads the notes actually sounding on the board right now (i.e. what
+    // chordLibCustomDots is currently fretting), lowest pitch to highest
+    // (true sounding pitch, not just string order — a capo'd/high-fretted
+    // low string can sound above an open higher string), de-duped by name.
+    function computeChordLibSoundingNotes() {
+        if (!chordLibCustomDots) return [];
+        const preferFlats = chordLibNoteDisplayMode === 'flat';
+        const seen = new Set();
+        const names = [];
+        chordLibCustomDots
+            .filter(d => !d.muted)
+            .map(d => {
+                const pc = MT.noteIndex(TUNING[d.string]) + d.fret;
+                const abs = OPEN_OCTAVES[d.string] * 12 + pc;
+                return { name: MT.noteName(pc, preferFlats), abs };
+            })
+            .sort((a, b) => a.abs - b.abs)
+            .forEach(n => { if (!seen.has(n.name)) { seen.add(n.name); names.push(n.name); } });
+        return names;
+    }
+
+    // Same detect-as-you-go pattern the Keyboard page's chord-display card
+    // uses: figure out what chord (if any) the currently-sounding notes
+    // actually form, rather than just listing the raw pitches — so the
+    // banner reflects the real chord (root + quality) after manual edits,
+    // not only the untouched preset's original name.
+    function updateChordLibDisplay() {
+        const displayName = document.querySelector('#chordlib-display .chord-display-name');
+        const displayNotes = document.querySelector('#chordlib-display .chord-display-notes');
+        if (!displayName || !displayNotes) return;
+        const noteNames = computeChordLibSoundingNotes();
+        const preferFlats = chordLibNoteDisplayMode === 'flat';
+        if (!noteNames.length) {
+            displayName.textContent = 'Select a chord';
+            displayName.classList.remove('has-chord');
+            displayNotes.textContent = '';
+            return;
+        }
+        const detected = MT.detectChord(noteNames, preferFlats);
+        if (detected) {
+            const typeLabel = detected.chordName === 'Major' ? 'Major' : detected.chordName;
+            displayName.textContent = `${MT.noteName(MT.noteIndex(detected.root), preferFlats)} ${typeLabel}`;
+            displayName.classList.add('has-chord');
+        } else {
+            displayName.textContent = noteNames.length === 1 ? noteNames[0] : 'No chord match';
+            displayName.classList.remove('has-chord');
+        }
+        displayNotes.textContent = noteNames.join(' · ');
+    }
+
     function renderChordLibBoard() {
         const preferFlats = chordLibNoteDisplayMode === 'flat';
         Fretboard.render(chordLibBoard, {
@@ -716,8 +775,13 @@
             dots: chordLibCustomDots,
             preferFlats,
             showOpenBadge: true,
+            openOctaves: OPEN_OCTAVES,
         });
         if (chordLibPlayBtn) chordLibPlayBtn.disabled = !chordLibCustomDots.some(d => !d.muted);
+        // Keep the banner (both the chord name AND the note list) in sync
+        // with whatever is actually fretted, including manual edits, not
+        // just the untouched preset's theoretical chord formula.
+        updateChordLibDisplay();
     }
 
     function selectVoicing(i) {
@@ -736,19 +800,16 @@
         chordLibTypeValue = 'Major';
         chordLibVoicings = [];
         chordLibVoicingIndex = -1;
-        chordLibCustomDots = null;
+        chordLibCustomDots = [];
         stopChordLibPlayback();
-        if (chordLibPlayBtn) chordLibPlayBtn.disabled = true;
         chordLibRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
         chordLibTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === 'Major'));
         chordLibTypeRow.classList.remove('ps-visible');
-        const displayName = document.querySelector('#chordlib-display .chord-display-name');
-        const displayNotes = document.querySelector('#chordlib-display .chord-display-notes');
-        displayName.textContent = 'Select a chord';
-        displayName.classList.remove('has-chord');
-        displayNotes.textContent = '';
         renderVoicingChips();
-        renderChordLib();
+        // Re-render through the board+banner path (not the plain
+        // placeholder renderChordLib) so the neck stays editable and the
+        // banner/play button reflect the (now empty) shape consistently.
+        renderChordLibBoard();
     }
 
     function renderChordFinder() {
@@ -756,14 +817,15 @@
         const displayName = document.querySelector('#chordlib-display .chord-display-name');
         const displayNotes = document.querySelector('#chordlib-display .chord-display-notes');
         if (!root) {
-            displayName.textContent = 'Select a chord';
-            displayName.classList.remove('has-chord');
-            displayNotes.textContent = '';
             chordLibVoicings = [];
             chordLibVoicingIndex = -1;
-            chordLibCustomDots = null;
+            chordLibCustomDots = [];
             renderVoicingChips();
-            renderChordLib();
+            // renderChordLibBoard (not renderChordLib) so the neck stays
+            // editable and the banner/play button reflect the shape,
+            // which is empty here but will update live as the player
+            // clicks notes on the board with no root/type chosen.
+            renderChordLibBoard();
             return;
         }
         const type = chordLibTypeValue;
@@ -794,47 +856,53 @@
     }
 
     chordLibBoard.addEventListener('click', e => {
-        if (!chordLibCustomDots) return;
-
         const badge = e.target.closest('.gtr-open-note-badge');
+        const cell = badge ? null : e.target.closest('.gtr-fret-cell');
+
+        // The neck is always editable now, whether or not a root/type/
+        // voicing has been picked — clicking a string/fret edits the
+        // live custom-dots shape (add/move/remove a note). This is what
+        // lets purely manual clicks, with no chord ever selected, still
+        // build a real shape: renderChordLibBoard() re-detects and shows
+        // whatever chord those notes form in the banner below.
         if (badge && badge.dataset.string !== undefined) {
             const s = Number(badge.dataset.string);
             const idx = chordLibCustomDots.findIndex(d => d.string === s);
             if (idx < 0) {
                 // blank string -> open
-                chordLibCustomDots.push({ string: s, fret: 0, isRoot: true });
+                chordLibCustomDots.push({ string: s, fret: 0, isRoot: true, userEdited: true });
                 playChordLibNote(s, 0);
             } else if (chordLibCustomDots[idx].fret === 0 && !chordLibCustomDots[idx].muted) {
                 // open -> muted
-                chordLibCustomDots[idx] = { string: s, fret: 0, muted: true };
+                chordLibCustomDots[idx] = { string: s, fret: 0, muted: true, userEdited: true };
             } else if (chordLibCustomDots[idx].muted) {
                 // muted -> blank
                 chordLibCustomDots.splice(idx, 1);
             } else {
                 // fretted -> open
-                chordLibCustomDots[idx] = { string: s, fret: 0, isRoot: true };
+                chordLibCustomDots[idx] = { string: s, fret: 0, isRoot: true, userEdited: true };
                 playChordLibNote(s, 0);
             }
             renderChordLibBoard();
             return;
         }
 
-        const cell = e.target.closest('.gtr-fret-cell');
-        if (!cell || cell.dataset.string === undefined) return;
-        const s = Number(cell.dataset.string);
-        const f = Number(cell.dataset.fret);
-        const idx = chordLibCustomDots.findIndex(d => d.string === s && !d.muted);
-        if (idx >= 0 && chordLibCustomDots[idx].fret === f) {
-            // clicking the already-selected note removes it (string unused)
-            chordLibCustomDots.splice(idx, 1);
-        } else {
-            if (idx >= 0) chordLibCustomDots.splice(idx, 1);
-            const mutedIdx = chordLibCustomDots.findIndex(d => d.string === s && d.muted);
-            if (mutedIdx >= 0) chordLibCustomDots.splice(mutedIdx, 1);
-            chordLibCustomDots.push({ string: s, fret: f, isRoot: true });
-            playChordLibNote(s, f);
+        if (cell && cell.dataset.string !== undefined) {
+            const s = Number(cell.dataset.string);
+            const f = Number(cell.dataset.fret);
+            const idx = chordLibCustomDots.findIndex(d => d.string === s && !d.muted);
+            if (idx >= 0 && chordLibCustomDots[idx].fret === f) {
+                // clicking the already-selected note removes it (string unused)
+                chordLibCustomDots.splice(idx, 1);
+            } else {
+                if (idx >= 0) chordLibCustomDots.splice(idx, 1);
+                const mutedIdx = chordLibCustomDots.findIndex(d => d.string === s && d.muted);
+                if (mutedIdx >= 0) chordLibCustomDots.splice(mutedIdx, 1);
+                chordLibCustomDots.push({ string: s, fret: f, isRoot: true, userEdited: true });
+                playChordLibNote(s, f);
+            }
+            renderChordLibBoard();
         }
-        renderChordLibBoard();
     });
 
     // ── Capo Explorer ───────────────────────────────────────────────────
@@ -1103,6 +1171,14 @@
     // ── Play button — strums the sounding chord's fretted/open notes,
     // low string to high, same pattern as the Chord Library's Play. ──────
     let capoPlayTimeouts = [];
+    let capoSingleNoteMode = false;
+    const capoSingleNoteToggle = document.getElementById('capo-single-note-toggle');
+    if (capoSingleNoteToggle) {
+        capoSingleNoteToggle.addEventListener('click', () => {
+            capoSingleNoteMode = !capoSingleNoteMode;
+            capoSingleNoteToggle.setAttribute('aria-pressed', String(capoSingleNoteMode));
+        });
+    }
     function stopCapoPlayback() {
         capoPlayTimeouts.forEach(id => clearTimeout(id));
         capoPlayTimeouts = [];
@@ -1117,7 +1193,11 @@
             .map(d => ({ note: MT.noteName(MT.noteIndex(TUNING[d.string]) + d.fret, false), octave: Math.floor((OPEN_OCTAVES[d.string] * 12 + MT.noteIndex(TUNING[d.string]) + d.fret) / 12) }));
         if (!notes.length) return;
         stopCapoPlayback();
-        const strumDelay = 45;
+        // Strummed mode overlaps notes with a short 45ms stagger; arpeggio
+        // mode spaces them out past each tone's ~0.9s decay so only one
+        // note is ever sounding at a time, like plucking through the
+        // shape instead of strumming it.
+        const strumDelay = capoSingleNoteMode ? 420 : 45;
         capoPlayBtn.classList.add('is-playing');
         notes.forEach((item, i) => {
             const id = setTimeout(() => {

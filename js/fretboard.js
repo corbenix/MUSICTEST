@@ -75,7 +75,8 @@ window.Fretboard = (function () {
                 badge.dataset.string = s;
                 if (openOctave !== null) badge.dataset.abs = openOctave * 12 + openIdx;
                 if (isDiagram) {
-                    const isMuted = dots.some(d => d.string === s && d.muted);
+                    const mutedMatch = dots.find(d => d.string === s && d.muted);
+                    const isMuted = !!mutedMatch;
                     // A string "sounds open" for badge purposes either when
                     // it's a literal fret-0 dot (Chord Library, no capo) or
                     // when the capo itself is fretting it (capoChordDots
@@ -87,7 +88,7 @@ window.Fretboard = (function () {
                     // dot, not viaCapo) are left as the blank placeholder
                     // here since that note is already shown at its own fret.
                     const openMatch = dots.find(d => d.string === s && !d.muted && (d.fret === 0 || d.viaCapo));
-                    if (isMuted) { badge.classList.add('is-mute'); badge.textContent = 'X'; }
+                    if (isMuted) { badge.classList.add('is-mute'); if (mutedMatch.userEdited) badge.classList.add('gtr-open-note-badge--user-edited'); badge.textContent = 'X'; }
                     else if (openMatch && openMatch.viaCapo) {
                         // Sounding because the capo bars it, not because a
                         // finger presses it. The badge is a *source* legend
@@ -103,6 +104,7 @@ window.Fretboard = (function () {
                         // A genuinely open string with no capo involved —
                         // plain open-string indicator, no root ring.
                         badge.classList.add('is-open');
+                        if (openMatch.userEdited) badge.classList.add('gtr-open-note-badge--user-edited');
                         badge.textContent = 'O';
                     }
                     else { badge.classList.add('is-blank'); badge.textContent = '·'; }
@@ -160,7 +162,7 @@ window.Fretboard = (function () {
                             dot.textContent = match.label ? MT.noteName(MT.noteIndex(match.label), preferFlats) : MT.noteName(noteIdx, preferFlats);
                         } else if (match) {
                             if (match.isRoot) cell.classList.add('active');
-                            dot.className = 'gtr-fret-dot gtr-fret-dot--shape' + (match.cagedLetter ? ` caged-${match.cagedLetter}` : '');
+                            dot.className = 'gtr-fret-dot gtr-fret-dot--shape' + (match.cagedLetter ? ` caged-${match.cagedLetter}` : '') + (match.userEdited ? ' gtr-fret-dot--user-edited' : '');
                             // Labels are always a note name (e.g. the chord's
                             // root), baked in whatever spelling was current
                             // when the shape was built. Re-spell it through

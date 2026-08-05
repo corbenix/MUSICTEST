@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/coffee-widget.css" />
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/tools.css" />
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -34,7 +35,7 @@
             <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="tools.html" aria-current="page" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
-        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn">Guide</a>
         </div>
     </nav>
 
@@ -156,6 +157,38 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <div class="guide-modal" id="guide-modal">
+        <div class="guide-modal-backdrop" id="guide-modal-backdrop"></div>
+        <div class="guide-modal-panel" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+            <button type="button" class="guide-modal-close" id="guide-modal-close" aria-label="Close guide">✕</button>
+            <h2 id="guide-modal-title">🧰 Quick Guide</h2>
+            <p class="guide-modal-intro">A fast tour of what each part of the Other Tools page does.</p>
+            <div class="guide-modal-list">
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎯</div>
+                    <div>
+                        <div class="guide-modal-item-title">Tuner</div>
+                        <p>Start the tuner to use your mic — the needle and cents readout show how close you are to pitch.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🥁</div>
+                    <div>
+                        <div class="guide-modal-item-title">Metronome</div>
+                        <p>Set a BPM from 20–300, then tap ▶ to click along.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎼</div>
+                    <div>
+                        <div class="guide-modal-item-title">Song Analyzer</div>
+                        <p>Drop in an audio file to detect its BPM, key, and chord progression.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/metronome-core.js"></script>
     <script src="js/music-theory.js"></script>
     <script src="js/tools.js"></script>
@@ -163,5 +196,24 @@
     <script src="js/background.js"></script>
     <script src="js/metronome-widget.js"></script>
     <script src="js/coffee-widget.js"></script>
+    <script>
+        (function () {
+            const openBtn = document.getElementById('guide-nav-btn');
+            const modal = document.getElementById('guide-modal');
+            const backdrop = document.getElementById('guide-modal-backdrop');
+            const closeBtn = document.getElementById('guide-modal-close');
+            if (!openBtn || !modal) return;
+
+            function open() { modal.classList.add('guide-modal--open'); }
+            function close() { modal.classList.remove('guide-modal--open'); }
+
+            openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });
+            closeBtn.addEventListener('click', close);
+            backdrop.addEventListener('click', close);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/fretboard.css" />
     <link rel="stylesheet" href="css/guitar.css" />
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -37,7 +38,7 @@
             <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
-        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn">Guide</a>
         </div>
     </nav>
 
@@ -139,6 +140,10 @@
         </section>
 
         <section id="panel-chords" class="tool-panel" role="tabpanel">
+            <div class="pedalboard-panel">
+                <div class="pedalboard-panel-label"><i class="ti ti-grid-dots" aria-hidden="true"></i> Effects Pedals</div>
+                <div class="pedalboard" id="chordlib-pedalboard"></div>
+            </div>
             <div class="tool-controls-card gcv-card">
                 <div class="tool-controls-header">
                     <div class="tool-controls-title">🎵 Chord Finder</div>
@@ -172,16 +177,16 @@
                 </button>
                 <button type="button" id="chordlib-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
             </div>
-            <div class="pedalboard-panel">
-                <div class="pedalboard-panel-label">Effects</div>
-                <div class="pedalboard" id="chordlib-pedalboard"></div>
-            </div>
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="chord-lib-fretboard"></div>
             </div>
         </section>
 
         <section id="panel-capo" class="tool-panel" role="tabpanel" hidden>
+            <div class="pedalboard-panel">
+                <div class="pedalboard-panel-label"><i class="ti ti-grid-dots" aria-hidden="true"></i> Effects Pedals</div>
+                <div class="pedalboard" id="capo-pedalboard"></div>
+            </div>
             <div class="tool-controls-card" id="capo-controls-card">
                 <div class="tool-controls-header">
                     <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/capo_logo.png" alt="" /> Capo Explorer</div>
@@ -222,10 +227,6 @@
                 </button>
                 <button type="button" id="capo-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
             </div>
-            <div class="pedalboard-panel">
-                <div class="pedalboard-panel-label">Effects</div>
-                <div class="pedalboard" id="capo-pedalboard"></div>
-            </div>
             <div class="gtr-fretboard-panel" style="margin-top:18px;">
                 <div id="capo-fretboard"></div>
             </div>
@@ -264,6 +265,59 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <div class="guide-modal" id="guide-modal">
+        <div class="guide-modal-backdrop" id="guide-modal-backdrop"></div>
+        <div class="guide-modal-panel" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+            <button type="button" class="guide-modal-close" id="guide-modal-close" aria-label="Close guide">✕</button>
+            <h2 id="guide-modal-title">🎸 Quick Guide</h2>
+            <p class="guide-modal-intro">A fast tour of what each part of the Guitar page does.</p>
+            <div class="guide-modal-list">
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon"><img src="assets/icons/gchord_lib.png" alt="" /></div>
+                    <div>
+                        <div class="guide-modal-item-title">Chord Library</div>
+                        <p>Pick a root and chord type to see fingerings, then tap a voicing to view it on the fretboard.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon"><img src="assets/icons/capo_logo.png" alt="" /></div>
+                    <div>
+                        <div class="guide-modal-item-title">Capo Explorer</div>
+                        <p>Slide the capo to a fret and choose a shape to hear and see the sounding chord.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon"><img src="assets/icons/gscale_exp.png" alt="" /></div>
+                    <div>
+                        <div class="guide-modal-item-title">Scale Explorer</div>
+                        <p>Browse scales across the whole neck, with degrees marked on every note.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon"><i class="ti ti-layout-grid" aria-hidden="true"></i></div>
+                    <div>
+                        <div class="guide-modal-item-title">CAGED System</div>
+                        <p>Learn the 5 CAGED shapes and how they connect up the neck.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon"><i class="ti ti-grid-dots" aria-hidden="true"></i></div>
+                    <div>
+                        <div class="guide-modal-item-title">Effects Pedals</div>
+                        <p>In Chord Library and Capo Explorer, tap a pedal to open its controls and the footswitch to turn it on. Amp swaps in an electric guitar tone; Overdrive needs Amp on first.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🙏</div>
+                    <div>
+                        <div class="guide-modal-item-title">Credits</div>
+                        <p>Guitar samples — University of Iowa Electronic Music Studios. Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>. Thanks to everyone who shared these samples.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/metronome-core.js"></script>
     <script src="js/music-theory.js"></script>
     <script src="js/note-display.js"></script>
@@ -280,6 +334,21 @@
             window.GuitarEffects.renderPedalboard(document.getElementById('chordlib-pedalboard'));
             window.GuitarEffects.renderPedalboard(document.getElementById('capo-pedalboard'));
         }
+        (function () {
+            const openBtn = document.getElementById('guide-nav-btn');
+            const modal = document.getElementById('guide-modal');
+            const backdrop = document.getElementById('guide-modal-backdrop');
+            const closeBtn = document.getElementById('guide-modal-close');
+            if (!openBtn || !modal) return;
+            function open() { modal.classList.add('guide-modal--open'); }
+            function close() { modal.classList.remove('guide-modal--open'); }
+            openBtn.addEventListener('click', e => { e.preventDefault(); open(); });
+            backdrop.addEventListener('click', close);
+            closeBtn.addEventListener('click', close);
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
+            });
+        })();
     </script>
 </body>
 </html>

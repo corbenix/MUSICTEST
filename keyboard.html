@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/circle-of-fifths.css" />
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/keyboard.css" />
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -35,7 +36,7 @@
             <a class="nclg-nav-link" href="keyboard.html" aria-current="page" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
-        <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+        <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn">Guide</a>
         </div>
     </nav>
 
@@ -142,6 +143,45 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <div class="guide-modal" id="guide-modal">
+        <div class="guide-modal-backdrop" id="guide-modal-backdrop"></div>
+        <div class="guide-modal-panel" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+            <button type="button" class="guide-modal-close" id="guide-modal-close" aria-label="Close guide">✕</button>
+            <h2 id="guide-modal-title">🎹 Quick Guide</h2>
+            <p class="guide-modal-intro">A fast tour of what each part of the Keyboard page does.</p>
+            <div class="guide-modal-list">
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎶</div>
+                    <div>
+                        <div class="guide-modal-item-title">Scale Explorer</div>
+                        <p>Pick a root and mode to see its notes highlighted across the keyboard.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎹</div>
+                    <div>
+                        <div class="guide-modal-item-title">Chord Finder</div>
+                        <p>Pick a root and chord type to see its notes highlighted, then browse chord inversions below the keyboard.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">⌨</div>
+                    <div>
+                        <div class="guide-modal-item-title">Play & Computer Keyboard</div>
+                        <p>Toggle Arpeggio, octave range, sustain, and sharps/flats. With Keyboard input on, your computer keys play notes — Z/X shifts the octave down/up.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🙏</div>
+                    <div>
+                        <div class="guide-modal-item-title">Credits</div>
+                        <p>Piano samples — Salamander Grand Piano, recorded by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>). Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/metronome-core.js"></script>
     <script src="js/music-theory.js"></script>
     <script src="js/note-display.js"></script>
@@ -151,5 +191,24 @@
     <script src="js/metronome-widget.js"></script>
     <script src="js/coffee-widget.js"></script>
     <script src="js/circle-of-fifths.js"></script>
+    <script>
+        (function () {
+            const openBtn = document.getElementById('guide-nav-btn');
+            const modal = document.getElementById('guide-modal');
+            const backdrop = document.getElementById('guide-modal-backdrop');
+            const closeBtn = document.getElementById('guide-modal-close');
+            if (!openBtn || !modal) return;
+
+            function open() { modal.classList.add('guide-modal--open'); }
+            function close() { modal.classList.remove('guide-modal--open'); }
+
+            openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });
+            closeBtn.addEventListener('click', close);
+            backdrop.addEventListener('click', close);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
+            });
+        })();
+    </script>
 </body>
 </html>

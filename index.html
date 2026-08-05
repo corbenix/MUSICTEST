@@ -43,11 +43,12 @@
     <link rel="stylesheet" href="css/metronome-widget.css" />
     <link rel="stylesheet" href="css/coffee-widget.css" />
     <link rel="stylesheet" href="css/landing.css" />
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="page-home">
     <div class="cn-bg" aria-hidden="true">
         <div class="cn-bg-glow cn-bg-glow--1"></div>
         <div class="cn-bg-glow cn-bg-glow--2"></div>
@@ -72,7 +73,7 @@
             <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
-            <a class="nclg-nav-link nclg-nav-link--text" href="#">Guide</a>
+            <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn">Guide</a>
         </div>
     </nav>
 
@@ -126,9 +127,81 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <div class="guide-modal" id="guide-modal">
+        <div class="guide-modal-backdrop" id="guide-modal-backdrop"></div>
+        <div class="guide-modal-panel" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+            <button type="button" class="guide-modal-close" id="guide-modal-close" aria-label="Close guide">✕</button>
+            <h2 id="guide-modal-title">🎶 Quick Start Guide</h2>
+            <p class="guide-modal-intro">Chord Nexus in a nutshell — what's in each section, and where to go for what.</p>
+            <div class="guide-modal-list">
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎸</div>
+                    <div>
+                        <div class="guide-modal-item-title">Guitar</div>
+                        <p>Chord Library, Capo Explorer, Scale Explorer, and the CAGED system, plus effects pedals for chord and capo tones.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon"><img src="assets/icons/bass_logo.png" alt="" /></div>
+                    <div>
+                        <div class="guide-modal-item-title">Bass</div>
+                        <p>Full fretboard scale positions and root-note maps for 4- and 5-string bass.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎹</div>
+                    <div>
+                        <div class="guide-modal-item-title">Keyboard</div>
+                        <p>An interactive piano with a Scale Explorer, Chord Finder, and chord inversions.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🎵</div>
+                    <div>
+                        <div class="guide-modal-item-title">Chord Builder</div>
+                        <p>Build and hear chord progressions in any key, or browse common progressions by key.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🧰</div>
+                    <div>
+                        <div class="guide-modal-item-title">Other Tools</div>
+                        <p>A chromatic tuner, metronome, and a song key analyzer that detects key and chords from an audio file.</p>
+                    </div>
+                </div>
+                <div class="guide-modal-item">
+                    <div class="guide-modal-item-icon">🙏</div>
+                    <div>
+                        <div class="guide-modal-item-title">Credits</div>
+                        <p>Real instrument samples power this app's sound — Piano: Salamander Grand Piano, recorded by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>). Guitar: University of Iowa Electronic Music Studios. Bass: Karoryfer Samples. Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/metronome-core.js"></script>
     <script src="js/background.js"></script>
     <script src="js/metronome-widget.js"></script>
     <script src="js/coffee-widget.js"></script>
+    <script>
+        (function () {
+            const openBtn = document.getElementById('guide-nav-btn');
+            const modal = document.getElementById('guide-modal');
+            const backdrop = document.getElementById('guide-modal-backdrop');
+            const closeBtn = document.getElementById('guide-modal-close');
+            if (!openBtn || !modal) return;
+
+            function open() { modal.classList.add('guide-modal--open'); }
+            function close() { modal.classList.remove('guide-modal--open'); }
+
+            openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });
+            closeBtn.addEventListener('click', close);
+            backdrop.addEventListener('click', close);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -1,0 +1,38 @@
+/* ==========================================================================
+   MOBILE TOUCH FEEDBACK
+   ==========================================================================
+   Standalone stylesheet for touch-specific interaction polish. Separate
+   from mobile.css and nav-mobile.css on purpose — this file only adds
+   touch-device behavior (tap feedback, no-hover fallbacks) and never
+   changes layout/sizing, so it can be dropped or edited independently.
+
+   Loaded only at mobile widths via the <link media="(max-width: 768px)">
+   attribute in each page's <head>. Ideas borrowed from patterns seen in
+   the single-page prototype (1.html/1.css): touch-action manipulation
+   to kill tap delay, and @media (hover: none) for press feedback +
+   surfacing hover-only affordances on devices that can't hover.
+   ========================================================================== */
+
+/* Removes the ~300ms tap delay and double-tap-to-zoom on tappable
+   elements, so nav links and buttons feel instant. */
+a, button, [role="button"] {
+    touch-action: manipulation;
+}
+
+@media (hover: none) {
+    /* Visible press feedback in place of :hover, which never fires on
+       touch. Applies to the header nav drawer links and the in-page
+       tool-switcher cards/buttons. */
+    .nclg-nav-link:active,
+    .nclg-nav-toggle:active,
+    .section-nav-btn:active {
+        transform: scale(0.96);
+        transition-duration: 0.08s;
+    }
+
+    /* Any hover-only affordance (tooltips, hint text) should just be
+       visible by default on touch devices rather than unreachable. */
+    [data-tooltip]:hover::after {
+        display: none;
+    }
+}

@@ -249,6 +249,13 @@ a { color: inherit; text-decoration: none; }
 }
 .nclg-nav-link[aria-current="page"] .nclg-nav-icon { filter: none; }
 
+/* Mobile hamburger toggle button — hidden by default. Its visible/flex
+   state and the drawer it opens live entirely in css/nav-mobile.css,
+   which only loads on mobile widths; this base rule just ensures the
+   button doesn't render with unstyled browser defaults on desktop. */
+.nclg-nav-toggle { display: none; }
+.nclg-nav-scrim { display: none; }
+
 /* ── Section nav card (in-page tool switcher) ────────────────────────── */
 .sr-only {
     position: absolute;

@@ -73,19 +73,18 @@
 
 @media (max-width: 768px) {
     /* Beyond stripping the blur, flatten the actual "glass" look on
-       components that still read as frosted glass from a translucent
-       gradient background alone (no blur needed for that effect on a
-       dark page). Reuses the same solid card tokens (--bg3 / --border2)
-       already used elsewhere on this page for non-glass cards, e.g.
-       .gcv-voicing-chip and .scale-fret-toggle-group in guitar.css, so
-       this matches the app's existing "solid card" style rather than a
-       one-off color.  */
+       components that still read as frosted glass even without blur —
+       a 50%-alpha background (var(--bg3)) still lets the page's glow
+       show through it, which reads as translucent/glass on its own.
+       Uses #1a1830, the same fully-opaque solid color guitar.css
+       already uses elsewhere on this page (its tooltip background),
+       so this is a real flat card, not just a lighter shade of glass. */
     .tool-tabs--cards .tool-tab {
-        background: var(--bg3);
+        background: #1a1830;
         border: 1px solid var(--border2);
     }
     .tool-tabs--cards .tool-tab[aria-selected="true"] {
-        background: var(--bg3);
+        background: #221c48;
         border: 1px solid var(--border2);
         border-bottom: 2px solid rgba(var(--tool-light-rgb), 0.9);
         box-shadow: none;

@@ -67,7 +67,12 @@
                 <span>NEXUS</span>
             </div>
         </a>
-        <div class="nclg-nav-links">
+        <button class="nclg-nav-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nclg-nav-links">
+            <span class="nclg-nav-toggle-bar"></span>
+            <span class="nclg-nav-toggle-bar"></span>
+            <span class="nclg-nav-toggle-bar"></span>
+        </button>
+        <div class="nclg-nav-links" id="nclg-nav-links">
             <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
             <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
             <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
@@ -75,6 +80,7 @@
             <a class="nclg-nav-link" href="tools.html" aria-label="Other Tools" title="Other Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
             <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn">Guide</a>
         </div>
+        <div class="nclg-nav-scrim"></div>
     </nav>
 
 
@@ -181,6 +187,7 @@
     </div>
 
     <script src="js/metronome-core.js"></script>
+    <script src="js/mobile-nav.js"></script>
     <script src="js/background.js"></script>
     <script src="js/metronome-widget.js"></script>
     <script src="js/coffee-widget.js"></script>

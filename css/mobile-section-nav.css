@@ -1,34 +1,21 @@
 /* ==========================================================================
    MOBILE SECTION NAV (in-page tool switcher pills)
    ==========================================================================
-   Standalone stylesheet for .section-nav-card / .section-nav-btn on small
-   screens. Separate from mobile.css and nav-mobile.css on purpose — this
-   only touches the in-page tool-switcher pill bar, nothing else.
+   Standalone stylesheet for .section-nav-card on small screens. Separate
+   from mobile.css and nav-mobile.css on purpose — this only touches the
+   in-page tool-switcher pill bar, nothing else.
 
    Loaded only at mobile widths via the <link media="(max-width: 768px)">
    attribute in each page's <head>.
 
-   Idea borrowed from the instrument tab bar fix in the 1.html/1.css
-   prototype: turn a nowrap flex row into a proper horizontally-scrolling
-   touch tab bar (scrollbar hidden, momentum scroll) instead of letting it
-   get squeezed, and guarantee a real touch target size on every pill.
+   The header now has a hamburger drawer (css/nav-mobile.css) that already
+   links to every instrument/tool page, so this in-page switcher is a
+   redundant second way to do the same navigation on mobile — hidden here
+   rather than kept and polished.
    ========================================================================== */
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .section-nav-card {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        justify-content: flex-start;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-    .section-nav-card::-webkit-scrollbar { display: none; }
-
-    .section-nav-btn {
-        flex: 0 0 auto;
-        min-height: 44px;
-        min-width: 44px;
+        display: none;
     }
 }

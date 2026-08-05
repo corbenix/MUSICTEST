@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="css/circle-of-fifths.css" />
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/chord-builder.css?v=2" />
-    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/nav-mobile.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-touch.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-section-nav.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-no-glass.css" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/nav-mobile.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-touch.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-section-nav.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-no-glass.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-play-buttons.css?v=2" media="(max-width: 768px)" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -106,7 +108,7 @@
 
                 <div class="cpb-transport">
                     <div class="cpb-transport-buttons">
-                        <button type="button" id="cpb-play-btn" class="cpb-tbtn cpb-tbtn--play">▶ Play</button>
+                        <button type="button" id="cpb-play-btn" class="cpb-tbtn cpb-tbtn--play" aria-label="Play">▶<span class="btn-label-text"> Play</span></button>
                         <button type="button" id="cpb-stop-btn" class="cpb-tbtn">■ Stop</button>
                         <button type="button" id="cpb-clear-btn" class="cpb-tbtn">🗑 Clear</button>
                         <button type="button" id="cpb-copy-btn" class="cpb-tbtn">📋 Copy</button>
@@ -152,7 +154,7 @@
             <div class="progression-select-row">
                 <span class="ps-micro-label">Progression:</span>
                 <select id="progression-select" class="progression-select"></select>
-                <button type="button" id="progression-play-btn" class="progression-play-btn">▶ Play</button>
+                <button type="button" id="progression-play-btn" class="progression-play-btn" aria-label="Play progression">▶<span class="btn-label-text"> Play</span></button>
             </div>
             <p id="progression-desc" class="progression-desc"></p>
             <div id="progression-cards" class="diatonic-grid progression-cards"></div>

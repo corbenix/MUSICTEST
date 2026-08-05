@@ -14,11 +14,13 @@
     <link rel="stylesheet" href="css/circle-of-fifths.css" />
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/bass.css" />
-    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/nav-mobile.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-touch.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-section-nav.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-no-glass.css" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/nav-mobile.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-touch.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-section-nav.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-no-glass.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-play-buttons.css?v=2" media="(max-width: 768px)" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -84,7 +86,7 @@
 
             <div class="bass-toolbar">
                 <div class="bass-toolbar-group">
-                    <button type="button" id="bass-play-btn" class="reset-btn bass-play-btn" disabled title="Play the selected scale or root note">▶ Play</button>
+                    <button type="button" id="bass-play-btn" class="reset-btn bass-play-btn" disabled title="Play the selected scale or root note">▶<span class="btn-label-text"> Play</span></button>
                     <div class="pill-group">
                         <button type="button" id="bass-speed-toggle" class="pill-btn" title="Playback speed">1x</button>
                     </div>

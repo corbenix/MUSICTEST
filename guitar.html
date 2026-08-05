@@ -15,11 +15,13 @@
     <link rel="stylesheet" href="css/tool.css" />
     <link rel="stylesheet" href="css/fretboard.css" />
     <link rel="stylesheet" href="css/guitar.css" />
-    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/nav-mobile.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-touch.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-section-nav.css" media="(max-width: 768px)" />
-    <link rel="stylesheet" href="css/mobile-no-glass.css" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/nav-mobile.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-touch.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-section-nav.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-no-glass.css?v=2" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-play-buttons.css?v=2" media="(max-width: 768px)" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -111,7 +113,7 @@
             </div>
             <div class="scale-fretboard-controls-row">
                 <button type="button" id="scale-play-btn" class="reset-btn scale-play-btn" title="Play this scale">
-                    ▶ Play
+                    ▶<span class="btn-label-text"> Play</span>
                 </button>
                 <button type="button" id="scale-speed-toggle" class="reset-btn scale-speed-toggle" title="Playback speed">1x</button>
                 <div class="scale-fret-toggle-group" role="group" aria-label="Number of frets">
@@ -180,7 +182,7 @@
                 </div>
             </div>
             <div class="scale-fretboard-controls-row">
-                <button type="button" id="chordlib-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶ Play</button>
+                <button type="button" id="chordlib-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶<span class="btn-label-text"> Play</span></button>
                 <button type="button" id="chordlib-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
                     <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
                     <span class="chordlib-single-note-pill-label">Arpeggio</span>
@@ -230,7 +232,7 @@
             <div class="capo-card-grid" id="capo-card-grid"></div>
 
             <div class="scale-fretboard-controls-row">
-                <button type="button" id="capo-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶ Play</button>
+                <button type="button" id="capo-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶<span class="btn-label-text"> Play</span></button>
                 <button type="button" id="capo-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
                     <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
                     <span class="chordlib-single-note-pill-label">Arpeggio</span>

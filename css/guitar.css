@@ -607,48 +607,51 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
-    flex-wrap: wrap;
+    gap: clamp(6px, 3vw, 18px);
+    flex-wrap: nowrap;
 }
-.capo-sounding-col { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+.capo-sounding-col { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 0 1 auto; }
 .capo-sounding-col-left { align-items: center; text-align: center; }
 .capo-sounding-col-right { align-items: center; text-align: center; }
 .capo-sounding-col-mid {
-    flex: 1;
+    flex: 1 1 auto;
     align-items: center;
     text-align: center;
-    min-width: 140px;
+    min-width: 0;
     gap: 2px;
     position: relative;
 }
 .capo-sounding-eyebrow {
-    font-size: 10px;
+    font-size: clamp(7px, 2vw, 10px);
     font-weight: 700;
     letter-spacing: .08em;
     text-transform: uppercase;
     color: var(--text3);
+    white-space: nowrap;
 }
 .capo-shape-big {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 30px;
+    font-size: clamp(17px, 6.5vw, 30px);
     line-height: 1.1;
     color: var(--gold);
+    white-space: nowrap;
 }
-.capo-shape-sub { font-size: 12px; color: var(--text2); }
+.capo-shape-sub { font-size: clamp(9px, 2.8vw, 12px); color: var(--text2); white-space: nowrap; }
 .capo-sounding-chord-big {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 30px;
+    font-size: clamp(17px, 6.5vw, 30px);
     line-height: 1.1;
     color: var(--gold);
+    white-space: nowrap;
 }
-.capo-sounding-quality { font-size: 12px; color: var(--text2); }
+.capo-sounding-quality { font-size: clamp(9px, 2.8vw, 12px); color: var(--text2); white-space: nowrap; }
 .capo-sounding-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: clamp(3px, 1.5vw, 8px);
     width: 100%;
 }
 .capo-sounding-link-line {
@@ -656,17 +659,18 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(139,124,240,.55));
     max-width: 60px;
+    min-width: 8px;
 }
 .capo-sounding-col-mid .capo-sounding-link-line:last-child { background: linear-gradient(90deg, rgba(139,124,240,.55), transparent); }
 .capo-fret-pill {
     flex-shrink: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 12px;
+    font-size: clamp(9px, 2.6vw, 12px);
     color: var(--capo-gold, #e0a838);
     border: 1px solid var(--border2);
     border-radius: 20px;
-    padding: 4px 14px;
+    padding: 4px clamp(6px, 2.5vw, 14px);
     background: rgba(255,255,255,.03);
     white-space: nowrap;
 }
@@ -1473,12 +1477,6 @@
     .caged-legend-info { font-size: 9.5px; }
     .caged-legend-info[data-tooltip]:hover::after { font-size: 10.5px; }
     .chord-lib-card-name { font-size: 13px; }
-    .capo-sounding-eyebrow { font-size: 9.5px; }
-    .capo-shape-big { font-size: 28.5px; }
-    .capo-shape-sub { font-size: 11.5px; }
-    .capo-sounding-chord-big { font-size: 28.5px; }
-    .capo-sounding-quality { font-size: 11.5px; }
-    .capo-fret-pill { font-size: 11.5px; }
     .capo-sounding-sounds-like { font-size: 10.5px; }
     .capo-sounding-link-arrow { font-size: 12.5px; }
     .capo-sounding-note-pill { font-size: 11.5px; }

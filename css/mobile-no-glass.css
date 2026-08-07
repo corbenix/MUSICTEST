@@ -115,7 +115,6 @@
     .tool-tabs--cards .tool-tab[aria-selected="true"] {
         background: color-mix(in srgb, rgb(var(--tool-rgb)) 30%, var(--bg3));
         border: 1.5px solid color-mix(in srgb, rgb(var(--tool-rgb)) 55%, var(--border2));
-        border-bottom: 2px solid rgba(var(--tool-light-rgb), 0.9);
         box-shadow: none;
         color: var(--text);
     }

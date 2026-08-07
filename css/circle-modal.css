@@ -119,3 +119,18 @@
 }
 .circle-info-title { font-family: var(--font-display); font-size: 17px; font-weight: 700; margin-bottom: 10px; }
 .circle-info-rel { color: var(--text3); font-weight: 500; font-size: 13px; }
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    /* ==========================================================================
+   CIRCLE OF FIFTHS — shared modal, opened from a nav button on every page.
+   ========================================================================== */
+
+.nclg-nav-cof-btn { font-size: 12.5px; }
+    .cof-modal-close { font-size: 19px; }
+    .circle-major-label { font-size: 14px; }
+    .circle-minor-label { font-size: 10.5px; }
+    .circle-info-title { font-size: 16px; }
+    .circle-info-rel { font-size: 12.5px; }
+}

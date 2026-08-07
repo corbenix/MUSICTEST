@@ -16,7 +16,7 @@
 
 @media (max-width: 640px) {
     .section-nav-card { margin: 23px 16px 0; }
-    .section-nav-btn { padding: 9px 12px; gap: 5px; font-size: 15.5px; }
+    .section-nav-btn { padding: 9px 12px; gap: 5px; font-size: 14.5px; }
 }
 
 @media (max-width: 460px) {
@@ -45,17 +45,17 @@
 }
 
 @media (max-width: 480px) {
-    .root-pill { font-size: 11px; padding: 5px 10px; }
+    .root-pill { font-size: 10.5px; padding: 5px 10px; }
 }
 
 @media (max-width: 480px) {
-    .type-pill-btn { font-size: 11px; padding: 4px 10px; }
+    .type-pill-btn { font-size: 10.5px; padding: 4px 10px; }
     .ps-type-pills .pill-sep-break { flex-basis: 100%; width: 0; height: 0; margin: 0; }
 }
 
 @media (max-width: 480px) {
-    .scale-pill-note { font-size: 11.5px; padding: 7px 2px 6px; }
-    .scale-pill-degree { font-size: 8px; }
+    .scale-pill-note { font-size: 11px; padding: 7px 2px 6px; }
+    .scale-pill-degree { font-size: 7.5px; }
 }
 
 @media (max-width: 480px) {
@@ -68,7 +68,7 @@
 @media (max-width: 600px) {
     .gcv-voicings-row { gap: 6px; }
     .gcv-voicing-chip { min-width: 54px; padding: 6px 7px; }
-    .gcv-voicing-chip-label { font-size: 9px; }
+    .gcv-voicing-chip-label { font-size: 8.5px; }
 }
 
 @media (max-width: 600px) {
@@ -88,7 +88,7 @@
 
 @media (max-width: 480px) {
     .pedal-box { width: 78px; padding: 9px 6px 11px; }
-    .pedal-box-label { font-size: 10px; }
+    .pedal-box-label { font-size: 9.5px; }
     .pedal-param-row { grid-template-columns: 56px 1fr 34px; gap: 10px; }
 }
 
@@ -96,21 +96,21 @@
 
 @media (max-width: 600px) {
     :root { --bf-panel-maxw: 100%; --bf-card-fs: 11px; --bf-card-pad: 12px 14px; }
-    .root-pill { font-size: 11px; padding: 5px 10px; }
+    .root-pill { font-size: 10.5px; padding: 5px 10px; }
     .fretboard-wrap { min-width: 700px; padding: 14px 10px 14px 0; }
     .string-row { height: 46px; }
-    .string-label { width: 26px; font-size: 13px; }
+    .string-label { width: 26px; font-size: 12.5px; }
     .fret-header-spacer, .marker-spacer { width: 44px; }
     .nut { width: 6px; }
-    .fret-dot { width: 28px; height: 28px; font-size: 11px; }
-    .fret-num { font-size: 11px; }
+    .fret-dot { width: 28px; height: 28px; font-size: 10.5px; }
+    .fret-num { font-size: 10.5px; }
 }
 
 /* ── From keyboard.css ─────────────────────────────────────────── */
 
 @media (max-width: 480px) {
     .piano { height: 140px; }
-    .pk-label { font-size: 10px; }
+    .pk-label { font-size: 9.5px; }
 }
 
 /* ── From chord-builder.css ─────────────────────────────────────────── */
@@ -151,10 +151,10 @@
 @media (max-width: 767px) {
     .circle-container { width: 220px; height: 220px; }
     .circle-center-hub { width: 74px; height: 74px; padding: 0 6px; }
-    .circle-center-value { font-size: 13px; }
-    .circle-center-label { font-size: 8px; }
-    .circle-text { font-size: 12px; }
-    .circle-text-minor { font-size: 8.5px; }
+    .circle-center-value { font-size: 12.5px; }
+    .circle-center-label { font-size: 7.5px; }
+    .circle-text { font-size: 11.5px; }
+    .circle-text-minor { font-size: 8px; }
     .diatonic-grid-bottom { grid-template-columns: repeat(4, 1fr); }
 }
 

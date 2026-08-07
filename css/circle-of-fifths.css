@@ -321,3 +321,27 @@
 .scale-info-notes { color: var(--purple-l); font-weight: 600; }
 
 
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .circle-header-title h3 { font-size: 17px; }
+    .circle-header-title p { font-size: 12.5px; }
+    /* ── Circle-of-fifths sharp/flat display toggle. Independent from the
+   root-picker's ♮/♯/♭ pill elsewhere on the site — this one only swaps
+   which glyph (♯ or ♭) is drawn on the wheel/hub/legend text. Two states
+   only (sharp/flat), no natural, sharp by default. ── */
+.cof-sf-toggle { font-size: 13.5px; }
+    .circle-toggle-btn { font-size: 19px; }
+    .circle-text { font-size: 14px; }
+    .circle-text-minor { font-size: 10px; }
+    .circle-center-label { font-size: 8.5px; }
+    .circle-center-value { font-size: 14.5px; }
+    .circle-title-block h3 { font-size: 16px; }
+    .circle-title-block p { font-size: 12.5px; }
+    .diatonic-card .roman { font-size: 10.5px; }
+    .diatonic-card .chord-name { font-size: 19px; }
+    .diatonic-card .chord-quality { font-size: 10.5px; }
+    .scale-info-row { font-size: 12.5px; }
+    .scale-info-icon { font-size: 14px; }
+}

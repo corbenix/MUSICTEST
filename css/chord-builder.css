@@ -446,3 +446,27 @@
 #cpb-beats-pills .pill-btn.active:hover {
     background: linear-gradient(160deg, rgba(var(--tool-light-rgb), .40) 0%, rgba(var(--tool-rgb), .80) 45%, rgba(var(--tool-rgb), .92) 100%);
 }
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .diatonic-numeral { font-size: 11.5px; }
+    .diatonic-name { font-size: 19px; }
+    .diatonic-quality { font-size: 10.5px; }
+    .diatonic-notes { font-size: 10.5px; }
+    .progression-select { font-size: 13px; }
+    .progression-desc { font-size: 13px; }
+    .progression-tag { font-size: 10.5px; }
+    .progression-play-btn { font-size: 11.5px; }
+    .section-heading { font-size: 14px; }
+    .cpb-add-btn { font-size: 11.5px; }
+    .cpb-seq-count { font-size: 11.5px; }
+    .cpb-seq-empty { font-size: 13px; }
+    .cpb-chip { font-size: 13px; }
+    .cpb-chip-index { font-size: 10px; }
+    .cpb-chip-remove { font-size: 10.5px; }
+    .cpb-tbtn { font-size: 12px; }
+    .cpb-bpm-input { font-size: 12.5px; }
+    .card-toggle-btn { font-size: 17px; }
+    #cpb-beats-pills .pill-btn { font-size: 12.5px; }
+}

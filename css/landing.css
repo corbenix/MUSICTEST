@@ -189,3 +189,14 @@
 .hub-card--keyboard { --c-rgb: var(--keyboard-rgb); }
 .hub-card--chords   { --c-rgb: var(--chordbuilder-rgb); }
 .hub-card--tools    { --c-rgb: var(--tools-rgb); }
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .hero-eyebrow { font-size: 12.5px; }
+    .hero h1 { font-size: clamp(28.5px, 5.2vw, 43.5px); }
+    .hero p { font-size: 18px; }
+    .hub-card-icon { font-size: 19px; }
+    .hub-card-title { font-size: 16px; }
+    .hub-card-desc { font-size: 13px; }
+}

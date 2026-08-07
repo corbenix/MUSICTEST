@@ -490,3 +490,10 @@
     color: #2a1c00;
     box-shadow: 0 0 18px rgba(255, 209, 102, .85);
 }
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .gtr-fret-marker-dot { font-size: clamp(8.5px, 0.9vw, 11.5px); }
+    .gtr-scroll-hint { font-size: 11px; }
+}

@@ -604,3 +604,37 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(var(--tool-rgb), .45);
     text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
 }
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .pk-label { font-size: 10.5px; }
+    .pill-btn { font-size: 12.5px; }
+    .sf-toggle { font-size: 11.5px; }
+    .inversions-panel-title { font-size: 13.5px; }
+    .inversions-panel-hint { font-size: 11px; }
+    .inversion-card-label { font-size: 10px; }
+    .inversion-card-name { font-size: 14px; }
+    .inversion-card-notes { font-size: 11px; }
+    /* ── Computer-keyboard MIDI hint — sits under the piano, explains the
+   ASDF/QWERTY + Z/X mapping used by the physical-keyboard input added
+   in js/keyboard.js. Hidden on touch-only screens since it's not
+   relevant there. ─────────────────────────────────────────────────── */
+.kb-computer-hint { font-size: 12px; }
+    /* ── Computer-keyboard key-mapping badges — sit right above each key's
+   note label (instead of up at the top of the key) so the two read as
+   one connected label instead of two separate things fighting for
+   attention. White keys get a small round chip with just the letter,
+   sitting right above their existing note-name label. Black keys are
+   too short for two separate labels, so their chip carries both lines
+   (letter + note name) and the plain note label underneath is hidden
+   to avoid repeating it. ─────────────────────────────────────────── */
+.pk--white[data-kbkey]::after { font-size: 9px; }
+    .pk--black[data-kbkey]::after { font-size: 9px; }
+    /* 5-oct keys are narrower than 2/3-oct (36 white keys in the same
+   panel width), so the badges shrink to match rather than the piano
+   scrolling or the keys being forced wider than the panel. */
+.piano[data-octaves="5"] .pk--white[data-kbkey]::after { font-size: 8.5px; }
+    .piano[data-octaves="5"] .pk--black[data-kbkey]::after { font-size: 8.5px; }
+    .piano[data-octaves="5"] .pk-label { font-size: 8.5px; }
+}

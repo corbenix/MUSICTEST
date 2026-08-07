@@ -467,3 +467,28 @@ a { color: inherit; text-decoration: none; }
     color: var(--text2);
 }
 
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .nclg-nav-wordmark strong { font-size: 19px; }
+    .nclg-nav-wordmark span { font-size: 14px; }
+    .nclg-nav-icon { font-size: 20px; }
+    .nclg-nav-link--text { font-size: 15px; }
+    .section-nav-btn { font-size: 16px; }
+    .section-nav-icon { font-size: 16px; }
+    /* Shrink padding/font before dropping labels, so all 5 items always fit
+   on one line without scrolling or clipping. */
+
+
+
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+.site-footer { font-size: 15px; }
+    .guide-modal-close { font-size: 13.5px; }
+    .guide-modal-panel h2 { font-size: 20px; }
+    .guide-modal-intro { font-size: 13px; }
+    .guide-modal-item-icon { font-size: 17px; }
+    .guide-modal-item-title { font-size: 14px; }
+    .guide-modal-item p { font-size: 12.5px; }
+}

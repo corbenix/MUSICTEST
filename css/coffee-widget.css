@@ -149,3 +149,13 @@
 .gcw-close:hover { filter: brightness(1.08); }
 
 
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .gcw-fab-icon { font-size: 18px; }
+    .gcw-tooltip { font-size: 12.5px; }
+    .gcw-modal-title { font-size: 14px; }
+    .gcw-modal-sub { font-size: 11.5px; }
+    .gcw-close { font-size: 12.5px; }
+}

@@ -71,7 +71,7 @@
 }
 .nclg-nav-link::after {
     content: attr(aria-label);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: inherit;
 }
@@ -96,8 +96,8 @@ body.nav-open { overflow: hidden; }
 @media (max-width: 380px) {
     .nclg-nav { padding: 0 12px; }
     .nclg-nav-logo { width: 30px; height: 30px; }
-    .nclg-nav-wordmark strong { font-size: 15px; }
-    .nclg-nav-wordmark span { font-size: 10px; }
+    .nclg-nav-wordmark strong { font-size: 14px; }
+    .nclg-nav-wordmark span { font-size: 9.5px; }
     .nclg-nav-links { width: 200px; }
 }
 

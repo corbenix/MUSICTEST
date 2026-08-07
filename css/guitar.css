@@ -1449,3 +1449,61 @@
 
 /* Quick Guide modal styles now live in shared.css (css/shared.css) so
    every page — not just Guitar — can use the same modal markup/JS. */
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .tool-hint { font-size: 12.5px; }
+    .scale-fret-toggle { font-size: 12.5px; }
+    .scale-clear-btn { font-size: 11.5px; }
+    /* Clear Fretboard sits on the same line as Play (Scale Explorer, Chord
+   Library, Capo Explorer), pushed to the right end of that row so it
+   reads as the top-right control of the fretboard section below it. */
+.fretboard-clear-btn { font-size: 11.5px; }
+    /* Speed toggle — always shown toggled-in (never a blank/off state),
+   reusing the Scale Explorer's own fret-count pill theme (coral) so it
+   matches the other pills in this section. */
+.scale-speed-toggle,
+.scale-speed-toggle.active { font-size: 12.5px; }
+    .gcv-voicings-label { font-size: 10.5px; }
+    .gcv-voicing-chip-label { font-size: 9.5px; }
+    .gcv-shape-badge { font-size: 7.5px; }
+    .caged-legend-item { font-size: 12.5px; }
+    .caged-fret-range-label { font-size: 10.5px; }
+    .caged-legend-info { font-size: 9.5px; }
+    .caged-legend-info[data-tooltip]:hover::after { font-size: 10.5px; }
+    .chord-lib-card-name { font-size: 13px; }
+    .capo-sounding-eyebrow { font-size: 9.5px; }
+    .capo-shape-big { font-size: 28.5px; }
+    .capo-shape-sub { font-size: 11.5px; }
+    .capo-sounding-chord-big { font-size: 28.5px; }
+    .capo-sounding-quality { font-size: 11.5px; }
+    .capo-fret-pill { font-size: 11.5px; }
+    .capo-sounding-sounds-like { font-size: 10.5px; }
+    .capo-sounding-link-arrow { font-size: 12.5px; }
+    .capo-sounding-note-pill { font-size: 11.5px; }
+    .capo-slider-btn { font-size: 13.5px; }
+    .capo-slider-fret-word { font-size: 15px; }
+    .capo-slider-fret-num { font-size: 21px; }
+    .capo-shape-row-label { font-size: 9.5px; }
+    .capo-all-shapes-btn { font-size: 11.5px; }
+    .capo-card-grid-placeholder { font-size: 12px; }
+    .capo-group-header { font-size: 10.5px; }
+    .capo-card-top { font-size: 9.5px; }
+    .capo-card-badge { font-size: 8px; }
+    .capo-card-shape { font-size: 15px; }
+    .capo-card-arrow { font-size: 9.5px; }
+    .capo-card-target { font-size: 17px; }
+    .capo-card-quality { font-size: 9.5px; }
+    .tool-tabs--cards .tool-tab-icon { font-size: 23px; }
+    .tool-tabs--cards .tool-tab-label { font-size: 14px; }
+    .tool-tabs--cards .tool-tab-desc { font-size: 12px; }
+    .tool-tab-icon { font-size: 19px; }
+    .tool-tab-label { font-size: 13px; }
+    .tool-tab-desc { font-size: 11px; }
+    .pedalboard-panel-label { font-size: 14px; }
+    .pedal-box-label { font-size: 11px; }
+    .pedal-box-icon { font-size: 24.5px; }
+    .pedal-param-label { font-size: 10.5px; }
+    .pedal-param-value { font-size: 12px; }
+}

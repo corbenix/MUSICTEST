@@ -614,3 +614,22 @@
    overrides actually win the cascade (equal specificity + later source
    order). Values match the reference app's mobile bass fretboard. ── */
 
+
+@media (max-width: 768px) {
+    /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
+       the original sizes; this block only fires under 768px. */
+    .pill-btn { font-size: 12.5px; }
+    .reset-btn { font-size: 11.5px; }
+    .ps-micro-label { font-size: 10.5px; }
+    .root-pill { font-size: 11.5px; }
+    .sf-toggle { font-size: 11.5px; }
+    /* Sharp/flat colors for .sf-toggle and .sf-acc-pill now live centrally
+   in tool.css (shared by every tool page) rather than duplicated here. */
+
+/* ── Scale dropdown — dark, rounded, custom arrow (ported from the
+   original app's Scale Explorer select), tinted teal to match the
+   rest of the Bass tab identity ─────────────────────────────────── */
+.scale-select { font-size: 12.5px; }
+    .scale-select option { font-size: 12.5px; }
+    .scroll-hint { font-size: 11px; }
+}

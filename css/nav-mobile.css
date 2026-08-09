@@ -1,0 +1,103 @@
+/* ==========================================================================
+   MOBILE NAV DRAWER
+   ==========================================================================
+   Standalone stylesheet for the header's hamburger toggle + off-canvas
+   link drawer on small screens. Kept separate from mobile.css and every
+   desktop stylesheet on purpose — this file only ever touches
+   .nclg-nav-toggle / .nclg-nav-links / .nclg-nav-scrim, so nothing here
+   can affect desktop layout or any other component.
+
+   Loaded only at mobile widths via the <link media="(max-width: 768px)">
+   attribute in each page's <head>.
+   ========================================================================== */
+
+.nclg-nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: var(--radius-pill, 999px);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+}
+.nclg-nav-toggle:hover { background: var(--glass); }
+.nclg-nav-toggle-bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--text2);
+    transition: transform 0.2s var(--ease), opacity 0.2s var(--ease), background 0.2s var(--ease);
+}
+.nclg-nav-toggle[aria-expanded="true"] .nclg-nav-toggle-bar { background: var(--text); }
+.nclg-nav-toggle[aria-expanded="true"] .nclg-nav-toggle-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nclg-nav-toggle[aria-expanded="true"] .nclg-nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nclg-nav-toggle[aria-expanded="true"] .nclg-nav-toggle-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* The links row becomes an off-canvas sidebar drawer. */
+.nclg-nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 60;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    width: 240px;
+    height: 100vh;
+    margin: 0;
+    padding: 84px 14px 20px;
+    background: rgba(10, 7, 28, 0.97);
+    backdrop-filter: var(--blur-md);
+    border-left: 1px solid var(--border);
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+    transform: translateX(100%);
+    transition: transform 0.25s var(--ease);
+}
+.nclg-nav-links.is-open { transform: translateX(0); }
+
+.nclg-nav-link {
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: var(--radius-md);
+}
+.nclg-nav-link::after {
+    content: attr(aria-label);
+    font-size: 14px;
+    font-weight: 600;
+    color: inherit;
+}
+.nclg-nav-link--text { justify-content: flex-start; }
+.nclg-nav-link--text::after { content: none; }
+
+/* Dim + block the page behind the open drawer. */
+.nclg-nav-scrim {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(3, 2, 10, 0.55);
+}
+.nclg-nav-scrim.is-open { display: block; }
+
+body.nav-open { overflow: hidden; }
+
+/* Extra-small phones: shrink the brand a touch further so the toggle
+   button never crowds it. Mirrors the small-phone tier pattern used
+   for the nav bar in the 1.html/1.css prototype. */
+@media (max-width: 380px) {
+    .nclg-nav { padding: 0 12px; }
+    .nclg-nav-logo { width: 30px; height: 30px; }
+    .nclg-nav-wordmark strong { font-size: 14px; }
+    .nclg-nav-wordmark span { font-size: 9.5px; }
+    .nclg-nav-links { width: 200px; }
+}
+

@@ -1,0 +1,187 @@
+/* ==========================================================================
+   MOBILE-ONLY STYLES
+   ==========================================================================
+   All small-viewport (max-width) overrides for the whole app live here in
+   one place, instead of scattered across each component's stylesheet. This
+   file is only loaded/applied on narrow viewports (see the `media`
+   attribute on its <link> tag in each page's <head>), so nothing here
+   affects desktop layout.
+
+   Organized by the component it overrides — each section header names the
+   stylesheet the rules used to live in, to make it easy to find the
+   desktop counterpart.
+   ========================================================================== */
+
+/* ── From shared.css ─────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .section-nav-card { margin: 23px 16px 0; }
+    .section-nav-btn { padding: 9px 12px; gap: 5px; font-size: 14.5px; }
+}
+
+@media (max-width: 460px) {
+    .section-nav-label { display: none; }
+    .section-nav-btn { padding: 11px; }
+}
+
+@media (max-width: 480px) {
+    .guide-modal-panel { padding: 24px 18px 20px; }
+}
+
+/* ── From landing.css ─────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+    .hub { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+    .hub { grid-template-columns: 1fr; }
+}
+
+/* ── From tool.css ─────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .tool-header p { white-space: normal; overflow: visible; text-overflow: clip; }
+}
+
+@media (max-width: 480px) {
+    .root-pill { font-size: 10.5px; padding: 5px 10px; }
+}
+
+@media (max-width: 480px) {
+    .type-pill-btn { font-size: 10.5px; padding: 4px 10px; }
+    .ps-type-pills .pill-sep-break { flex-basis: 100%; width: 0; height: 0; margin: 0; }
+}
+
+@media (max-width: 480px) {
+    .scale-pill-note { font-size: 11px; padding: 7px 2px 6px; }
+    .scale-pill-degree { font-size: 7.5px; }
+}
+
+@media (max-width: 480px) {
+    .chordlib-single-note-pill-label { display: none; }
+    .chordlib-single-note-pill { padding: 8px 11px; }
+}
+
+/* ── From guitar.css ─────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .gcv-voicings-row { gap: 6px; }
+    .gcv-voicing-chip { min-width: 54px; padding: 6px 7px; }
+    .gcv-voicing-chip-label { font-size: 8.5px; }
+}
+
+@media (max-width: 600px) {
+    .caged-legend-info[data-tooltip]:hover::after { display: none; }
+}
+
+@media (max-width: 720px) {
+    .tool-tabs--cards { gap: 10px; }
+    .tool-tabs--cards .tool-tab { padding: 14px 16px; gap: 10px; }
+}
+
+@media (max-width: 720px) {
+    .tool-tabs--cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .pedal-box { width: 78px; padding: 9px 6px 11px; }
+    .pedal-box-label { font-size: 9.5px; }
+    .pedal-param-row { grid-template-columns: 56px 1fr 34px; gap: 10px; }
+}
+
+/* ── From bass.css ─────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    :root { --bf-panel-maxw: 100%; --bf-card-fs: 11px; --bf-card-pad: 12px 14px; }
+    .root-pill { font-size: 10.5px; padding: 5px 10px; }
+    .fretboard-wrap { min-width: 700px; padding: 14px 10px 14px 0; }
+    .string-row { height: 46px; }
+    .string-label { width: 26px; font-size: 12.5px; }
+    .fret-header-spacer, .marker-spacer { width: 44px; }
+    .nut { width: 6px; }
+    .fret-dot { width: 28px; height: 28px; font-size: 10.5px; }
+    .fret-num { font-size: 10.5px; }
+}
+
+/* ── From keyboard.css ─────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+    .piano { height: 140px; }
+    .pk-label { font-size: 9.5px; }
+}
+
+/* ── From chord-builder.css ─────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .cpb-transport { justify-content: flex-start; }
+}
+
+@media (max-width: 640px) {
+    .cpb-card,
+    .cbk-card {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* ── From fretboard.css ─────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    :root {
+        --gf-wrap-minw: 700px;
+        --gf-dot: 27px;
+        --gf-dot-fs: 10px;
+        --gf-string-h: 44px;
+        --gf-label-w: 24px;
+        --gf-label-fs: 13px;
+        --gf-nut-w: 6px;
+        --gf-spacer-w: 42px;
+        --gf-badge: 27px;
+        --gf-badge-fs: 10px;
+        --gf-spacer-w-badge: 74px;
+    }
+}
+
+/* ── From circle-of-fifths.css ─────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+    .circle-container { width: 220px; height: 220px; }
+    .circle-center-hub { width: 74px; height: 74px; padding: 0 6px; }
+    .circle-center-value { font-size: 12.5px; }
+    .circle-center-label { font-size: 7.5px; }
+    .circle-text { font-size: 11.5px; }
+    .circle-text-minor { font-size: 8px; }
+    .diatonic-grid-bottom { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── From metronome-widget.css ─────────────────────────────────────────── */
+
+@media (max-width: 460px) {
+    .gmw-fab { right: 14px; bottom: 14px; width: 36px; height: 36px; }
+}
+
+/* ── From coffee-widget.css ─────────────────────────────────────────── */
+
+@media (max-width: 460px) {
+    .gcw-fab { left: 14px; bottom: 14px; width: 36px; height: 36px; }
+    .gcw-tooltip { display: none; }
+}
+
+/* ── Ambient background animation — off on mobile, except the homepage ──
+   The spinning orbit rings and twinkling sparkles (css/shared.css) are
+   purely decorative and can be a drag on lower-powered phones, so they're
+   switched off on every tool page at mobile widths. The homepage
+   (`<body class="page-home">`) keeps them since it's a lighter page with
+   more room for flourish. ────────────────────────────────────────────── */
+body:not(.page-home) .cn-bg-sparkles i {
+    animation: none;
+    opacity: 0;
+}
+body:not(.page-home) .cn-orbit-ring--1,
+body:not(.page-home) .cn-orbit-ring--2 {
+    animation: none;
+}

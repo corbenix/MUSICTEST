@@ -1,0 +1,77 @@
+/* ==========================================================================
+   MOBILE VIEWPORT FIT
+   ==========================================================================
+   Standalone stylesheet whose only job is making sure nothing ever
+   bleeds past the edge of the screen or forces horizontal scrolling on
+   a phone, no matter the device width. Separate from every other mobile
+   file and every desktop file on purpose.
+
+   Loaded only at mobile widths via the <link media="(max-width: 768px)">
+   attribute in each page's <head>.
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Hard stop: the page itself can never scroll sideways. Individual
+       components (fretboard, piano, etc.) still get their own
+       intentional horizontal scroll via overflow-x on their own
+       wrapper — this only stops the *whole page* from widening past
+       the viewport because of some fixed-width element inside it. */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+
+    /* Any image/SVG/video that doesn't already have its own sizing
+       rule falls back to fitting its container instead of imposing
+       its natural pixel size on a narrow screen. */
+    img, svg, video, canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Respect the safe area on notched / rounded-corner phones so the
+       fixed header and off-canvas drawer never sit under a notch or
+       get clipped by rounded corners. */
+    .nclg-nav {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+    }
+    .nclg-nav-links {
+        padding-right: max(14px, env(safe-area-inset-right));
+    }
+
+    /* Generic containers: let side padding scale down slightly on very
+       narrow phones (≤360px, e.g. older/smaller devices) instead of
+       staying at a fixed px value that eats a bigger share of a small
+       screen. */
+    .tool-header,
+    .hub,
+    main {
+        padding-left: clamp(12px, 4vw, 24px);
+        padding-right: clamp(12px, 4vw, 24px);
+    }
+
+    /* Guitar section's card-style tab nav (Chord Library / Capo Explorer /
+       Scale / CAGED): the 2-column grid from mobile.css can still overflow
+       on narrow phones because flex children with icon + wrapped text
+       don't have a min-width floor, so long labels push a card wider
+       than its grid track. Give it an explicit min-width: 0 and drop to
+       a single column below 420px where two columns get too tight. */
+    .tool-tabs--cards .tool-tab {
+        min-width: 0;
+    }
+    .tool-tabs--cards .tool-tab-text {
+        min-width: 0;
+        overflow: hidden;
+    }
+    .tool-tabs--cards .tool-tab-label,
+    .tool-tabs--cards .tool-tab-desc {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    @media (max-width: 420px) {
+        .tool-tabs--cards {
+            grid-template-columns: 1fr;
+        }
+    }
+}

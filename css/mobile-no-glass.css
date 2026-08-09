@@ -117,7 +117,7 @@
        (--guitar-rgb, 239,95,111) for Scale Explorer / CAGED System,
        so this one rule automatically themes both pairs correctly. */
     .tool-tabs--cards .tool-tab[aria-selected="true"] {
-        background: color-mix(in srgb, rgb(var(--tool-rgb)) 30%, var(--bg3));
+        background: color-mix(in srgb, rgb(var(--tool-rgb)) 48%, var(--bg3));
         border: 1.5px solid color-mix(in srgb, rgb(var(--tool-rgb)) 55%, var(--border2));
         box-shadow: none;
         color: var(--text);

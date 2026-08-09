@@ -171,6 +171,35 @@
     .gcw-tooltip { display: none; }
 }
 
+/* ── From bass.css ─────────────────────────────────────────── */
+/* The bass toolbar's controls (play/speed, fret-count, string-count,
+   sharps toggle, clear) were wrapping in whatever order the markup
+   happened to declare them, so the row broke unpredictably depending on
+   label widths. On mobile, flatten the two toolbar groups into one flex
+   context and explicitly order + wrap into two clean rows:
+     Row 1: Play · speed  ——  ♯ · fret-count (12/15/24)
+     Row 2: string-count (4/5-String)  ——  Clear Fretboard          */
+@media (max-width: 768px) {
+    .bass-toolbar-group { display: contents; }
+
+    .bass-toolbar { row-gap: 10px; }
+
+    #bass-play-btn { order: 1; }
+    .pill-group:has(#bass-speed-toggle) { order: 2; }
+    .pill-group:has(#note-display-toggle) { order: 3; margin-left: auto; }
+    .pill-group:has(#fret-toggle-b-12) { order: 4; }
+
+    .bass-toolbar::after {
+        content: "";
+        order: 5;
+        flex-basis: 100%;
+        height: 0;
+    }
+
+    .pill-group:has(#bass-4-btn) { order: 6; }
+    #bass-clear-btn { order: 7; margin-left: auto; }
+}
+
 /* ── Ambient background animation — off on mobile, except the homepage ──
    The spinning orbit rings and twinkling sparkles (css/shared.css) are
    purely decorative and can be a drag on lower-powered phones, so they're

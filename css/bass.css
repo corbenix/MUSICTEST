@@ -19,7 +19,7 @@
     --bf-label-w: 32px;
     --bf-label-fs: 16px;
     --bf-nut-w: 8px;
-    --bf-spacer-w: 52px;
+    --bf-spacer-w: 96px;
     --bf-card-fs: 12px;
     --bf-card-pad: 16px 18px;
 }
@@ -35,7 +35,7 @@
         --bf-label-w: 28px;
         --bf-label-fs: 14px;
         --bf-nut-w: 7px;
-        --bf-spacer-w: 47px;
+        --bf-spacer-w: 85px;
         --bf-card-fs: 11.5px;
         --bf-card-pad: 14px 16px;
     }
@@ -52,7 +52,7 @@
         --bf-label-w: 36px;
         --bf-label-fs: 17px;
         --bf-nut-w: 9px;
-        --bf-spacer-w: 57px;
+        --bf-spacer-w: 107px;
         --bf-card-fs: 13px;
         --bf-card-pad: 18px 20px;
     }
@@ -69,7 +69,7 @@
         --bf-label-w: 40px;
         --bf-label-fs: 18px;
         --bf-nut-w: 10px;
-        --bf-spacer-w: 62px;
+        --bf-spacer-w: 116px;
         --bf-card-fs: 14px;
         --bf-card-pad: 20px 22px;
     }
@@ -86,7 +86,7 @@
         --bf-label-w: 46px;
         --bf-label-fs: 20px;
         --bf-nut-w: 11px;
-        --bf-spacer-w: 69px;
+        --bf-spacer-w: 131px;
         --bf-card-fs: 15.5px;
         --bf-card-pad: 24px 26px;
     }

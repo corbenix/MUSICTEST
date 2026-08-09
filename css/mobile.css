@@ -100,7 +100,7 @@
     .fretboard-wrap { min-width: 700px; padding: 14px 10px 14px 0; }
     .string-row { height: 46px; }
     .string-label { width: 26px; font-size: 12.5px; }
-    .fret-header-spacer, .marker-spacer { width: 44px; }
+    .fret-header-spacer, .marker-spacer { width: 94px; }
     .nut { width: 6px; }
     .fret-dot { width: 28px; height: 28px; font-size: 10.5px; }
     .fret-num { font-size: 10.5px; }

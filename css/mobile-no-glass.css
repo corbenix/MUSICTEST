@@ -162,6 +162,19 @@
         border-color: var(--border2);
         box-shadow: none;
     }
+    /* Bass page root pills (#bass-root-pills / #bass-scalevis-root-pills)
+       still painted their own gradient background from bass.css's
+       .root-pill.active (blur already killed above, but the translucent
+       gradient layer itself remained), so they kept reading as glass
+       unlike the guitar page's root pills. Same color-mix flatten as
+       .gcv-root-pills .root-pill.active above, using --tool-rgb — which
+       resolves to the bass theme color on this page. */
+    #bass-root-pills .root-pill.active,
+    #bass-scalevis-root-pills .root-pill.active {
+        background: color-mix(in srgb, rgb(var(--tool-rgb)) 45%, var(--bg)) !important;
+        border-color: var(--border2);
+        box-shadow: none;
+    }
     .capo-shape-chip.caged-C.active { background: color-mix(in srgb, rgb(224, 112, 64) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
     .capo-shape-chip.caged-A.active { background: color-mix(in srgb, rgb(58, 127, 212) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
     .capo-shape-chip.caged-G.active { background: color-mix(in srgb, rgb(40, 168, 88) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }

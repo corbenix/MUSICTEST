@@ -22,7 +22,7 @@
 
     // ── DOM refs ────────────────────────────────────────────────────────
     const fretHeader = document.getElementById('b-fret-header');
-    const stringsContainer = document.getElementById('b-strings-container');
+    const fretboardWrap = document.getElementById('b-fretboard-wrap');
     const markerCells = document.getElementById('b-marker-cells');
     const fretToggle12 = document.getElementById('fret-toggle-b-12');
     const fretToggle15 = document.getElementById('fret-toggle-b-15');
@@ -258,14 +258,11 @@
             fretHeader.appendChild(cell);
         }
 
-        stringsContainer.innerHTML = '';
+        fretboardWrap.querySelectorAll('.string-lead, .frets-row').forEach(el => el.remove());
+        const markerSpacer = fretboardWrap.querySelector('.marker-spacer');
         tuning.forEach(openNote => {
-            const row = document.createElement('div');
-            row.className = 'string-row';
-
             const lead = document.createElement('div');
             lead.className = 'string-lead';
-            row.appendChild(lead);
 
             const label = document.createElement('div');
             label.className = 'string-label';
@@ -305,8 +302,8 @@
                 cell.appendChild(dot);
                 fretsRow.appendChild(cell);
             }
-            row.appendChild(fretsRow);
-            stringsContainer.appendChild(row);
+            fretboardWrap.insertBefore(lead, markerSpacer);
+            fretboardWrap.insertBefore(fretsRow, markerSpacer);
         });
 
         markerCells.innerHTML = '';
@@ -326,7 +323,7 @@
     // like plucking the string at that fret. Delegated on the container
     // so it survives buildBoard() rebuilding the cells on fret/string
     // count changes.
-    stringsContainer.addEventListener('click', e => {
+    fretboardWrap.addEventListener('click', e => {
         const cell = e.target.closest('.fret-cell, .open-badge');
         if (!cell) return;
         cell.classList.toggle('active');

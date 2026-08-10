@@ -443,15 +443,11 @@
     display: grid;
     grid-template-columns: auto 1fr;
 }
-.fret-header-row { display: contents; }
 .fret-header-spacer { grid-column: 1; }
 .fret-header-cells { grid-column: 2; display: flex; align-items: center; margin-bottom: 6px; }
 .fret-num { flex: 1; text-align: center; font-size: calc(var(--bf-dot-fs) - 1px); color: #7ea3b5; }
 .fret-num.marker { color: var(--gold); font-weight: 700; }
 
-.string-row {
-    display: contents;
-}
 .string-lead {
     grid-column: 1;
     display: flex;
@@ -466,13 +462,14 @@
     height: var(--bf-string-h);
     border-top: 1px solid rgba(0,0,0,.25);
 }
-.string-row:first-of-type .string-lead,
-.string-row:first-of-type .frets-row { border-top: none; }
+.fret-header-cells + .string-lead,
+.fret-header-cells + .string-lead + .frets-row { border-top: none; }
 .string-label {
     width: var(--bf-label-w);
     text-align: center;
     font-size: var(--bf-label-fs);
     font-weight: 700;
+
     color: #cfe6f2;
     flex-shrink: 0;
     margin-right: 8px;
@@ -527,7 +524,7 @@
     box-shadow: 1px 1px 3px #00000080;
     z-index: 3;
 }
-.frets-row { display: flex; flex: 1; height: 100%; position: relative; }
+.frets-row { position: relative; }
 .frets-row::before {
     content: "";
     position: absolute;
@@ -593,7 +590,6 @@
     box-shadow: 0 0 8px rgba(var(--tool-rgb), .35) !important;
 }
 
-.marker-row { display: contents; }
 .marker-spacer { grid-column: 1; }
 #b-marker-cells { grid-column: 2; margin-top: 8px; }
 .fret-marker-dot {

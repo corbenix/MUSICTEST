@@ -139,10 +139,8 @@
         --gf-label-w: 24px;
         --gf-label-fs: 13px;
         --gf-nut-w: 6px;
-        --gf-spacer-w: calc(var(--gf-label-w) + 8px + var(--gf-nut-w));
         --gf-badge: 27px;
         --gf-badge-fs: 10px;
-        --gf-spacer-w-badge: 74px;
     }
 }
 

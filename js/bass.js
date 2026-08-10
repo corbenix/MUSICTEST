@@ -263,10 +263,14 @@
             const row = document.createElement('div');
             row.className = 'string-row';
 
+            const lead = document.createElement('div');
+            lead.className = 'string-lead';
+            row.appendChild(lead);
+
             const label = document.createElement('div');
             label.className = 'string-label';
             label.textContent = openNote;
-            row.appendChild(label);
+            lead.appendChild(label);
 
             // Open string indicator (fret 0) — lit up exactly like a
             // fretted cell when its note is part of the active scale,
@@ -277,11 +281,11 @@
             badge.className = 'open-badge';
             badge.dataset.abs = String(OPEN_OCTAVE[openNote] * 12 + MT.noteIndex(openNote));
             badge.dataset.pc = MT.noteIndex(openNote);
-            row.appendChild(badge);
+            lead.appendChild(badge);
 
             const nut = document.createElement('div');
             nut.className = 'nut';
-            row.appendChild(nut);
+            lead.appendChild(nut);
 
             const fretsRow = document.createElement('div');
             fretsRow.className = 'frets-row';

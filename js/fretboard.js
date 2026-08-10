@@ -55,6 +55,10 @@ window.Fretboard = (function () {
             const row = document.createElement('div');
             row.className = 'gtr-string-row';
 
+            const lead = document.createElement('div');
+            lead.className = 'gtr-string-lead';
+            row.appendChild(lead);
+
             const label = document.createElement('div');
             label.className = 'gtr-string-label';
             // Reference app displays the highest (thinnest) string as
@@ -62,7 +66,7 @@ window.Fretboard = (function () {
             // still using the real (uppercase) note name for pitch/note
             // lookups everywhere else. Display-only, cosmetic.
             label.textContent = (s === numStrings - 1 && openNote === 'E') ? 'e' : openNote;
-            row.appendChild(label);
+            lead.appendChild(label);
 
             // Open string indicator (fret 0) — only rendered for callers
             // that opt in via showOpenBadge (Chord Library), where each
@@ -127,12 +131,12 @@ window.Fretboard = (function () {
                     }
 
                 }
-                row.appendChild(badge);
+                lead.appendChild(badge);
             }
 
             const nut = document.createElement('div');
             nut.className = 'gtr-nut' + (isDiagram && capo > 0 ? ' gtr-capo-adjacent' : '');
-            row.appendChild(nut);
+            lead.appendChild(nut);
 
             const fretsRow = document.createElement('div');
             fretsRow.className = 'gtr-frets-row';
@@ -205,8 +209,7 @@ window.Fretboard = (function () {
         markerRow.appendChild(markerSpacer);
 
         const markerCells = document.createElement('div');
-        markerCells.style.display = 'flex';
-        markerCells.style.flex = '1';
+        markerCells.className = 'gtr-marker-cells';
         for (let f = 1; f <= numFrets; f++) {
             const dotWrap = document.createElement('div');
             dotWrap.className = 'gtr-fret-marker-dot';

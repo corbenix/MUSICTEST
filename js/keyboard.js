@@ -1,6 +1,23 @@
 (function () {
     const MT = window.MusicTheory;
     const KD = window.KeyboardData;
+
+    // ── Hardware-keyboard detection (mobile/touch) ───────────────────────
+    // On touch-primary devices the "computer-keyboard input" toggle is
+    // hidden by CSS (see @media (pointer: coarse) in keyboard.css) since
+    // most phones/tablets have no physical keyboard. If one IS attached
+    // (e.g. Bluetooth keyboard paired with a tablet), the first real
+    // keydown it produces reveals the control. This page has no text
+    // inputs, so a genuine keydown here is a reliable signal.
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+        const detectHwKeyboard = (e) => {
+            if (e.repeat) return;
+            document.documentElement.classList.add('hw-kbd-detected');
+            window.removeEventListener('keydown', detectHwKeyboard);
+        };
+        window.addEventListener('keydown', detectHwKeyboard);
+    }
+
     // Starting octave per range: 2 oct → C4, 3 oct → C3, 5 oct → C2.
     const START_OCTAVE = { 2: 4, 3: 3, 5: 2 };
     let octaveCount = 5;

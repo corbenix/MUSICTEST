@@ -17,10 +17,8 @@
     --gf-label-w: 32px;
     --gf-label-fs: 16px;
     --gf-nut-w: 8px;
-    --gf-spacer-w: calc(var(--gf-label-w) + 8px + var(--gf-nut-w));
     --gf-badge: 40px;
     --gf-badge-fs: 14px;
-    --gf-spacer-w-badge: 100px;
 }
 
 @media (min-width: 601px) and (max-width: 1099px) {
@@ -32,10 +30,8 @@
         --gf-label-w: 28px;
         --gf-label-fs: 14px;
         --gf-nut-w: 7px;
-        --gf-spacer-w: calc(var(--gf-label-w) + 8px + var(--gf-nut-w));
         --gf-badge: 34px;
         --gf-badge-fs: 12px;
-        --gf-spacer-w-badge: 88px;
     }
 }
 @media (min-width: 1920px) {
@@ -47,10 +43,8 @@
         --gf-label-w: 36px;
         --gf-label-fs: 17px;
         --gf-nut-w: 9px;
-        --gf-spacer-w: calc(var(--gf-label-w) + 8px + var(--gf-nut-w));
         --gf-badge: 46px;
         --gf-badge-fs: 15px;
-        --gf-spacer-w-badge: 112px;
     }
 }
 @media (min-width: 2560px) {
@@ -62,10 +56,8 @@
         --gf-label-w: 40px;
         --gf-label-fs: 18px;
         --gf-nut-w: 10px;
-        --gf-spacer-w: calc(var(--gf-label-w) + 8px + var(--gf-nut-w));
         --gf-badge: 50px;
         --gf-badge-fs: 16px;
-        --gf-spacer-w-badge: 120px;
     }
 }
 @media (min-width: 3840px) {
@@ -77,10 +69,8 @@
         --gf-label-w: 46px;
         --gf-label-fs: 20px;
         --gf-nut-w: 11px;
-        --gf-spacer-w: calc(var(--gf-label-w) + 8px + var(--gf-nut-w));
         --gf-badge: 58px;
         --gf-badge-fs: 18px;
-        --gf-spacer-w-badge: 136px;
     }
 }
 
@@ -114,33 +104,33 @@
     min-width: var(--gf-wrap-minw);
     padding: 18px 16px 18px 0;
     border-radius: var(--radius-lg);
+    display: grid;
+    grid-template-columns: auto 1fr;
 }
 
-.gtr-fret-header-row { display: flex; align-items: center; margin-bottom: 6px; }
-.gtr-fret-header-spacer { width: var(--gf-spacer-w); flex-shrink: 0; }
-.gtr-fret-header-cells { display: flex; flex: 1; }
+.gtr-fret-header-row { display: contents; }
+.gtr-fret-header-spacer { grid-column: 1; }
+.gtr-fret-header-cells { grid-column: 2; display: flex; align-items: center; margin-bottom: 6px; }
 .gtr-fret-num { flex: 1; text-align: center; font-size: calc(var(--gf-dot-fs) - 1px); color: #c9bda7; }
 .gtr-fret-num.marker { color: var(--gold); font-weight: 700; }
 
-/* Chord Library opts into the open/muted-string badge (showOpenBadge)
-   since each string's O/×/blank state is real information about a
-   single fixed fingering. Widen the header/marker spacers to match so
-   the fret-number columns still line up over the actual frets. */
-.gtr-fretboard-wrap.gtr-has-badge .gtr-fret-header-spacer,
-.gtr-fretboard-wrap.gtr-has-badge .gtr-marker-spacer {
-    width: var(--gf-spacer-w-badge);
-}
-
-.gtr-string-row {
+.gtr-string-row { display: contents; }
+.gtr-string-lead {
+    grid-column: 1;
     display: flex;
     align-items: center;
     height: var(--gf-string-h);
     border-top: 1px solid rgba(0, 0, 0, .25);
 }
-.gtr-string-row:first-of-type { border-top: none; }
+.gtr-frets-row {
+    grid-column: 2;
+    height: var(--gf-string-h);
+    border-top: 1px solid rgba(0, 0, 0, .25);
+}
+.gtr-string-row:first-of-type .gtr-string-lead,
+.gtr-string-row:first-of-type .gtr-frets-row { border-top: none; }
 
 .gtr-string-label {
-    width: var(--gf-label-w);
     text-align: center;
     font-size: var(--gf-label-fs);
     font-weight: 700;
@@ -356,8 +346,9 @@
 /* ── Fret-inlay markers (dots below the board at frets 3,5,7,9,12,15,17,
    19,21 — 12/24 doubled) — ported straight from css/bass.css so the
    guitar board reads the same as the bass board. ─────────────────── */
-.gtr-marker-row { display: flex; align-items: center; margin-top: 8px; }
-.gtr-marker-spacer { width: var(--gf-spacer-w); flex-shrink: 0; }
+.gtr-marker-row { display: contents; }
+.gtr-marker-spacer { grid-column: 1; }
+.gtr-marker-cells { grid-column: 2; display: flex; margin-top: 8px; }
 .gtr-fret-marker-dot {
     flex: 1;
     text-align: center;

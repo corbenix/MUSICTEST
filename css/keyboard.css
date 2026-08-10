@@ -605,6 +605,16 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
 }
 
+@media (pointer: coarse) {
+    /* Most touch/handheld devices don't have a physical keyboard, so the
+       "computer-keyboard input" toggle is dead weight there — hide it by
+       default. If a real hardware keydown is ever detected at runtime
+       (e.g. a Bluetooth keyboard paired with a tablet), keyboard.js adds
+       .hw-kbd-detected to <html> and this rule backs off. */
+    #kb-midi-toggle-group { display: none; }
+    html.hw-kbd-detected #kb-midi-toggle-group { display: flex; }
+}
+
 @media (max-width: 768px) {
     /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
        the original sizes; this block only fires under 768px. */

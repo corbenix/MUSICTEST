@@ -72,9 +72,15 @@
 .toolbar-break { flex-basis: 100%; height: 0; }
 .piano-toolbar-right {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 8px;
     margin-left: auto;
+}
+.toolbar-right-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 @media (pointer: coarse) {

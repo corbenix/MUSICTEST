@@ -58,7 +58,7 @@
 
 .piano-toolbar {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 14px;
     flex-wrap: wrap;

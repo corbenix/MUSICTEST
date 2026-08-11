@@ -1,6 +1,23 @@
 (function () {
     const MT = window.MusicTheory;
     const KD = window.KeyboardData;
+
+    // ── Hardware-keyboard detection (mobile/touch) ───────────────────────
+    // On touch-primary devices the "computer-keyboard input" toggle is
+    // hidden by CSS (see @media (pointer: coarse) in keyboard.css) since
+    // most phones/tablets have no physical keyboard. If one IS attached
+    // (e.g. Bluetooth keyboard paired with a tablet), the first real
+    // keydown it produces reveals the control. This page has no text
+    // inputs, so a genuine keydown here is a reliable signal.
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+        const detectHwKeyboard = (e) => {
+            if (e.repeat) return;
+            document.documentElement.classList.add('hw-kbd-detected');
+            window.removeEventListener('keydown', detectHwKeyboard);
+        };
+        window.addEventListener('keydown', detectHwKeyboard);
+    }
+
     // Starting octave per range: 2 oct → C4, 3 oct → C3, 5 oct → C2.
     const START_OCTAVE = { 2: 4, 3: 3, 5: 2 };
     let octaveCount = 5;
@@ -114,6 +131,15 @@
         pianoEl.innerHTML = '';
         const whiteKeys = keys.filter(k => k.type === 'white');
         const whiteWidthPct = 100 / whiteKeys.length;
+        // Below this, individual keys become too thin to tap accurately or
+        // read their label — instead of shrinking further, the piano gets
+        // a real min-width and .piano-scroll (overflow-x:auto on touch
+        // devices, see keyboard.css) takes over so the user swipes across
+        // a comfortably-sized keyboard instead of squinting at ~7px keys.
+        const MIN_WHITE_KEY_WIDTH = 20;
+        const pianoMinWidth = (whiteKeys.length * MIN_WHITE_KEY_WIDTH) + 'px';
+        pianoEl.style.minWidth = pianoMinWidth;
+        if (pianoFeltEl) pianoFeltEl.style.minWidth = pianoMinWidth;
 
         whiteKeys.forEach((k) => {
             const displayOctave = startOctave + k.octave;

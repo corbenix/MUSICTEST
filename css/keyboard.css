@@ -153,6 +153,15 @@
 
 .piano-scroll { overflow: visible; border-radius: 10px; width: 100%; }
 
+@media (pointer: coarse) {
+    /* Desktop has room to shrink-to-fit any octave count comfortably;
+       touch devices don't — below a comfortable per-key width (enforced
+       via #piano's min-width, set in keyboard.js) the keyboard scrolls
+       horizontally instead of squeezing keys down to unusable slivers. */
+    .piano-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .piano, .piano-felt { width: auto; }
+}
+
 /* ── Felt rail — the strip of color real upright pianos show just above
    the keytops. Spans the full width of the keybed (same width as
    .piano at every octave count) and grounds the sky-cyan brand accent

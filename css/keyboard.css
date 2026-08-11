@@ -63,11 +63,54 @@
     margin-bottom: 14px;
     flex-wrap: wrap;
 }
+.toolbar-row-1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+.toolbar-break { flex-basis: 100%; height: 0; }
 .piano-toolbar-right {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-left: auto;
+}
+
+@media (pointer: coarse) {
+    /* Cleaner, flatter pill styling on touch devices — thinner borders,
+       muted resting state, accent fill only when active. */
+    .pill-group { border-radius: 999px; }
+    .pill-btn {
+        border: 0.5px solid rgba(255, 255, 255, .14);
+        background: rgba(255, 255, 255, .04);
+        color: rgba(255, 255, 255, .75);
+    }
+    .pill-btn.active {
+        background: var(--tool-accent, #4f8ef7);
+        border-color: var(--tool-accent, #4f8ef7);
+        color: #05121f;
+    }
+    #chord-clear-btn {
+        margin-left: auto;
+        color: rgba(255, 255, 255, .55);
+        background: transparent;
+        border: none;
+    }
+
+    /* Row 1 (Play, speed, octave range, sharp/flat) is tight on narrow
+       screens — drop the "Play" text label (icon only) and shrink the
+       sharp/flat toggle to an icon-only circle so everything fits on
+       one line without wrapping. */
+    .keyboard-play-btn .btn-label-text { display: none; }
+    .keyboard-play-btn { padding-left: 12px; padding-right: 12px; }
+    #note-display-toggle {
+        width: 34px;
+        padding: 0;
+        text-align: center;
+        border-radius: 50%;
+    }
+    .piano-toolbar { gap: 6px; }
 }
 
 /* ── Play button — runs the currently highlighted scale or chord back
@@ -605,11 +648,21 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
 }
 
+@media (pointer: coarse) {
+    /* Most touch/handheld devices don't have a physical keyboard, so the
+       "computer-keyboard input" toggle is dead weight there — hide it by
+       default. If a real hardware keydown is ever detected at runtime
+       (e.g. a Bluetooth keyboard paired with a tablet), keyboard.js adds
+       .hw-kbd-detected to <html> and this rule backs off. */
+    #kb-midi-toggle-group { display: none; }
+    html.hw-kbd-detected #kb-midi-toggle-group { display: flex; }
+}
+
 @media (max-width: 768px) {
     /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
        the original sizes; this block only fires under 768px. */
     .pk-label { font-size: 10.5px; }
-    .pill-btn { font-size: 12.5px; }
+    .pill-btn { font-size: 12.5px; padding-left: 10px; padding-right: 10px; }
     .sf-toggle { font-size: 11.5px; }
     .inversions-panel-title { font-size: 13.5px; }
     .inversions-panel-hint { font-size: 11px; }

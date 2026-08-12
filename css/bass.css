@@ -156,6 +156,10 @@
     transition: background .15s var(--ease), color .15s var(--ease);
 }
 .pill-btn:hover { color: #a8f0e4; background: rgba(var(--tool-rgb), .18); }
+/* Sharp/flat toggle holds a single glyph, not a text label — the
+   generic .pill-btn padding (sized for labels like "5 oct") leaves it
+   needlessly wide. Matches guitar's equivalent toggle sizing. */
+#note-display-toggle { padding: 6px 10px; }
 .pill-btn.active {
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),

@@ -124,18 +124,12 @@
         border: none;
     }
 
-    /* Row 1 (Play, speed, octave range, sharp/flat) is tight on narrow
-       screens — drop the "Play" text label (icon only) and shrink the
-       sharp/flat toggle to an icon-only circle so everything fits on
-       one line without wrapping. */
+    /* Row 1 was previously tight (Play, speed, octave, sharp/flat all in
+       one line) — the "Play" text label still drops to icon-only to save
+       space, but the sharp/flat toggle now lives in row 2 next to
+       Sustain with plenty of room, so it keeps the normal pill look. */
     .keyboard-play-btn .btn-label-text { display: none; }
     .keyboard-play-btn { padding-left: 12px; padding-right: 12px; }
-    #note-display-toggle {
-        width: 34px;
-        padding: 0;
-        text-align: center;
-        border-radius: 50%;
-    }
     .piano-toolbar { gap: 6px; }
 }
 

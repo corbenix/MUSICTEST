@@ -103,7 +103,7 @@
                             <div class="pill-group">
                                 <button type="button" id="keyboard-speed-toggle" class="pill-btn" title="Playback speed">1x</button>
                             </div>
-                            <div class="pill-group">
+                            <div class="pill-group" id="toolbar-octave-group">
                                 <button type="button" id="octave-toggle-2" class="pill-btn">2 oct</button>
                                 <button type="button" id="octave-toggle-3" class="pill-btn">3 oct</button>
                                 <button type="button" id="octave-toggle-5" class="pill-btn">5 oct</button>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div class="toolbar-break" aria-hidden="true"></div>
-                    <div class="toolbar-center">
+                    <div class="toolbar-center" id="toolbar-center">
                         <button type="button" id="keyboard-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play chord notes one at a time instead of strumming">
                             <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
                             <span class="chordlib-single-note-pill-label">Arpeggio</span>
@@ -135,6 +135,30 @@
                         <button type="button" id="chord-clear-btn" class="reset-btn">Clear Keys</button>
                     </div>
                 </div>
+                <script>
+                    /* Mobile-only toolbar reorder: swap the octave-range
+                       group and the Arpeggio/Sustain/sharp-flat group so
+                       row 1 reads Play, speed, Arpeggio, Sustain, sharp-
+                       flat, and row 2 leads with the octave range. Runs
+                       inline (not in keyboard.js) so it happens before
+                       first paint — no flash of the desktop order. Desktop
+                       (pointer: fine) is untouched, keeping its existing
+                       three-zone centered layout. */
+                    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+                        var row1 = document.querySelector('.toolbar-row-1');
+                        var octaveGroup = document.getElementById('toolbar-octave-group');
+                        var center = document.getElementById('toolbar-center');
+                        var toolbar = document.querySelector('.piano-toolbar');
+                        var toolbarRight = document.querySelector('.piano-toolbar-right');
+                        if (row1 && octaveGroup && center && toolbar && toolbarRight) {
+                            center.querySelectorAll('.chordlib-single-note-pill, .pill-group').forEach(function (el) {
+                                row1.appendChild(el);
+                            });
+                            center.remove();
+                            toolbar.insertBefore(octaveGroup, toolbarRight);
+                        }
+                    }
+                </script>
                 <div class="piano-scroll">
                     <div class="piano-felt"></div>
                     <div id="piano" class="piano"></div>

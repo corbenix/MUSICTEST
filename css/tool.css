@@ -313,6 +313,20 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 
+/* Sharp/flat toggle glyph centering — line-height-based centering
+   doesn't reliably center the ♯ glyph (font metrics vary), so every
+   instance of this toggle across the site uses flex centering instead. */
+.chordlib-note-toggle,
+.caged-note-toggle,
+.scale-note-toggle,
+.capo-note-toggle,
+.sf-toggle,
+#note-display-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* The sharp/flat toggle button itself — every page's toggle (however
    it's classed: .chordlib-note-toggle, .caged-note-toggle,
    .scale-note-toggle, .capo-note-toggle) shares this same look. */

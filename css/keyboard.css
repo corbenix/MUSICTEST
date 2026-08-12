@@ -378,6 +378,8 @@
    matching the accent colors already used by the per-row toggles. ── */
 /* Sharp/flat colors for #note-display-toggle now live centrally in
    tool.css (shared by every tool page) rather than duplicated here. */
+/* Sharp/flat centering now lives centrally in tool.css (shared by
+   every tool page) rather than duplicated here. */
 
 /* ── Sharp/flat spelling toggle for the Scale Explorer's root picker —
    ported 100% from the Bass page's Scale Explorer. Cycles

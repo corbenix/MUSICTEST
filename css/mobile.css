@@ -182,10 +182,10 @@
 
     .bass-toolbar { row-gap: 10px; }
 
-    #bass-play-btn { order: 1; }
-    .pill-group:has(#bass-speed-toggle) { order: 2; }
-    .pill-group:has(#note-display-toggle) { order: 3; }
-    .pill-group:has(#fret-toggle-b-12) { order: 4; margin-left: auto; }
+    .bass-toolbar #bass-play-btn { order: 1; }
+    .bass-toolbar .pill-group:has(#bass-speed-toggle) { order: 2; }
+    .bass-toolbar .pill-group:has(#note-display-toggle) { order: 3; }
+    .bass-toolbar .pill-group:has(#fret-toggle-b-12) { order: 4; margin-left: auto; }
 
     .bass-toolbar::after {
         content: "";
@@ -194,8 +194,8 @@
         height: 0;
     }
 
-    .pill-group:has(#bass-4-btn) { order: 6; }
-    #bass-clear-btn { order: 7; margin-left: auto; }
+    .bass-toolbar .pill-group:has(#bass-4-btn) { order: 6; }
+    .bass-toolbar #bass-clear-btn { order: 7; margin-left: auto; }
 }
 
 /* ── Ambient background animation — off on mobile, except the homepage ──

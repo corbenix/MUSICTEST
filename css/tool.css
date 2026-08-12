@@ -531,7 +531,7 @@
     -webkit-backdrop-filter: var(--blur-sm);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
-    padding: 8px 14px;
+    padding: 6px 14px;
     font-family: var(--font-display);
     font-size: 13px;
     font-weight: 700;

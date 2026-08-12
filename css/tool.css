@@ -327,6 +327,16 @@
     justify-content: center;
 }
 
+/* Guitar's sharp/flat toggle holds a single glyph, not a text label —
+   the generic .reset-btn padding (sized for labels like "Clear
+   Fretboard") leaves it needlessly wide. */
+.chordlib-note-toggle,
+.caged-note-toggle,
+.scale-note-toggle,
+.capo-note-toggle {
+    padding: 6px 10px;
+}
+
 /* The sharp/flat toggle button itself — every page's toggle (however
    it's classed: .chordlib-note-toggle, .caged-note-toggle,
    .scale-note-toggle, .capo-note-toggle) shares this same look. */

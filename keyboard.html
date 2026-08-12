@@ -136,11 +136,12 @@
                     </div>
                 </div>
                 <script>
-                    /* Mobile-only toolbar reorder: row 1 reads Play,
-                       speed, Sustain, sharp-flat; row 2 leads with
-                       Arpeggio then the octave range. Runs inline (not
-                       in keyboard.js) so it happens before first paint —
-                       no flash of the desktop order. Desktop (pointer:
+                    /* Mobile-only toolbar reorder: row 1 = Play, speed,
+                       Sustain, sharp-flat (left) / Keyboard, Notes
+                       (right). Row 2 = Arpeggio, octave range (left) /
+                       Clear Keys (right). Runs inline (not in
+                       keyboard.js) so it happens before first paint — no
+                       flash of the desktop order. Desktop (pointer:
                        fine) is untouched, keeping its existing
                        three-zone centered layout. */
                     if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
@@ -150,13 +151,23 @@
                         var arpeggio = document.getElementById('keyboard-single-note-toggle');
                         var toolbar = document.querySelector('.piano-toolbar');
                         var toolbarRight = document.querySelector('.piano-toolbar-right');
-                        if (row1 && octaveGroup && center && arpeggio && toolbar && toolbarRight) {
+                        var kbGroup = document.getElementById('kb-midi-toggle-group');
+                        var clearBtn = document.getElementById('chord-clear-btn');
+                        if (row1 && octaveGroup && center && arpeggio && toolbar && toolbarRight && clearBtn) {
                             center.querySelectorAll('.pill-group').forEach(function (el) {
                                 row1.appendChild(el);
                             });
                             center.remove();
                             toolbar.insertBefore(octaveGroup, toolbarRight);
                             toolbar.insertBefore(arpeggio, octaveGroup);
+                            toolbar.insertBefore(clearBtn, toolbarRight);
+                            clearBtn.classList.add('toolbar-row-1-end');
+                            var rightTop = document.querySelector('.toolbar-right-top');
+                            if (rightTop) {
+                                rightTop.classList.add('toolbar-row-1-end');
+                                row1.appendChild(rightTop);
+                            }
+                            toolbarRight.remove();
                         }
                     }
                 </script>

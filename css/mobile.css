@@ -180,7 +180,11 @@
 @media (max-width: 768px) {
     .bass-toolbar-group { display: contents; }
 
-    .bass-toolbar { row-gap: 10px; }
+    /* The forced row-break below (::after) technically creates its own
+       empty flex line, so row-gap is applied twice (once on each side
+       of it) — halved here so the effective visual gap between the two
+       real rows comes out to 10px, not 20px. */
+    .bass-toolbar { row-gap: 5px; }
 
     .bass-toolbar #bass-play-btn { order: 1; }
     .bass-toolbar .pill-group:has(#bass-speed-toggle) { order: 2; }

@@ -121,7 +121,6 @@
         margin-left: auto;
         color: rgba(255, 255, 255, .55);
         background: transparent;
-        border: none;
     }
 
     /* Row 1 was previously tight (Play, speed, octave, sharp/flat all in

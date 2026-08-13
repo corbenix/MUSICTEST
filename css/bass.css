@@ -201,6 +201,19 @@
     -webkit-backdrop-filter: var(--blur-sm);
     box-shadow: none;
 }
+/* Fret-count toggle specifically copies the Guitar Scale Explorer's
+   .scale-fret-toggle-group / .scale-fret-toggle look exactly — subtler
+   background/border and tighter padding than the glass treatment above,
+   which still applies to the 4/5-string group. */
+.pill-group:has(#fret-toggle-b-12) {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.pill-group:has(#fret-toggle-b-12) .pill-btn {
+    padding: 6px 12px;
+}
 .pill-group:has(#fret-toggle-b-12) .pill-btn:not(.active):hover,
 .pill-group:has(#bass-4-btn) .pill-btn:not(.active):hover {
     background: rgba(var(--tool-rgb), .16);

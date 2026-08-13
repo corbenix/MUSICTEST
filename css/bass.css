@@ -640,8 +640,10 @@
     .reset-btn { font-size: 11.5px; }
     /* Sharp/flat toggle holds a single glyph, not a text label — the
        generic .pill-btn padding (sized for labels like "5 oct") leaves
-       it needlessly wide on narrow screens. */
-    #note-display-toggle { padding: 6px 10px; }
+       it needlessly wide on narrow screens. The ♯ glyph's own ink isn't
+       perfectly centered within its font line-box; that's invisible at
+       desktop's wider size but noticeable here, so nudge it slightly. */
+    #note-display-toggle { padding: 6px 10px; transform: translate(1px, -1px); }
     .ps-micro-label { font-size: 10.5px; }
     .root-pill { font-size: 11.5px; }
     .sf-toggle { font-size: 11.5px; }

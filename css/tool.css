@@ -582,6 +582,17 @@
 @media (max-width: 768px) {
     /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps
        the original sizes; this block only fires under 768px. */
+    /* The ♯ glyph's own ink isn't perfectly centered within its font
+       line-box; invisible at desktop's wider padding, but noticeable on
+       mobile's narrower pill, so nudge it slightly. Covers every
+       instance of the toggle across the site. */
+    .chordlib-note-toggle,
+    .caged-note-toggle,
+    .scale-note-toggle,
+    .capo-note-toggle,
+    #note-display-toggle {
+        transform: translate(1px, -1px);
+    }
     .tool-header-icon { font-size: 19px; }
     .tool-header h1 { font-size: clamp(24.5px, 4vw, 32.5px); }
     .tool-header p { font-size: 14px; }

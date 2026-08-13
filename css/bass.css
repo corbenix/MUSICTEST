@@ -643,7 +643,7 @@
        it needlessly wide on narrow screens. The ♯ glyph's own ink isn't
        perfectly centered within its font line-box; that's invisible at
        desktop's wider size but noticeable here, so nudge it slightly. */
-    #note-display-toggle { padding: 6px 10px; transform: translate(1px, -1px); }
+    #note-display-toggle { padding: 6px 10px; }
     .ps-micro-label { font-size: 10.5px; }
     .root-pill { font-size: 11.5px; }
     .sf-toggle { font-size: 11.5px; }

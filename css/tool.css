@@ -429,11 +429,17 @@
 .tool-controls-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
 }
 .tool-controls-header .tool-controls-desc { margin-bottom: 0; }
-.tool-controls-header .reset-btn { flex-shrink: 0; margin-top: 2px; }
+.tool-controls-header .reset-btn { flex-shrink: 0; }
+.tool-controls-header .scale-note-toggle,
+.tool-controls-header .caged-note-toggle,
+.tool-controls-header .chordlib-note-toggle,
+.tool-controls-header .capo-note-toggle {
+    padding: 4px 8px;
+}
 .tool-controls-title {
     font-family: var(--font-display);
     font-weight: 700;

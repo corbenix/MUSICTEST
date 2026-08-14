@@ -172,6 +172,19 @@
         });
 
         updateKeyLabels();
+
+        // On mobile, 5-octave mode is wide enough to need horizontal
+        // scrolling (see MIN_WHITE_KEY_WIDTH above) — land on C4 (middle
+        // C, the standard tuning reference) by default instead of
+        // stranding the user at the far-left (lowest) end of the range.
+        if (octaveCount === 5 && window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+            const scrollContainer = document.querySelector('.piano-scroll');
+            const c4Key = pianoEl.querySelector('.pk--white[data-note="C"][data-octave="4"]');
+            if (scrollContainer && c4Key) {
+                const targetScroll = c4Key.offsetLeft - (scrollContainer.clientWidth / 2) + (c4Key.offsetWidth / 2);
+                scrollContainer.scrollLeft = Math.max(0, targetScroll);
+            }
+        }
     }
 
     function flash(el) {

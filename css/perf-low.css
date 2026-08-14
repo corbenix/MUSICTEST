@@ -23,6 +23,18 @@ html.perf-low .cn-trail-dot {
     display: none;
 }
 
+/* Circle of Fifths collapse/expand — grid-template-rows is layout-
+   triggering (costlier to animate than transform/opacity), so on
+   detected low-end phones this trims the duration and drops the
+   co-animating opacity fade, keeping the motion snappy instead of
+   stuttering through a longer, heavier transition. */
+html.perf-low .circle-body-outer {
+    transition: grid-template-rows .2s ease-out !important;
+}
+html.perf-low .circle-body-outer.collapsed {
+    opacity: 1;
+}
+
 /* Backdrop blur is one of the most expensive properties to composite on
    weak mobile GPUs. css/mobile-no-glass.css already strips it below
    768px; this reinforces the same removal keyed off measured/reported

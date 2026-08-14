@@ -1,0 +1,34 @@
+/* ==========================================================================
+   LOW-PERFORMANCE DEVICES: REDUCE CONTINUOUS ANIMATION
+   ==========================================================================
+   Applies when js/perf-detect.js adds .perf-low to <html> — either from an
+   explicit prefers-reduced-motion preference, low reported hardware specs
+   (Chrome/Android only), or a measured low real-world frame rate.
+
+   Scope is deliberately narrow: purely decorative animations that run
+   forever regardless of user action (background orbit rings, twinkling
+   sparkles, cursor trail) are removed outright, since they cost paint and
+   compositing cycles continuously for zero functional benefit. Short,
+   state-driven animations (e.g. a play button pulsing only while audio is
+   actually playing) are left alone — they're brief, user-triggered, and
+   removing them would remove real feedback, not just polish.
+   ========================================================================== */
+
+html.perf-low .cn-bg-orbit,
+html.perf-low .cn-bg-sparkles {
+    display: none;
+}
+
+html.perf-low .cn-trail-dot {
+    display: none;
+}
+
+/* Backdrop blur is one of the most expensive properties to composite on
+   weak mobile GPUs. css/mobile-no-glass.css already strips it below
+   768px; this reinforces the same removal keyed off measured/reported
+   device performance instead of viewport width, so it also covers a
+   low-end device at a larger viewport (e.g. an older tablet). */
+html.perf-low * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}

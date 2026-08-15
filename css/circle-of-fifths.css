@@ -142,6 +142,7 @@
     transition: grid-template-rows .36s cubic-bezier(0.22, 1, 0.36, 1), opacity .36s cubic-bezier(0.22, 1, 0.36, 1);
     opacity: 1;
     overflow: hidden;
+    contain: layout;
 }
 .circle-body-outer.collapsed { grid-template-rows: 0fr; opacity: 0; pointer-events: none; }
 .circle-body {
@@ -344,4 +345,20 @@
     .diatonic-card .chord-quality { font-size: 10.5px; }
     .scale-info-row { font-size: 12.5px; }
     .scale-info-icon { font-size: 14px; }
+}
+
+@media (pointer: coarse) {
+    /* The collapse animates a container wrapping the circle-of-fifths
+       SVG wheel plus multiple chord cards — animating grid-template-rows
+       forces that whole subtree to reflow every frame, which real phone
+       GPUs/CPUs handle noticeably worse than desktop even on decent
+       hardware (not just devices flagged perf-low). Shorter duration and
+       dropping the co-animating opacity fade both cut down the per-frame
+       work enough to stay smooth. */
+    .circle-body-outer {
+        transition: grid-template-rows .24s ease-out;
+    }
+    .circle-body-outer.collapsed {
+        opacity: 1;
+    }
 }

@@ -357,4 +357,15 @@
     .circle-body-outer {
         transition: none;
     }
+
+    /* Even with no animation, toggling still forces one synchronous
+       layout+paint pass over the whole SVG wheel + chord cards — heavy
+       enough on real phone hardware to show as a single hitch. When
+       collapsed, tell the browser to skip layout/paint for this subtree
+       entirely (and remember its rendering state, unlike display:none,
+       so re-expanding is also cheap) instead of just skipping the
+       transition around it. */
+    .circle-body-outer.collapsed {
+        content-visibility: hidden;
+    }
 }

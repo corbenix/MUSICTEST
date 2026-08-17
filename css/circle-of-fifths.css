@@ -348,17 +348,13 @@
 }
 
 @media (pointer: coarse) {
-    /* The collapse animates a container wrapping the circle-of-fifths
-       SVG wheel plus multiple chord cards — animating grid-template-rows
-       forces that whole subtree to reflow every frame, which real phone
-       GPUs/CPUs handle noticeably worse than desktop even on decent
-       hardware (not just devices flagged perf-low). Shorter duration and
-       dropping the co-animating opacity fade both cut down the per-frame
-       work enough to stay smooth. */
+    /* However light the transition properties are, animating a
+       container that wraps the SVG wheel + chord cards still forces
+       that whole subtree to be laid out on every frame — real phone
+       hardware struggles with this regardless of duration tuning.
+       Skip the animation on mobile entirely: an instant, snappy toggle
+       reads better than a stuttering animated one. */
     .circle-body-outer {
-        transition: grid-template-rows .24s ease-out;
-    }
-    .circle-body-outer.collapsed {
-        opacity: 1;
+        transition: none;
     }
 }

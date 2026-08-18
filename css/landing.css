@@ -189,6 +189,7 @@
 .hub-card--keyboard { --c-rgb: var(--keyboard-rgb); }
 .hub-card--chords   { --c-rgb: var(--chordbuilder-rgb); }
 .hub-card--tools    { --c-rgb: var(--tools-rgb); }
+.hub-card--tips      { --c-rgb: var(--tips-rgb); }
 
 @media (max-width: 768px) {
     /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps

@@ -102,7 +102,7 @@
 .gtr-fretboard-wrap {
     background: transparent;
     min-width: var(--gf-wrap-minw);
-    padding: 18px 16px 18px 0;
+    padding: 18px 16px 18px 16px;
     border-radius: var(--radius-lg);
     display: grid;
     grid-template-columns: auto 1fr;

@@ -4,6 +4,30 @@
    on top of this one.
    ========================================================================== */
 
+/* Cross-document View Transitions: smooths navigation between the separate
+   instrument pages (guitar.html <-> bass.html <-> keyboard.html, etc.),
+   which are full page loads rather than an in-app tab switch. Opting in via
+   @view-transition makes same-origin navigations cross-fade natively in
+   supporting browsers (Chrome/Edge 126+, Safari 18+) with zero JS. Browsers
+   without support simply navigate instantly as before — no fallback needed. */
+@view-transition {
+    navigation: auto;
+}
+
+/* Keep the crossfade calm and consistent with the rest of the UI's motion
+   language rather than the default zoom/slide some browsers apply. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.22s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition {
+        navigation: none;
+    }
+}
+
 :root {
     --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
     --font-body:    'Nunito', 'Inter', system-ui, sans-serif;

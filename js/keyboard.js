@@ -872,7 +872,14 @@
     const SHIFTED_KEY_ALIASES = { ':': ';' };
     let computerOctaveShift = 0; // in octaves, adjusted by Z / X
     const heldComputerKeys = {}; // physical key -> the .pk element it's sounding
+    // Default on, but restored from localStorage so the choice persists
+    // across visits (mirrors the reference app's cn-kbkey-legend-visible key).
+    const KB_MIDI_STORAGE_KEY = 'cn-kb-midi-enabled';
     let computerKeyboardEnabled = true; // toggled via the Keyboard: On/Off button, default on
+    try {
+        const savedKbMidi = window.localStorage.getItem(KB_MIDI_STORAGE_KEY);
+        if (savedKbMidi !== null) computerKeyboardEnabled = savedKbMidi === '1';
+    } catch (err) { /* localStorage unavailable — default to on */ }
 
     // Converts a semitone offset from C4 into an actual { note, octave }
     // pair using the same note-naming table every other instrument page
@@ -1004,11 +1011,15 @@
     // on-key badges, and mutes the keydown/keyup listeners above without
     // removing them.
     const kbMidiToggle = document.getElementById('kb-midi-toggle');
+    kbMidiToggle.classList.toggle('active', computerKeyboardEnabled);
+    kbMidiToggle.setAttribute('aria-pressed', String(computerKeyboardEnabled));
+    kbMidiToggle.textContent = computerKeyboardEnabled ? '⌨ Keyboard: On' : '⌨ Keyboard: Off';
     kbMidiToggle.addEventListener('click', () => {
         computerKeyboardEnabled = !computerKeyboardEnabled;
         kbMidiToggle.classList.toggle('active', computerKeyboardEnabled);
         kbMidiToggle.setAttribute('aria-pressed', String(computerKeyboardEnabled));
         kbMidiToggle.textContent = computerKeyboardEnabled ? '⌨ Keyboard: On' : '⌨ Keyboard: Off';
+        try { window.localStorage.setItem(KB_MIDI_STORAGE_KEY, computerKeyboardEnabled ? '1' : '0'); } catch (err) {}
         if (!computerKeyboardEnabled) {
             resetComputerKeyboardInput(); // releases held notes; also reapplies (empty) labels
         } else {

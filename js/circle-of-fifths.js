@@ -90,7 +90,8 @@
                         <svg class="circle-svg" id="cof-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"></svg>
                         <div class="circle-center-hub">
                             <div class="circle-center-label">Key of</div>
-                            <div class="circle-center-value" id="cof-center-value">C Major</div>
+                            <div class="circle-center-value" id="cof-center-value">C</div>
+                            <div class="circle-center-mode" id="cof-center-mode">Major</div>
                         </div>
                     </div>
                     <div class="circle-legend-panel">
@@ -121,6 +122,7 @@
     const sectionEl = mount.querySelector('#cof-section');
     const bodyOuter = mount.querySelector('#cof-body-outer');
     const centerValue = mount.querySelector('#cof-center-value');
+    const centerMode = mount.querySelector('#cof-center-mode');
     const legendTitle = mount.querySelector('#cof-legend-title');
     const diatonicTop = mount.querySelector('#cof-diatonic-top');
     const diatonicBottom = mount.querySelector('#cof-diatonic-bottom');
@@ -183,7 +185,7 @@
         const preferFlats = MT.PREFERS_FLATS.has(root);
         const scale = MT.scaleNotes(root, 'Major (Ionian)', preferFlats);
 
-        centerValue.textContent = cofDisplayName(root) + ' Major';
+        centerValue.textContent = cofDisplayName(root);
         legendTitle.textContent = cofDisplayName(root) + ' Major Diatonic Chords';
         scaleName.textContent = cofDisplayName(root) + ' Major';
         scaleNotes.textContent = scale.map(cofDisplayName).join(' - ') + ' - ' + cofDisplayName(scale[0]);

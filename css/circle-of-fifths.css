@@ -215,7 +215,7 @@
 .circle-text {
     font-family: system-ui, sans-serif;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 16px;
     fill: var(--text);
     pointer-events: none;
     user-select: none;
@@ -247,18 +247,20 @@
     text-align: center;
 }
 .circle-center-label {
-    font-size: 9px;
+    font-size: 10px;
     color: var(--text2);
     text-transform: uppercase;
     letter-spacing: .5px;
 }
 .circle-center-value {
-    font-size: 15.5px;
-    line-height: 1.15;
+    font-size: 24px;
     font-weight: 800;
     color: var(--purple-l);
-    font-family: var(--font-display);
-    letter-spacing: -0.2px;
+}
+.circle-center-mode {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 1px;
 }
 
 .circle-legend-panel {
@@ -347,7 +349,7 @@
 .diatonic-card.tonic-card { background: rgba(79, 125, 245, .12); border-color: rgba(140, 170, 255, .30); }
 
 .scale-info-row {
-    background: rgba(255, 255, 255, .04);
+    background: rgba(0, 0, 0, .18);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, .10);
@@ -379,7 +381,9 @@
     .circle-text { font-size: 14px; }
     .circle-text-minor { font-size: 10px; }
     .circle-center-label { font-size: 8.5px; }
-    .circle-center-value { font-size: 14.5px; }
+    .circle-center-value { font-size: 18px; }
+    .circle-center-label { font-size: 8px; }
+    .circle-center-mode { font-size: 9px; }
     .circle-title-block h3 { font-size: 16px; }
     .circle-title-block p { font-size: 12.5px; }
     .diatonic-card .roman { font-size: 10.5px; }

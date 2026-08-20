@@ -304,50 +304,39 @@
 }
 .diatonic-card {
     position: relative;
-    background: rgba(79, 125, 245, .06);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(140, 170, 255, .16);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
-    border-radius: 10px;
+    --c-rgb: 79, 125, 245;
+    background: radial-gradient(120% 130% at 30% 15%, rgba(255, 255, 255, .18), rgba(var(--c-rgb), .32) 60%, rgba(var(--c-rgb), .20) 100%);
+    border: none;
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .18), inset 0 -4px 8px rgba(0, 0, 0, .18), 0 6px 12px rgba(0, 0, 0, .25);
+    border-radius: 16px;
     padding: 12px 8px;
     text-align: center;
     cursor: pointer;
     overflow: hidden;
-    transition: transform .22s cubic-bezier(0.22, 1, 0.36, 1), background .18s var(--ease), border-color .18s var(--ease), box-shadow .22s var(--ease);
+    transition: transform .22s cubic-bezier(0.22, 1, 0.36, 1), background .18s var(--ease), box-shadow .22s var(--ease);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
 }
-.diatonic-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, rgba(255, 255, 255, .07), transparent 45%);
-    pointer-events: none;
-}
 .diatonic-card:hover {
-    background: rgba(79, 125, 245, .12);
-    border-color: rgba(140, 170, 255, .30);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(79, 125, 245, .18);
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .24), inset 0 -4px 8px rgba(0, 0, 0, .2), 0 10px 20px rgba(var(--c-rgb), .3);
 }
 .diatonic-card.active-diatonic {
-    background: rgba(79, 125, 245, .18);
-    border-color: rgba(140, 170, 255, .45);
+    background: radial-gradient(120% 130% at 30% 15%, rgba(255, 255, 255, .3), rgba(var(--c-rgb), .55) 60%, rgba(var(--c-rgb), .35) 100%);
     box-shadow:
-        0 0 0 1px rgba(140, 170, 255, .40),
-        0 10px 30px rgba(79, 125, 245, .32),
-        inset 0 1px 0 rgba(255, 255, 255, .16);
+        inset 0 2px 3px rgba(255, 255, 255, .35),
+        inset 0 -4px 8px rgba(0, 0, 0, .2),
+        0 10px 22px rgba(var(--c-rgb), .4);
 }
-.diatonic-card .roman { position: relative; z-index: 1; font-size: 11px; color: var(--text2); font-weight: 600; letter-spacing: .3px; }
-.diatonic-card .chord-name { position: relative; z-index: 1; font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.1; margin: 4px 0 2px; text-shadow: 0 1px 2px rgba(0, 0, 0, .3); }
-.diatonic-card .chord-quality { position: relative; z-index: 1; font-size: 11px; color: var(--text3); }
+.diatonic-card .roman { position: relative; z-index: 1; font-size: 11px; color: rgba(255, 255, 255, .75); font-weight: 600; letter-spacing: .3px; }
+.diatonic-card .chord-name { position: relative; z-index: 1; font-family: var(--font-display); font-size: 20px; font-weight: 800; color: #fff; line-height: 1.1; margin: 4px 0 2px; text-shadow: 0 1px 2px rgba(0, 0, 0, .3); }
+.diatonic-card .chord-quality { position: relative; z-index: 1; font-size: 11px; color: rgba(255, 255, 255, .6); }
 .diatonic-card.is-major .chord-name { color: var(--gold); }
-.diatonic-card.is-minor .chord-name { color: var(--purple-l); }
-.diatonic-card.is-dim .chord-name { color: #f07070; }
-.diatonic-card.tonic-card { background: rgba(79, 125, 245, .12); border-color: rgba(140, 170, 255, .30); }
+.diatonic-card.is-minor .chord-name { color: #fff; }
+.diatonic-card.is-dim .chord-name { color: #ffb3b3; }
+.diatonic-card.tonic-card { background: radial-gradient(120% 130% at 30% 15%, rgba(255, 255, 255, .26), rgba(var(--c-rgb), .45) 60%, rgba(var(--c-rgb), .28) 100%); }
 
 .scale-info-row {
     background: rgba(0, 0, 0, .18);

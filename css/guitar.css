@@ -320,9 +320,8 @@
        card. */
 }
 .gcv-display {
-    background: rgba(0, 0, 0, .22);
-    border: none;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, .3);
+    background: var(--purple-dim);
+    border: 1px solid rgba(194, 182, 255, .30);
 }
 .gcv-display-name.has-chord { color: var(--purple-l); }
 
@@ -345,9 +344,9 @@
     flex-wrap: wrap;
 }
 .gcv-voicing-chip {
-    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .12), rgba(255, 255, 255, .02) 70%);
-    border: none;
-    border-radius: 14px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
     padding: 7px 9px;
     cursor: pointer;
     display: flex;
@@ -357,21 +356,24 @@
     min-width: 64px;
     font-family: inherit;
     color: var(--text2);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .22);
     transition: transform .22s cubic-bezier(0.22, 1, 0.36, 1),
                 background .18s var(--ease),
+                border-color .18s var(--ease),
                 box-shadow .22s var(--ease),
                 color .14s var(--ease);
 }
 .gcv-voicing-chip svg { display: block; }
 .gcv-voicing-chip:hover {
-    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .2), rgba(var(--tool-rgb), .55) 70%);
+    border-color: var(--purple-l);
+    background: var(--purple-dim);
     transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .28);
     color: #fff;
 }
 .gcv-voicing-chip.active {
-    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .4), rgba(var(--tool-rgb), .95) 65%);
-    box-shadow: inset 0 -4px 8px rgba(0, 0, 0, .18), 0 3px 8px rgba(var(--tool-rgb), .35);
+    border-color: var(--purple-l);
+    background: rgba(124, 111, 224, .30);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 3px 12px rgba(124, 111, 224, .40);
     color: #fff;
 }
 .gcv-voicing-chip-label {
@@ -478,24 +480,25 @@
     gap: 12px;
 }
 .chord-lib-card {
-    background: radial-gradient(120% 130% at 30% 15%, rgba(255, 255, 255, .16), rgba(var(--tool-rgb), .5) 55%, rgba(var(--tool-rgb), .36) 100%);
-    border: none;
-    border-radius: 16px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
     padding: 10px;
     cursor: pointer;
-    box-shadow: inset 0 -4px 8px rgba(0, 0, 0, .16), 0 4px 10px rgba(0, 0, 0, .22);
     transition: all 0.15s var(--ease);
 }
-.chord-lib-card:hover {
-    transform: translateY(-2px);
-    box-shadow: inset 0 -4px 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(var(--tool-rgb), .28);
-}
+.chord-lib-card:hover { background: var(--glass-md); }
 .chord-lib-card[aria-selected="true"] {
-    background: radial-gradient(120% 130% at 30% 15%, rgba(255, 255, 255, .38), rgba(155, 110, 255, .85) 55%, rgba(155, 110, 255, .6) 100%);
-    border: none;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%),
+        rgba(155, 110, 255, 0.14);
+    backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 2px solid rgba(180, 150, 255, 0.9);
     box-shadow:
-        inset 0 -4px 8px rgba(0, 0, 0, .2),
-        0 8px 18px rgba(155, 110, 255, .35);
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 3px 10px rgba(155, 110, 255, 0.25);
 }
 .chord-lib-card-name {
     font-family: var(--font-display);
@@ -952,9 +955,10 @@
    which CAGED shape is being fretted. Ported from the reference app's
    .gc-capo-card. */
 .capo-card {
-    background: radial-gradient(120% 130% at 25% 15%, rgba(255, 255, 255, .10), rgba(224, 168, 56, .16) 60%, rgba(224, 168, 56, .10) 100%);
-    border: none;
-    border-radius: 14px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border2);
+    border-left: 3px solid var(--border2);
+    border-radius: 9px;
     padding: 8px 10px;
     cursor: pointer;
     display: flex;
@@ -962,15 +966,16 @@
     justify-content: space-between;
     gap: 4px;
     min-height: 58px;
-    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .1), inset 0 -3px 6px rgba(0, 0, 0, .16), 0 4px 8px rgba(0, 0, 0, .2);
     transition: transform .22s cubic-bezier(0.22, 1, 0.36, 1),
                 background .18s var(--ease),
+                border-color .18s var(--ease),
                 box-shadow .22s var(--ease);
 }
 .capo-card:hover {
-    background: radial-gradient(120% 130% at 25% 15%, rgba(255, 255, 255, .16), rgba(224, 168, 56, .28) 60%, rgba(224, 168, 56, .18) 100%);
+    border-color: var(--capo-gold);
+    background: rgba(212, 175, 55, .07);
     transform: translateY(-2px);
-    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .16), inset 0 -3px 6px rgba(0, 0, 0, .18), 0 8px 18px rgba(224, 168, 56, .28);
+    box-shadow: 0 8px 20px rgba(0,0,0,.24);
 }
 .capo-card-top {
     display: flex;
@@ -1237,16 +1242,26 @@
         0 3px 12px rgba(124, 111, 224, .45);
 }
 
-/* ── Sounding-chord result card: clay treatment ──── */
+/* ── Sounding-chord result card: glass card with corner sheen ──── */
 .capo-sounding-card {
     position: relative;
-    background: radial-gradient(140% 120% at 20% 0%, rgba(255, 255, 255, .16), rgba(139, 124, 240, .55) 55%, rgba(139, 124, 240, .4) 100%);
-    border: none;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .015)),
+                radial-gradient(120% 160% at 50% 0%, rgba(139, 124, 240, .10), transparent 60%);
+    backdrop-filter: var(--blur-md) saturate(140%);
+    -webkit-backdrop-filter: var(--blur-md) saturate(140%);
     box-shadow:
-        0 12px 24px rgba(0, 0, 0, .35),
-        inset 0 -6px 10px rgba(0, 0, 0, .18);
+        0 12px 34px rgba(0, 0, 0, .35),
+        inset 0 1px 0 rgba(255, 255, 255, .12);
     overflow: hidden;
 }
+.capo-sounding-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(100% 100% at 0% 0%, rgba(255, 255, 255, .09), transparent 60%);
+    pointer-events: none;
+}
+.capo-sounding-card > * { position: relative; z-index: 1; }
 .capo-shape-big,
 .capo-sounding-chord-big {
     text-shadow: 0 1px 2px rgba(0, 0, 0, .3);

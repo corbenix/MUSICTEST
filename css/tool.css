@@ -126,24 +126,25 @@
 .chip--root { background: var(--gold); color: #0a0714; border-color: var(--gold); }
 
 .reset-btn {
-    background: var(--glass-md);
-    border: 1px solid rgba(var(--tool-light-rgb), .22);
-    color: var(--text2);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .35), rgba(var(--tool-rgb), .8) 65%);
+    border: none;
+    color: #fff;
     font-family: var(--font-display);
     font-size: 12px;
     font-weight: 700;
     padding: 6px 14px;
     border-radius: 8px;
     cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .3), inset 0 1px 1px rgba(255, 255, 255, .3);
     transition: all .15s var(--ease);
 }
-.reset-btn:hover { color: var(--text); border-color: rgba(var(--tool-light-rgb), 0.32); background: rgba(var(--tool-rgb), 0.16); }
+.reset-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 3px 7px rgba(0, 0, 0, .35), inset 0 1px 1px rgba(255, 255, 255, .35); }
 
 .chord-display {
     text-align: center;
-    background: rgba(var(--tool-rgb), 0.08);
-    border: 1px solid rgba(var(--tool-rgb), 0.25);
-    border-radius: 10px;
+    background: rgba(0, 0, 0, .22);
+    border: none;
+    border-radius: 16px;
     padding: 9px 12px;
     margin: 14px 0 0;
     display: flex;
@@ -151,6 +152,7 @@
     align-items: center;
     justify-content: center;
     min-height: 64px;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, .3);
 }
 .chord-display-name {
     font-size: 22px;
@@ -184,10 +186,8 @@
 }
 .root-pill-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
 .root-pill {
-    background: rgba(255, 255, 255, .045);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, .10);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .16), rgba(255, 255, 255, .03) 70%);
+    border: none;
     border-radius: 20px;
     color: var(--text2);
     font-family: inherit;
@@ -198,27 +198,22 @@
     cursor: pointer;
     min-width: 42px;
     text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
-    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, .15), 0 2px 4px rgba(0, 0, 0, .25);
+    transition: background .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease), transform .12s var(--ease);
 }
 .root-pill:hover {
-    background: rgba(var(--tool-rgb), .16);
-    border-color: rgba(var(--tool-light-rgb), 0.40);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .22), rgba(var(--tool-rgb), .35) 70%);
     color: #fff;
+    transform: translateY(-1px);
 }
 .root-pill.active {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),
-        radial-gradient(130% 160% at 50% 105%, rgba(var(--tool-rgb), 0.75) 0%, rgba(var(--tool-rgb), 0.38) 55%, rgba(var(--tool-rgb), 0.18) 100%);
-    backdrop-filter: blur(14px) saturate(200%);
-    -webkit-backdrop-filter: blur(14px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 2px solid rgba(var(--tool-light-rgb), 1);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .4), rgba(var(--tool-rgb), .95) 65%);
+    border: none;
     color: #fff;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -4px 8px -3px rgba(var(--tool-rgb), 0.4),
-        0 2px 8px rgba(var(--tool-rgb), 0.2);
+        inset 0 2px 3px rgba(255, 255, 255, .35),
+        inset 0 -4px 8px rgba(0, 0, 0, .18),
+        0 3px 8px rgba(var(--tool-rgb), .4);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -229,10 +224,8 @@
 .ps-type-row.ps-visible { display: flex; }
 .ps-pills { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
 .type-pill-btn {
-    background: rgba(255, 255, 255, .045);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, .10);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .16), rgba(255, 255, 255, .03) 70%);
+    border: none;
     border-radius: 20px;
     color: var(--text2);
     font-family: inherit;
@@ -242,27 +235,22 @@
     line-height: 1.6;
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
-    transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, .15), 0 2px 4px rgba(0, 0, 0, .25);
+    transition: background .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease), transform .12s var(--ease);
 }
 .type-pill-btn:hover {
-    background: rgba(var(--tool-rgb), .16);
-    border-color: rgba(var(--tool-light-rgb), 0.40);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .22), rgba(var(--tool-rgb), .35) 70%);
     color: #fff;
+    transform: translateY(-1px);
 }
 .type-pill-btn.active {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),
-        radial-gradient(130% 160% at 50% 105%, rgba(var(--tool-rgb), 0.75) 0%, rgba(var(--tool-rgb), 0.38) 55%, rgba(var(--tool-rgb), 0.18) 100%);
-    backdrop-filter: blur(14px) saturate(200%);
-    -webkit-backdrop-filter: blur(14px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 2px solid rgba(var(--tool-light-rgb), 1);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .4), rgba(var(--tool-rgb), .95) 65%);
+    border: none;
     color: #fff;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -4px 8px -3px rgba(var(--tool-rgb), 0.4),
-        0 2px 8px rgba(var(--tool-rgb), 0.2);
+        inset 0 2px 3px rgba(255, 255, 255, .35),
+        inset 0 -4px 8px rgba(0, 0, 0, .18),
+        0 3px 8px rgba(var(--tool-rgb), .4);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .pill-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; margin: 0 3px; }
@@ -287,29 +275,27 @@
 }
 .sf-acc-pill[data-hidden="1"] { display: none !important; }
 .sf-acc-pill[data-mode="sharp"]:hover {
-    background: rgba(0, 150, 255, .14);
-    border-color: rgba(125, 223, 255, .40);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .2), rgba(0, 150, 255, .3) 70%);
     color: #fff;
 }
 .sf-acc-pill[data-mode="flat"]:hover {
-    background: rgba(255, 209, 102, .14);
-    border-color: rgba(255, 209, 102, .40);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .2), rgba(255, 209, 102, .3) 70%);
     color: #fff;
 }
 .sf-acc-pill.active[data-mode="sharp"],
 .sf-acc-pill[aria-pressed="true"][data-mode="sharp"] {
-    background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .70));
-    border-color: rgba(125, 223, 255, .55);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .45), rgba(0, 150, 255, .9) 65%);
+    border: none;
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 2px 6px rgba(0, 150, 255, .2);
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .35), inset 0 -3px 6px rgba(0, 0, 0, .18), 0 2px 6px rgba(0, 150, 255, .3);
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 .sf-acc-pill.active[data-mode="flat"],
 .sf-acc-pill[aria-pressed="true"][data-mode="flat"] {
-    background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
-    border-color: rgba(255, 209, 102, .55);
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .5), rgba(255, 209, 102, .95) 65%);
+    border: none;
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 2px 6px rgba(255, 209, 102, .2);
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, .4), inset 0 -3px 6px rgba(0, 0, 0, .18), 0 2px 6px rgba(255, 209, 102, .3);
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 
@@ -418,13 +404,15 @@
    generalized to --tool-rgb so any tool page can reuse it verbatim. ── */
 .tool-controls-card {
     background:
-        linear-gradient(160deg, rgba(var(--tool-rgb), .13), rgba(var(--tool-rgb), .02)),
-        linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
-    border: 1px solid rgba(var(--tool-light-rgb), .26);
-    border-radius: var(--radius-lg);
+        radial-gradient(140% 120% at 18% 0%, rgba(255, 255, 255, .10), rgba(var(--tool-rgb), .22) 60%, rgba(var(--tool-rgb), .14) 100%);
+    border: none;
+    border-radius: 22px;
     padding: var(--tc-card-pad);
     margin-bottom: 16px;
-    box-shadow: 0 0 20px rgba(var(--tool-rgb), .10);
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, .35),
+        inset 0 2px 3px rgba(255, 255, 255, .15),
+        inset 0 -6px 10px rgba(0, 0, 0, .18);
 }
 .tool-controls-header {
     display: flex;

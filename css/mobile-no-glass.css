@@ -1,0 +1,200 @@
+/* ==========================================================================
+   MOBILE: DISABLE GLASS EFFECT
+   ==========================================================================
+   Standalone stylesheet that removes the "glass" (glassmorphism) look on
+   mobile: both the backdrop-filter blur itself (expensive to composite,
+   inconsistently supported on lower-end/older mobile browsers) and the
+   translucent-tint tokens that still read as "glass" even with the blur
+   gone, since a semi-transparent panel over a colorful page still looks
+   frosted with zero blur applied.
+
+   Loaded only at mobile widths via the <link media="(max-width: 768px)">
+   attribute in each page's <head>.
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* The root cause of "still looks glassy after removing blur": these
+       are the actual translucent-color tokens every glass-styled card
+       in the app pulls from (--bg2, --bg3, --glass, --glass-md).
+       Overriding them here to fully opaque equivalents flattens every
+       component that uses them site-wide — including ones not
+       individually targeted below, like the Circle of Fifths panel
+       (css/circle-of-fifths.css uses --bg2) — without inventing a new
+       one-off color per component. Values are the same hue alpha-blended
+       to 100% over the page's --bg (#060414), so they read as the same
+       design, just solid. */
+    :root {
+        --bg2: #0d0a20;
+        --bg3: #15102e;
+        --glass: #100c26;
+        --glass-md: #16112e;
+    }
+
+    .nclg-nav,
+    .nclg-nav-links,
+    .section-nav-card,
+    .section-nav-btn[aria-current="page"],
+    .guide-modal-backdrop,
+    .guide-modal-panel,
+    .hero,
+    .hub-card,
+    .tool-tab[aria-selected="true"],
+    .root-pill,
+    .root-pill.active,
+    .type-pill-btn,
+    .type-pill-btn.active,
+    .chordlib-single-note-pill,
+    .scale-root-pill.active,
+    .caged-root-pill[aria-pressed="true"],
+    .capo-shape-chip.caged-C.active,
+    .capo-shape-chip.caged-A.active,
+    .capo-shape-chip.caged-G.active,
+    .capo-shape-chip.caged-E.active,
+    .capo-shape-chip.caged-D.active,
+    .gcv-root-pills .root-pill.active,
+    .gcv-type-pills .type-pill-btn.active,
+    .chord-lib-card[aria-selected="true"],
+    .capo-slider-btn,
+    .capo-card.active,
+    .tool-tabs--cards .tool-tab[aria-selected="true"],
+    #panel-capo .tool-controls-card,
+    #panel-capo .root-pill[aria-pressed="true"],
+    .capo-shape-chip,
+    #capo-controls-card,
+    .capo-sounding-card,
+    .capo-fret-pill,
+    .capo-sounding-note-pill,
+    .pill-group,
+    .pill-btn.active,
+    .sf-toggle,
+    .piano-panel,
+    .inversion-card.active,
+    #cpb-quality-pills .type-pill-btn.active,
+    #cpb-beats-pills.pill-group,
+    .gcw-fab,
+    .gcw-tooltip,
+    .gcw-overlay,
+    .gcw-modal,
+    .gmw-fab,
+    .cof-sf-toggle,
+    .diatonic-card.active-diatonic,
+    .cof-modal-backdrop,
+    .cof-modal-panel {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* Kept as its own rule: :has() isn't supported in every mobile
+       browser, and an unsupported selector in a shared comma list would
+       invalidate the ENTIRE rule above — silently keeping glass on
+       everything else. Isolating it here means a parse failure only
+       drops this one selector, not the whole block. */
+    .pill-group:has(#bass-4-btn) {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .pill-group {
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Match the existing solid card style already used elsewhere on
+       this page (.gcv-voicing-chip in guitar.css) instead of inventing
+       a new color: background: var(--bg3), 1.5px var(--border2) border,
+       no box-shadow. --bg3 is now opaque (see :root override above),
+       so this reuses the same design token rather than a one-off hex. */
+    .tool-tabs--cards .tool-tab {
+        background: var(--bg3);
+        border: 1.5px solid var(--border2);
+        box-shadow: none;
+    }
+    /* Selected card gets its page-section's accent color, solid (no
+       translucency). --tool-rgb is purple (124,111,224) for the
+       Chord Library / Capo Explorer tabs (see the override in
+       guitar.css right after this block's counterpart) and coral
+       (--guitar-rgb, 239,95,111) for Scale Explorer / CAGED System,
+       so this one rule automatically themes both pairs correctly. */
+    .tool-tabs--cards .tool-tab[aria-selected="true"] {
+        background: color-mix(in srgb, rgb(var(--tool-rgb)) 10%, var(--bg3));
+        border: 2.5px solid color-mix(in srgb, rgb(var(--tool-rgb)) 38%, var(--border2));
+        box-shadow: none;
+        color: var(--text);
+    }
+    .tool-tabs--cards .tool-tab[aria-selected="true"] .tool-tab-icon {
+        color: rgb(var(--tool-light-rgb));
+    }
+
+    /* The active link in the mobile hamburger drawer (e.g. "Other Tools"
+       when on tools.html) was still painting itself with the --glass-md
+       token, so it kept a glassy look even after the token itself was
+       flattened above. Match it to the same solid card treatment used
+       for the guitar tool cards instead. */
+    .nclg-nav-link[aria-current="page"] {
+        background: var(--bg3);
+        border: 1.5px solid var(--border2);
+    }
+
+    /* ── Flatten hardcoded translucent "selected/active" card states ──
+       Everything below (chord library cards, root/type pills, capo
+       cards, keyboard inversion cards, circle-of-fifths diatonic cards)
+       paints its background as a literal gradient + rgba() color baked
+       into guitar.css / tool.css / keyboard.css / circle-of-fifths.css,
+       instead of pulling from --glass / --glass-md. Killing
+       backdrop-filter on them (above) removed the blur but not the
+       see-through layer itself, so they still read as glass. Using
+       color-mix() to blend each one's own accent color down to a solid
+       color against the page's opaque --bg keeps every tint/hue exactly
+       where it already was — just fully opaque instead of translucent. */
+    .chord-lib-card[aria-selected="true"] {
+        background: color-mix(in srgb, rgb(155, 110, 255) 14%, var(--bg));
+        border: 1.5px solid var(--border2);
+        border-bottom: 2px solid rgba(180, 150, 255, 0.9);
+        box-shadow: none;
+    }
+    .gcv-root-pills .root-pill.active,
+    .gcv-type-pills .type-pill-btn.active,
+    .scale-root-pill.active,
+    .caged-root-pill[aria-pressed="true"],
+    #panel-capo .root-pill[aria-pressed="true"] {
+        background: color-mix(in srgb, rgb(var(--tool-rgb)) 45%, var(--bg)) !important;
+        border-color: var(--border2);
+        box-shadow: none;
+    }
+    /* Bass page root pills (#bass-root-pills / #bass-scalevis-root-pills)
+       still painted their own gradient background from bass.css's
+       .root-pill.active (blur already killed above, but the translucent
+       gradient layer itself remained), so they kept reading as glass
+       unlike the guitar page's root pills. Same color-mix flatten as
+       .gcv-root-pills .root-pill.active above, using --tool-rgb — which
+       resolves to the bass theme color on this page. */
+    #bass-root-pills .root-pill.active,
+    #bass-scalevis-root-pills .root-pill.active {
+        background: color-mix(in srgb, rgb(var(--tool-rgb)) 45%, var(--bg)) !important;
+        border-color: var(--border2);
+        box-shadow: none;
+    }
+    .capo-shape-chip.caged-C.active { background: color-mix(in srgb, rgb(224, 112, 64) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
+    .capo-shape-chip.caged-A.active { background: color-mix(in srgb, rgb(58, 127, 212) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
+    .capo-shape-chip.caged-G.active { background: color-mix(in srgb, rgb(40, 168, 88) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
+    .capo-shape-chip.caged-E.active { background: color-mix(in srgb, rgb(204, 40, 40) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
+    .capo-shape-chip.caged-D.active { background: color-mix(in srgb, rgb(184, 144, 0) 30%, var(--bg)) !important; border-color: var(--border2); box-shadow: none; }
+    .capo-card.active {
+        background: color-mix(in srgb, var(--capo-active-accent) 16%, var(--bg));
+        border: 1.5px solid var(--border2);
+        box-shadow: none;
+    }
+    .inversion-card.active {
+        background: color-mix(in srgb, rgb(var(--tool-rgb)) 16%, var(--bg));
+        border: 1.5px solid var(--border2);
+        border-bottom: 2px solid rgba(var(--tool-light-rgb), 0.9);
+        box-shadow: none;
+    }
+    .diatonic-card.active-diatonic {
+        background: color-mix(in srgb, rgb(155, 110, 255) 16%, var(--bg));
+        border: 1.5px solid var(--border2);
+        border-bottom: 2px solid rgba(180, 150, 255, 0.9);
+        box-shadow: none;
+    }
+}

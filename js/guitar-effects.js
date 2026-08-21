@@ -248,7 +248,7 @@ window.GuitarEffects = (function () {
 
     const COLORS = {
         amp:       { bg: '#3a3d4a', border: '#3a3d4a', text: '#f2f2f7', shadow: '#212330' },
-        overdrive: { bg: '#e08a1f', border: '#e08a1f', text: '#3a1f00', shadow: '#a05e0f' },
+        overdrive: { bg: '#b8700f', border: '#b8700f', text: '#ffffff', shadow: '#7a4a08' },
         chorus:    { bg: '#3457e0', border: '#3457e0', text: '#eaf0ff', shadow: '#1f378c' },
         delay:     { bg: '#0fae82', border: '#0fae82', text: '#e6fff8', shadow: '#0a7057' },
         reverb:    { bg: '#9b3fd6', border: '#9b3fd6', text: '#f6e8ff', shadow: '#652890' },

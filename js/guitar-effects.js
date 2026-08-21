@@ -247,11 +247,11 @@ window.GuitarEffects = (function () {
     }
 
     const COLORS = {
-        amp:       { bg: '#15161d', border: '#33343f', text: '#d7d8e0' },
-        overdrive: { bg: '#7a2426', border: '#c1494c', text: '#ffd9da' },
-        chorus:    { bg: '#1d3fae', border: '#5474e0', text: '#d7e0ff' },
-        delay:     { bg: '#0e7a5c', border: '#1fae86', text: '#cdfaee' },
-        reverb:    { bg: '#6b21a8', border: '#9c4fe0', text: '#ecdcff' },
+        amp:       { bg: '#3a3d4a', border: '#3a3d4a', text: '#f2f2f7', shadow: '#212330' },
+        overdrive: { bg: '#d6432f', border: '#d6432f', text: '#fff0ea', shadow: '#8c2a1c' },
+        chorus:    { bg: '#3457e0', border: '#3457e0', text: '#eaf0ff', shadow: '#1f378c' },
+        delay:     { bg: '#0fae82', border: '#0fae82', text: '#e6fff8', shadow: '#0a7057' },
+        reverb:    { bg: '#9b3fd6', border: '#9b3fd6', text: '#f6e8ff', shadow: '#652890' },
     };
 
     function renderPedalboard(container) {
@@ -315,6 +315,7 @@ window.GuitarEffects = (function () {
             box.style.setProperty('--pedal-bg', c.bg);
             box.style.setProperty('--pedal-border', c.border);
             box.style.setProperty('--pedal-text', c.text);
+            box.style.setProperty('--pedal-shadow', c.shadow);
             box.dataset.pedal = p.id;
             box.setAttribute('role', 'button');
             box.setAttribute('tabindex', '0');

@@ -1306,6 +1306,7 @@
     background: linear-gradient(165deg, rgba(24, 21, 46, .58), rgba(10, 8, 22, .66));
     border: 1px solid rgba(var(--tool-light-rgb), .26);
     border-radius: var(--radius-lg);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, .35), 0 10px 22px rgba(0, 0, 0, .4);
 }
 .pedalboard-panel-label {
     font-family: var(--font-display);

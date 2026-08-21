@@ -1331,13 +1331,22 @@
     width: 100px;
     padding: 12px 8px 14px;
     background: var(--pedal-bg);
-    border: 1px solid var(--pedal-border);
+    border: none;
     border-radius: 12px;
     cursor: pointer;
-    transition: opacity 0.15s var(--ease);
+    box-shadow: 0 4px 0 var(--pedal-shadow), 0 6px 14px rgba(0,0,0,.35);
+    transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s var(--ease), opacity 0.15s var(--ease);
+}
+.pedal-box:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 2px 0 var(--pedal-shadow), 0 8px 18px rgba(0,0,0,.4);
+}
+.pedal-box:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 1px 0 var(--pedal-shadow), 0 3px 8px rgba(0,0,0,.35);
 }
 .pedal-box--selected {
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55), 0 4px 14px rgba(0, 0, 0, .4);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55), 0 4px 0 var(--pedal-shadow), 0 8px 18px rgba(0, 0, 0, .4);
 }
 .pedal-box--locked { opacity: 0.4; cursor: not-allowed; }
 .pedal-box-label {

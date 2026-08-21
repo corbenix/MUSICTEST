@@ -101,78 +101,46 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 22px 20px 20px;
-    border-radius: 14px;
-    background: linear-gradient(160deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 55%, rgba(255,255,255,0.01) 100%);
-    backdrop-filter: var(--blur-md);
-    -webkit-backdrop-filter: var(--blur-md);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-top-color: rgba(255,255,255,0.22);
-    border-bottom-color: rgba(0,0,0,0.4);
+    gap: 12px;
+    padding: 24px 20px 20px;
+    border-radius: 20px;
+    background: linear-gradient(150deg, #1c1533, #241a3d);
+    border: none;
     overflow: hidden;
     will-change: transform;
-    box-shadow:
-        0 1px 0 rgba(255,255,255,0.08) inset,
-        0 -1px 0 rgba(0,0,0,0.4) inset,
-        0 10px 16px rgba(0,0,0,0.35),
-        0 28px 56px rgba(0,0,0,0.55),
-        0 6px 18px rgba(var(--c-rgb), 0.22);
-    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.2s var(--ease),
-                background 0.2s var(--ease);
+    box-shadow: 0 10px 0 rgba(0,0,0,0.35), 0 14px 30px rgba(0,0,0,0.5);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.25s var(--ease),
+                background 0.25s var(--ease);
 }
 
 .hub-card:hover,
 .hub-card:focus-visible {
-    transform: translateY(-6px);
-    border-color: rgba(var(--c-rgb), 0.4);
-    box-shadow:
-        0 1px 0 rgba(255,255,255,0.10) inset,
-        0 -1px 0 rgba(0,0,0,0.45) inset,
-        0 14px 22px rgba(0,0,0,0.4),
-        0 36px 70px rgba(0,0,0,0.65),
-        0 0 0 1px rgba(var(--c-rgb), 0.35),
-        0 10px 26px rgba(var(--c-rgb), 0.32);
+    transform: translateY(-6px) rotate(-1deg);
+    box-shadow: 0 14px 0 rgba(0,0,0,0.45), 0 26px 48px rgba(0,0,0,0.7);
+    background:
+        linear-gradient(150deg, rgba(var(--c-rgb),0.9), rgba(var(--c2-rgb, var(--c-rgb)),0.85)),
+        linear-gradient(150deg, #1c1533, #241a3d);
+    background-blend-mode: overlay, normal;
 }
 
 .hub-card:active {
-    transform: translateY(-2px);
-    box-shadow:
-        0 1px 0 rgba(255,255,255,0.08) inset,
-        0 4px 16px rgba(0,0,0,0.26);
+    transform: translateY(-2px) rotate(0deg);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.35), 0 10px 20px rgba(0,0,0,0.45);
 }
-
-.hub-card::before {
-    content: "";
-    position: absolute;
-    top: -35%; left: -25%;
-    width: 100%; height: 100%;
-    background: radial-gradient(circle, rgba(var(--c-rgb), 0.55), transparent 70%);
-    filter: blur(30px);
-    opacity: 0.35;
-    pointer-events: none;
-}
-.hub-card:hover::before,
-.hub-card:focus-visible::before { opacity: 0.55; }
 
 .hub-card-icon {
     position: relative;
     z-index: 1;
-    width: 42px; height: 42px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    background: rgba(var(--c-rgb), 0.16);
-    border: 1px solid rgba(var(--c-rgb), 0.30);
+    font-size: 38px;
+    line-height: 1;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
 }
 .hub-card-icon-img {
-    width: 32px;
-    height: 32px;
+    width: 42px;
+    height: 42px;
     object-fit: contain;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
 }
 
 .hub-card-title {
@@ -180,7 +148,7 @@
     z-index: 1;
     font-family: var(--font-display);
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text);
 }
 
@@ -193,27 +161,15 @@
 }
 
 .hub-card-string {
-    position: relative;
-    z-index: 1;
-    margin-top: auto;
-    height: 2px;
-    border-radius: 2px;
-    background: rgba(var(--c-rgb), 0.35);
-    transform-origin: left center;
-    transition: transform 0.2s var(--ease), background 0.2s var(--ease);
-}
-.hub-card:hover .hub-card-string,
-.hub-card:focus-visible .hub-card-string {
-    background: rgba(var(--c-rgb), 0.8);
-    transform: scaleX(1.04);
+    display: none;
 }
 
-.hub-card--guitar   { --c-rgb: var(--guitar-rgb); }
-.hub-card--bass     { --c-rgb: var(--bass-rgb); }
-.hub-card--keyboard { --c-rgb: var(--keyboard-rgb); }
-.hub-card--chords   { --c-rgb: var(--chordbuilder-rgb); }
-.hub-card--tools    { --c-rgb: var(--tools-rgb); }
-.hub-card--tips      { --c-rgb: var(--tips-rgb); }
+.hub-card--guitar   { --c-rgb: 255,111,111; --c2-rgb: 255,181,111; }
+.hub-card--bass     { --c-rgb: 46,196,182;  --c2-rgb: 111,230,210; }
+.hub-card--keyboard { --c-rgb: 56,189,248;  --c2-rgb: 124,111,224; }
+.hub-card--chords   { --c-rgb: 225,225,235; --c2-rgb: 168,158,240; }
+.hub-card--tools    { --c-rgb: 124,141,176; --c2-rgb: 169,184,214; }
+.hub-card--tips     { --c-rgb: 255,209,102; --c2-rgb: 255,159,111; }
 
 @media (max-width: 768px) {
     /* Mobile-only 5% font-size reduction (auto-generated). Desktop keeps

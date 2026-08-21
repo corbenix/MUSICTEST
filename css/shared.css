@@ -103,9 +103,9 @@ body::before {
     z-index: 0;
     pointer-events: none;
     background:
-        radial-gradient(circle at 18% 12%, rgba(255, 111, 179, 0.22), transparent 42%),
-        radial-gradient(circle at 82% 18%, rgba(124, 111, 224, 0.24), transparent 42%),
-        radial-gradient(circle at 50% 55%, rgba(56, 189, 248, 0.12), transparent 45%);
+        radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.20), transparent 42%),
+        radial-gradient(circle at 82% 18%, rgba(124, 111, 224, 0.26), transparent 42%),
+        radial-gradient(circle at 50% 55%, rgba(90, 70, 220, 0.14), transparent 45%);
     filter: blur(34px);
     animation: home-bg-drift 18s ease-in-out infinite alternate;
 }

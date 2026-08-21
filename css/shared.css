@@ -88,19 +88,15 @@ html { scroll-behavior: smooth; }
 
 body {
     margin: 0;
-    background: var(--bg);
+    position: relative;
+    background: linear-gradient(180deg, #0a0718 0%, #0f0c22 55%, #140f2c 100%);
     color: var(--text);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
-}
-
-body.page-home {
-    position: relative;
-    background: linear-gradient(180deg, #0a0718 0%, #0f0c22 55%, #140f2c 100%);
     overflow-x: hidden;
 }
-body.page-home::before {
+body::before {
     content: "";
     position: fixed;
     inset: -10%;
@@ -113,7 +109,7 @@ body.page-home::before {
     filter: blur(34px);
     animation: home-bg-drift 18s ease-in-out infinite alternate;
 }
-body.page-home::after {
+body::after {
     content: "";
     position: fixed;
     inset: 0;
@@ -130,13 +126,13 @@ body.page-home::after {
     background-size: 480px 380px;
     opacity: 0.45;
 }
-body.page-home > * { position: relative; z-index: 1; }
+body > * { position: relative; z-index: 1; }
 @keyframes home-bg-drift {
     from { transform: translate(0, 0) scale(1); }
     to   { transform: translate(-2.5%, 2.5%) scale(1.06); }
 }
 @media (prefers-reduced-motion: reduce) {
-    body.page-home::before { animation: none; }
+    body::before { animation: none; }
 }
 
 img { max-width: 100%; display: block; }

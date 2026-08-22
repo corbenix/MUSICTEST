@@ -480,7 +480,7 @@
         cagedAutoLabel.textContent = shapesShown.length > 0
             ? ''
             : `No CAGED shapes fit within frets 1–${CAGED_NUM_FRETS} for ${cagedRootNote}`;
-        cagedAutoLabel.style.color = shapesShown.length > 0 ? 'var(--purple-l)' : 'var(--text3)';
+        cagedAutoLabel.style.color = shapesShown.length > 0 ? '#f5a3ab' : 'var(--text3)';
         cagedLegend.style.display = 'flex';
         if (shapesShown.length > 0) {
             cagedLegendInfo.setAttribute('data-tooltip', `Showing ${shapesShown.length} shape${shapesShown.length > 1 ? 's' : ''} for ${cagedRootNote} major: ${shapesShown.join(' · ')}`);
@@ -538,7 +538,7 @@
     // the banner detects whatever chord it forms.
     let chordLibCustomDots = [];
 
-    const VOICING_SHAPE_COLOR = { E: '#a99ef5', A: '#a99ef5', D: '#a99ef5', Open: '#a99ef5' };
+    const VOICING_SHAPE_COLOR = { E: '#ef8a97', A: '#ef8a97', D: '#ef8a97', Open: '#ef8a97' };
 
     // Builds a small 6-string fret-diagram SVG (mute/open markers on top,
     // fretted dots below) for a single voicing chip, windowed to the
@@ -570,7 +570,7 @@
             if (f < start || f > start + 3) return;
             const x = 6 + s * 8;
             const y = 14 + (f - start + 0.5) * rowH;
-            svg += `<circle cx="${x}" cy="${y}" r="4" fill="#7c6fe0" stroke="#a99ef5" stroke-width="1"/>`;
+            svg += `<circle cx="${x}" cy="${y}" r="4" fill="#ef5f6f" stroke="#f5a3ab" stroke-width="1"/>`;
         });
         svg += '</svg>';
         return svg;
@@ -727,7 +727,7 @@
             const chip = document.createElement('button');
             chip.type = 'button';
             chip.className = 'gcv-voicing-chip' + (i === chordLibVoicingIndex ? ' active' : '');
-            const color = VOICING_SHAPE_COLOR[v.shape] || '#7c6fe0';
+            const color = VOICING_SHAPE_COLOR[v.shape] || '#ef5f6f';
             chip.innerHTML = `${voicingChipSvg(v.dots)}<span class="gcv-voicing-chip-label">${v.label}</span>` +
                 `<span class="gcv-shape-badge" style="background:${color}22;color:${color};border:1px solid ${color}66;">${v.shape}-shape</span>`;
             chip.addEventListener('click', () => selectVoicing(i));
@@ -966,7 +966,7 @@
         sus4: 'Sus4', 5: '5th', sus2: 'Sus2', dim: 'Diminished', aug: 'Augmented',
     };
     const CAPO_QUALITY_COLOR = {
-        '': 'var(--gold)', m: 'var(--purple-l)', 7: '#f07090', maj7: '#60c8f0',
+        '': 'var(--gold)', m: '#f5a3ab', 7: '#f07090', maj7: '#60c8f0',
         m7: '#c090f0', sus4: '#70d4b0', dim: '#f07070',
     };
     const CAPO_MAX_FRET = 9;

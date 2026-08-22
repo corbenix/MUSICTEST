@@ -480,7 +480,7 @@
         cagedAutoLabel.textContent = shapesShown.length > 0
             ? ''
             : `No CAGED shapes fit within frets 1–${CAGED_NUM_FRETS} for ${cagedRootNote}`;
-        cagedAutoLabel.style.color = shapesShown.length > 0 ? '#f5a3ab' : 'var(--text3)';
+        cagedAutoLabel.style.color = shapesShown.length > 0 ? '#c48cde' : 'var(--text3)';
         cagedLegend.style.display = 'flex';
         if (shapesShown.length > 0) {
             cagedLegendInfo.setAttribute('data-tooltip', `Showing ${shapesShown.length} shape${shapesShown.length > 1 ? 's' : ''} for ${cagedRootNote} major: ${shapesShown.join(' · ')}`);
@@ -538,7 +538,7 @@
     // the banner detects whatever chord it forms.
     let chordLibCustomDots = [];
 
-    const VOICING_SHAPE_COLOR = { E: '#ef8a97', A: '#ef8a97', D: '#ef8a97', Open: '#ef8a97' };
+    const VOICING_SHAPE_COLOR = { E: '#c48cde', A: '#c48cde', D: '#c48cde', Open: '#c48cde' };
 
     // Builds a small 6-string fret-diagram SVG (mute/open markers on top,
     // fretted dots below) for a single voicing chip, windowed to the
@@ -570,7 +570,7 @@
             if (f < start || f > start + 3) return;
             const x = 6 + s * 8;
             const y = 14 + (f - start + 0.5) * rowH;
-            svg += `<circle cx="${x}" cy="${y}" r="4" fill="#ef5f6f" stroke="#f5a3ab" stroke-width="1"/>`;
+            svg += `<circle cx="${x}" cy="${y}" r="4" fill="#8e44ad" stroke="#c48cde" stroke-width="1"/>`;
         });
         svg += '</svg>';
         return svg;
@@ -727,7 +727,7 @@
             const chip = document.createElement('button');
             chip.type = 'button';
             chip.className = 'gcv-voicing-chip' + (i === chordLibVoicingIndex ? ' active' : '');
-            const color = VOICING_SHAPE_COLOR[v.shape] || '#ef5f6f';
+            const color = VOICING_SHAPE_COLOR[v.shape] || '#8e44ad';
             chip.innerHTML = `${voicingChipSvg(v.dots)}<span class="gcv-voicing-chip-label">${v.label}</span>` +
                 `<span class="gcv-shape-badge" style="background:${color}22;color:${color};border:1px solid ${color}66;">${v.shape}-shape</span>`;
             chip.addEventListener('click', () => selectVoicing(i));

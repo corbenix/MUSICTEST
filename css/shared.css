@@ -75,8 +75,8 @@
     --bass-light-rgb:    110, 230, 215;
     --keyboard-rgb:      56, 189, 248;   /* Sky Cyan */
     --keyboard-light-rgb: 130, 220, 255;
-    --chordbuilder-rgb:       225, 225, 235;  /* Neutral off-white */
-    --chordbuilder-light-rgb: 245, 245, 250;
+    --chordbuilder-rgb:       142, 68, 173;   /* Plum */
+    --chordbuilder-light-rgb: 196, 140, 222;
     --tools-rgb:         124, 141, 176;  /* Slate — Other Tools */
     --tips-rgb:          245, 176, 66;   /* Amber — Quick Tips */
     --tools-light-rgb:   170, 185, 215;
@@ -100,7 +100,7 @@ body::before {
     content: "";
     position: fixed;
     inset: -10%;
-    z-index: 0;
+    z-index: -2;
     pointer-events: none;
     background:
         radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.20), transparent 42%),
@@ -113,7 +113,7 @@ body::after {
     content: "";
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: -2;
     pointer-events: none;
     background-image:
         radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent),

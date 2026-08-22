@@ -1154,8 +1154,12 @@
                     </div>
                 `;
                 card.addEventListener('click', () => {
-                    capoActiveKey = key;
-                    capoSelectedShape = shape;
+                    if (capoActiveKey === key) {
+                        capoActiveKey = null;
+                    } else {
+                        capoActiveKey = key;
+                        capoSelectedShape = shape;
+                    }
                     capoShowAllShapes = false;
                     capoSyncChipStates();
                     renderCapo();

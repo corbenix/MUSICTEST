@@ -259,24 +259,13 @@
 /* Sharp/flat colors for .sf-acc-pill now live centrally in tool.css
    (shared by every tool page) rather than duplicated here. */
 
-/* ── Chord Library + Capo Explorer — electric indigo identity ─────────
-   These two panels intentionally break from the page's default coral
-   (used by CAGED System / Scale Explorer / Effects Pedals) and use
-   their own electric-indigo accent instead — matches the fretboard
-   note-dot color set in fretboard.css (#chord-lib-fretboard /
-   #capo-fretboard --gf-violet). CAGED shape dots inside these panels
-   still keep their own distinct per-letter colors (see
-   CAPO_SHAPE_COLORS in guitar.js), untouched by this override. */
-#panel-chords,
-#panel-capo {
-    --tool-rgb: 102, 64, 232;
-    --tool-light-rgb: 165, 140, 245;
-}
-#panel-chords .tool-controls-card,
-#panel-capo .tool-controls-card {
-    background: linear-gradient(120deg, #3a1f8c, #6640e8, #3a1f8c, #8a5cf5, #3a1f8c);
-    border-color: rgba(165, 140, 245, .45);
-}
+/* ── Chord Library + Capo Explorer — unified plum identity ────────────
+   Both panels use the generic .tool-controls-card / fretboard shell
+   driven by --tool-rgb / --tool-light-rgb, which now default to this
+   page's plum (--guitar-rgb, matching Chord Builder) at the :root
+   level — no override needed here. CAGED shape dots keep their own
+   distinct per-letter colors (see CAPO_SHAPE_COLORS in guitar.js) so
+   the shapes stay easy to tell apart even though the page is single-tone. */
 
 /* Capo Explorer fretboard — CAGED shape dots keep each letter's own
    color, matching the pills and chord-quality cards above the board. */
@@ -1096,14 +1085,8 @@
         0 3px 10px rgba(var(--tool-rgb), 0.22);
     color: var(--text);
 }
-/* Chord Library / Capo Explorer tabs live outside #panel-chords / #panel-capo,
-   so they don't inherit the scoped indigo --tool-rgb override above.
-   Set it explicitly here so their active highlight matches their panels. */
-.tool-tab[data-panel="panel-chords"],
-.tool-tab[data-panel="panel-capo"] {
-    --tool-rgb: 102, 64, 232;
-    --tool-light-rgb: 165, 140, 245;
-}
+/* Chord Library / Capo Explorer tabs now inherit the page's default
+   plum --tool-rgb like every other tab, for a single unified identity. */
 
 .tool-tab-icon {
     flex-shrink: 0;

@@ -381,7 +381,8 @@
    their own fixed per-shape colors regardless of this rule.
    ========================================================================== */
 
-/* Shape dots (the actual chord-tone fingerings) — page-accent gradient instead of gold */
+/* Shape dots (the actual chord-tone fingerings) — embossed gradient in
+   this page's own accent color instead of gold. */
 #chord-lib-fretboard .gtr-fret-dot--shape,
 #capo-fretboard .gtr-fret-dot--shape {
     background: linear-gradient(160deg, rgba(var(--tool-light-rgb), .55) 0%, rgba(var(--tool-rgb), .95) 55%, rgba(var(--tool-rgb), .35) 100%);

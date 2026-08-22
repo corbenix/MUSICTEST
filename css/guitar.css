@@ -724,7 +724,6 @@
     background: linear-gradient(155deg, #9082ec, #6b5bd6);
     border: none;
     color: #fff;
-    box-shadow: 0 3px 10px rgba(142, 68, 173, .4);
 }
 .capo-slider-btn:active { transform: scale(0.93); }
 .capo-slider-btn:disabled { opacity: .35; cursor: default; box-shadow: none; }
@@ -792,7 +791,7 @@
     height: 12px;
     border-radius: 50%;
     background: #c48cde;
-    box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.18), 0 2px 6px rgba(142, 68, 173, .5);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .35);
     transform: translate(-50%, -50%);
     left: 0%;
     transition: left .25s var(--ease), transform .12s var(--ease);
@@ -887,7 +886,7 @@
     .capo-slider-track-dot {
         width: 16px;
         height: 16px;
-        box-shadow: 0 0 0 5px rgba(142, 68, 173, 0.18), 0 2px 8px rgba(142, 68, 173, .55);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .4);
     }
     .capo-slider-track:hover .capo-slider-track-dot { transform: translate(-50%, -50%) scale(1.12); }
 }
@@ -1220,15 +1219,10 @@
 }
 #capo-controls-card > * { position: relative; z-index: 1; }
 
-/* ── Slider buttons: glassy, glow on the plus/active button ── */
+/* ── Slider buttons: glassy plus/active button, no glow ─────────── */
 .capo-slider-btn {
     backdrop-filter: var(--blur-sm);
     -webkit-backdrop-filter: var(--blur-sm);
-}
-.capo-slider-btn-plus {
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, .35),
-        0 3px 12px rgba(142, 68, 173, .45);
 }
 
 /* ── Sounding-chord result card: glass card with corner sheen ──── */

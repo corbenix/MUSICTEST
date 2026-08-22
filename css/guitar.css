@@ -272,6 +272,11 @@
     --tool-rgb: 102, 64, 232;
     --tool-light-rgb: 165, 140, 245;
 }
+#panel-chords .tool-controls-card,
+#panel-capo .tool-controls-card {
+    background: linear-gradient(120deg, #3a1f8c, #6640e8, #3a1f8c, #8a5cf5, #3a1f8c);
+    border-color: rgba(165, 140, 245, .45);
+}
 
 /* Capo Explorer fretboard — CAGED shape dots keep each letter's own
    color, matching the pills and chord-quality cards above the board. */

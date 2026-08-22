@@ -46,9 +46,9 @@
 }
 #chord-lib-fretboard .gtr-open-note-badge.gtr-user-picked {
     background: #7a1f2c !important;
-    border-color: #ef5f6f !important;
+    border-color: #8e44ad !important;
     color: #fff !important;
-    box-shadow: 0 0 12px rgba(239, 95, 111, .55) !important;
+    box-shadow: 0 0 12px rgba(142, 68, 173, .55) !important;
 }
 
 /* Scale Explorer — clicking a regular fret (not just the fret-0 badge)
@@ -64,9 +64,9 @@
 }
 #chord-lib-fretboard .gtr-fret-cell.gtr-user-picked .gtr-fret-dot {
     background: #7a1f2c !important;
-    border-color: #ef5f6f !important;
+    border-color: #8e44ad !important;
     color: #fff !important;
-    box-shadow: 0 0 12px rgba(239, 95, 111, .55) !important;
+    box-shadow: 0 0 12px rgba(142, 68, 173, .55) !important;
 }
 
 /* Chord Library — once a chord/voicing is active, any note the user adds,
@@ -76,21 +76,21 @@
    used for the manual fret-highlight (.gtr-user-picked) elsewhere. */
 .gtr-fret-dot--user-edited {
     background: #7a1f2c !important;
-    border-color: #ef5f6f !important;
+    border-color: #8e44ad !important;
     color: #fff !important;
-    box-shadow: 0 0 12px rgba(239, 95, 111, .55) !important;
+    box-shadow: 0 0 12px rgba(142, 68, 173, .55) !important;
 }
 #chord-lib-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape.gtr-fret-dot--user-edited {
     background: #7a1f2c !important;
-    border-color: #ef5f6f !important;
+    border-color: #8e44ad !important;
     color: #fff !important;
-    box-shadow: 0 0 12px rgba(239, 95, 111, .55) !important;
+    box-shadow: 0 0 12px rgba(142, 68, 173, .55) !important;
 }
 .gtr-open-note-badge--user-edited {
     background: #7a1f2c !important;
-    border-color: #ef5f6f !important;
+    border-color: #8e44ad !important;
     color: #fff !important;
-    box-shadow: 0 0 12px rgba(239, 95, 111, .55) !important;
+    box-shadow: 0 0 12px rgba(142, 68, 173, .55) !important;
 }
 
 /* Chord Library board is editable once a chord is picked — every fretted
@@ -270,7 +270,7 @@
 /* Capo Explorer fretboard — CAGED shape dots keep each letter's own
    color, matching the pills and chord-quality cards above the board. */
 .gcv-root-pills .root-pill:hover {
-    background: rgba(239, 95, 111, 0.18);
+    background: rgba(142, 68, 173, 0.18);
     border-color: rgba(245, 163, 171, .40);
     color: #fff;
 }
@@ -290,7 +290,7 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 .gcv-type-pills .type-pill-btn:hover {
-    background: rgba(239, 95, 111, 0.18);
+    background: rgba(142, 68, 173, 0.18);
     border-color: rgba(245, 163, 171, .40);
     color: #fff;
 }
@@ -315,10 +315,10 @@
        card. */
 }
 .gcv-display {
-    background: rgba(239, 95, 111, 0.18);
+    background: rgba(142, 68, 173, 0.18);
     border: 1px solid rgba(245, 163, 171, .30);
 }
-.gcv-display-name.has-chord { color: #f5a3ab; }
+.gcv-display-name.has-chord { color: #c48cde; }
 
 .gcv-voicings-section {
     margin-top: 12px;
@@ -359,16 +359,16 @@
 }
 .gcv-voicing-chip svg { display: block; }
 .gcv-voicing-chip:hover {
-    border-color: #f5a3ab;
-    background: rgba(239, 95, 111, 0.18);
+    border-color: #c48cde;
+    background: rgba(142, 68, 173, 0.18);
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, .28);
     color: #fff;
 }
 .gcv-voicing-chip.active {
-    border-color: #f5a3ab;
-    background: rgba(239, 95, 111, .30);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 3px 12px rgba(239, 95, 111, .40);
+    border-color: #c48cde;
+    background: rgba(142, 68, 173, .30);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 3px 12px rgba(142, 68, 173, .40);
     color: #fff;
 }
 .gcv-voicing-chip-label {
@@ -424,8 +424,8 @@
     transition: border-color .15s var(--ease), color .15s var(--ease);
 }
 .caged-legend-info:hover {
-    border-color: #f5a3ab;
-    color: #f5a3ab;
+    border-color: #c48cde;
+    color: #c48cde;
 }
 .caged-legend-info[data-tooltip]:hover::after {
     content: attr(data-tooltip);
@@ -509,7 +509,7 @@
 #panel-capo .fretboard-clear-btn:hover {
     color: #fff;
     border-color: rgba(245, 163, 171, .40);
-    background: rgba(239, 95, 111, .18);
+    background: rgba(142, 68, 173, .18);
 }
 
 /* Chord Library fretboard — now left at the page's plain default coral
@@ -591,7 +591,7 @@
 .capo-sounding-card.caged-A .capo-fret-pill,
 .capo-sounding-card.caged-G .capo-fret-pill,
 .capo-sounding-card.caged-E .capo-fret-pill,
-.capo-sounding-card.caged-D .capo-fret-pill { color: #f5a3ab; }
+.capo-sounding-card.caged-D .capo-fret-pill { color: #c48cde; }
 .capo-sounding-card.caged-C .capo-fret-pill,
 .capo-sounding-card.caged-A .capo-fret-pill,
 .capo-sounding-card.caged-G .capo-fret-pill,
@@ -724,14 +724,14 @@
     background: linear-gradient(155deg, #9082ec, #6b5bd6);
     border: none;
     color: #fff;
-    box-shadow: 0 3px 10px rgba(239, 95, 111, .4);
+    box-shadow: 0 3px 10px rgba(142, 68, 173, .4);
 }
 .capo-slider-btn:active { transform: scale(0.93); }
 .capo-slider-btn:disabled { opacity: .35; cursor: default; box-shadow: none; }
 .capo-slider-btn-minus:not(:disabled):hover {
-    background: rgba(239, 95, 111, .14);
+    background: rgba(142, 68, 173, .14);
     color: var(--capo-gold);
-    border-color: rgba(239, 95, 111, .35);
+    border-color: rgba(142, 68, 173, .35);
 }
 .capo-slider-fret {
     display: flex;
@@ -747,7 +747,7 @@
     line-height: 1;
 }
 .capo-slider-fret-num {
-    color: #f5a3ab;
+    color: #c48cde;
     font-size: 22px;
     font-weight: 500;
     line-height: 1;
@@ -781,7 +781,7 @@
     left: 0;
     height: 3px;
     border-radius: 2px;
-    background: linear-gradient(90deg, #ef5f6f, #f5a3ab);
+    background: linear-gradient(90deg, #8e44ad, #c48cde);
     width: 0%;
     transition: width .25s var(--ease);
 }
@@ -791,8 +791,8 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #f5a3ab;
-    box-shadow: 0 0 0 4px rgba(239, 95, 111, 0.18), 0 2px 6px rgba(239, 95, 111, .5);
+    background: #c48cde;
+    box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.18), 0 2px 6px rgba(142, 68, 173, .5);
     transform: translate(-50%, -50%);
     left: 0%;
     transition: left .25s var(--ease), transform .12s var(--ease);
@@ -825,12 +825,12 @@
     cursor: pointer;
     transition: background .12s var(--ease), border-color .12s var(--ease), color .12s var(--ease), box-shadow .12s var(--ease);
 }
-.capo-all-shapes-btn:hover { color: #fff; border-color: #f5a3ab; }
+.capo-all-shapes-btn:hover { color: #fff; border-color: #c48cde; }
 .capo-all-shapes-btn.active {
-    background: linear-gradient(160deg, rgba(245, 190, 170, .40) 0%, #ef5f6f 55%, #ef5f6f 100%);
-    border-color: #f5a3ab;
+    background: linear-gradient(160deg, rgba(245, 190, 170, .40) 0%, #8e44ad 55%, #8e44ad 100%);
+    border-color: #c48cde;
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 3px 12px rgba(239, 95, 111, .45);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 3px 12px rgba(142, 68, 173, .45);
 }
 
 @media (min-width: 768px) {
@@ -887,7 +887,7 @@
     .capo-slider-track-dot {
         width: 16px;
         height: 16px;
-        box-shadow: 0 0 0 5px rgba(239, 95, 111, 0.18), 0 2px 8px rgba(239, 95, 111, .55);
+        box-shadow: 0 0 0 5px rgba(142, 68, 173, 0.18), 0 2px 8px rgba(142, 68, 173, .55);
     }
     .capo-slider-track:hover .capo-slider-track-dot { transform: translate(-50%, -50%) scale(1.12); }
 }
@@ -995,7 +995,7 @@
 }
 .capo-card-from { flex-shrink: 0; min-width: 26px; }
 .capo-card-shape { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.1; }
-.capo-card-arrow { font-size: 10px; color: #f5a3ab; flex-shrink: 0; line-height: 1; }
+.capo-card-arrow { font-size: 10px; color: #c48cde; flex-shrink: 0; line-height: 1; }
 .capo-card-to { flex: 1; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
 .capo-card-target {
     font-size: 18px;
@@ -1187,7 +1187,7 @@
 }
 #panel-capo .root-pill:not(.active):not([aria-pressed="true"]):hover {
     background: rgba(255, 255, 255, .07);
-    color: #f5a3ab;
+    color: #c48cde;
 }
 
 /* ── Shape chips: frosted glass pills, per-letter glow kept intact ── */
@@ -1200,7 +1200,7 @@
 .capo-shape-chip.active {
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .35),
-        0 3px 12px rgba(239, 95, 111, .45);
+        0 3px 12px rgba(142, 68, 173, .45);
 }
 
 /* ── Capo controls card: same frosted treatment, per-shape tint kept ── */
@@ -1228,7 +1228,7 @@
 .capo-slider-btn-plus {
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .35),
-        0 3px 12px rgba(239, 95, 111, .45);
+        0 3px 12px rgba(142, 68, 173, .45);
 }
 
 /* ── Sounding-chord result card: glass card with corner sheen ──── */
@@ -1436,16 +1436,16 @@
     appearance: none;
     width: 15px; height: 15px;
     border-radius: 50%;
-    background: var(--accent, #ef5f6f);
-    box-shadow: 0 0 0 4px rgba(239, 95, 111, 0.18);
+    background: var(--accent, #8e44ad);
+    box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.18);
     cursor: pointer;
 }
 .pedal-param-slider::-moz-range-thumb {
     width: 15px; height: 15px;
     border: none;
     border-radius: 50%;
-    background: var(--accent, #ef5f6f);
-    box-shadow: 0 0 0 4px rgba(239, 95, 111, 0.18);
+    background: var(--accent, #8e44ad);
+    box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.18);
     cursor: pointer;
 }
 

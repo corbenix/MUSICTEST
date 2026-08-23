@@ -1076,11 +1076,12 @@
     box-shadow: 0 6px 12px rgba(var(--tool-rgb), .18), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .1);
 }
 .guitar_selection_nav .tool-tab[aria-selected="true"] {
-    background: linear-gradient(160deg, rgba(var(--tool-light-rgb), .75), rgb(var(--tool-rgb)) 55%, rgba(var(--tool-rgb), .55) 100%);
+    background: linear-gradient(180deg, rgba(var(--tool-rgb), .35), rgba(var(--tool-rgb), .15));
     border: 1px solid rgba(var(--tool-light-rgb), .5);
+    border-bottom: 4px solid rgb(var(--tool-rgb));
     box-shadow:
         0 6px 14px rgba(var(--tool-rgb), .3),
-        0 3px 0 rgba(0, 0, 0, .4),
+        0 3px 0 rgba(0, 0, 0, .3),
         inset 0 1px 0 rgba(255, 255, 255, .15);
     color: #fff;
 }

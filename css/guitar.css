@@ -1032,57 +1032,57 @@
    Widened/enlarged to match the panel/circle cards below it (those run
    up to --gtr-panel-maxw / 1200px, but .tool-tabs caps at 900px by
    default) and given more room to breathe. */
-.tool-tabs--cards {
+.guitar_selection_nav {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     max-width: var(--gtr-panel-maxw);
     gap: 14px;
     margin-top: 28px;
 }
-.tool-tabs--cards .tool-tab {
+.guitar_selection_nav .tool-tab {
     display: flex;
     align-items: center;
     gap: 14px;
     text-align: left;
     padding: 18px 20px;
     border-radius: 16px;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+    background: rgba(var(--tool-rgb), 0.08);
+    border: 1px solid rgba(var(--tool-light-rgb), 0.22);
     color: var(--text2);
     font-family: var(--font-display);
     cursor: pointer;
-    transition: all 0.15s var(--ease);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .35), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease);
 }
-.tool-tabs--cards .tool-tab-icon {
+.guitar_selection_nav .tool-tab-icon {
     font-size: 24px;
 }
-.tool-tabs--cards .tool-tab-icon--img {
+.guitar_selection_nav .tool-tab-icon--img {
     width: 26px;
     height: 26px;
 }
-.tool-tabs--cards .tool-tab-label {
+.guitar_selection_nav .tool-tab-label {
     font-size: 15px;
 }
-.tool-tabs--cards .tool-tab-desc {
+.guitar_selection_nav .tool-tab-desc {
     font-size: 12.5px;
 }
 
-.tool-tabs--cards .tool-tab:hover {
-    background: var(--glass-md);
+.guitar_selection_nav .tool-tab:hover {
+    transform: translateY(-3px);
+    background: rgba(var(--tool-rgb), 0.16);
+    border-color: rgba(var(--tool-light-rgb), 0.4);
     color: var(--text);
+    box-shadow: 0 6px 12px rgba(var(--tool-rgb), .18), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .1);
 }
-.tool-tabs--cards .tool-tab[aria-selected="true"] {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%),
-        rgba(var(--tool-rgb), 0.10);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-bottom: 2px solid rgba(var(--tool-light-rgb), 0.9);
+.guitar_selection_nav .tool-tab[aria-selected="true"] {
+    background: linear-gradient(160deg, rgba(var(--tool-light-rgb), .75), rgb(var(--tool-rgb)) 55%, rgba(var(--tool-rgb), .55) 100%);
+    border: 1px solid rgba(var(--tool-light-rgb), .5);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 3px 10px rgba(var(--tool-rgb), 0.22);
-    color: var(--text);
+        0 6px 14px rgba(var(--tool-rgb), .3),
+        0 3px 0 rgba(0, 0, 0, .4),
+        inset 0 1px 0 rgba(255, 255, 255, .15);
+    color: #fff;
 }
 /* Chord Library / Capo Explorer tabs now inherit the page's default
    plum --tool-rgb like every other tab, for a single unified identity. */
@@ -1486,9 +1486,9 @@
     .capo-card-arrow { font-size: 9.5px; }
     .capo-card-target { font-size: 17px; }
     .capo-card-quality { font-size: 9.5px; }
-    .tool-tabs--cards .tool-tab-icon { font-size: 23px; }
-    .tool-tabs--cards .tool-tab-label { font-size: 14px; }
-    .tool-tabs--cards .tool-tab-desc { font-size: 12px; }
+    .guitar_selection_nav .tool-tab-icon { font-size: 23px; }
+    .guitar_selection_nav .tool-tab-label { font-size: 14px; }
+    .guitar_selection_nav .tool-tab-desc { font-size: 12px; }
     .tool-tab-icon { font-size: 19px; }
     .tool-tab-label { font-size: 13px; }
     .tool-tab-desc { font-size: 11px; }

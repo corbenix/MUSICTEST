@@ -439,10 +439,10 @@ a { color: inherit; text-decoration: none; }
 
 /* Per-tool accent, read by section-nav.js and applied to the pill's
    --c-rgb custom property when that tab becomes active. */
-.section-nav-btn[href="guitar.html"]        { --c-rgb: 239, 95, 111; }
+.section-nav-btn[href="guitar.html"]        { --c-rgb: 195, 77, 255; }
 .section-nav-btn[href="bass.html"]          { --c-rgb: 45, 197, 168; }
 .section-nav-btn[href="keyboard.html"]      { --c-rgb: 79, 179, 245; }
-.section-nav-btn[href="chord-builder.html"] { --c-rgb: 214, 96, 214; }
+.section-nav-btn[href="chord-builder.html"] { --c-rgb: 102, 64, 232; }
 .section-nav-btn[href="tools.html"]         { --c-rgb: 148, 148, 168; }
 
 /* Shrink padding/font before dropping labels, so all 5 items always fit

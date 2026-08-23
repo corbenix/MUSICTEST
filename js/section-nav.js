@@ -1,5 +1,5 @@
 // Drives the sliding active-tab indicator in the top .section-nav-card
-// (Guitar / Bass / Keyboard / Chord Builder / Other Tools). The pill's
+// (Guitar / Bass / Keyboard / Chord Builder / Practice Tools). The pill's
 // position and color (--c-rgb, set per-link in shared.css) are computed
 // here rather than in CSS alone, since CSS can't measure a sibling's
 // rendered width/offset to slide a separate element to it.

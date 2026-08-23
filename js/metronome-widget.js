@@ -1,5 +1,5 @@
 // Universal floating metronome button — play/stop only, in sync with the
-// metronome panel on the Other Tools page via window.GlobalMetronome.
+// metronome panel on the Practice Tools page via window.GlobalMetronome.
 (function () {
     'use strict';
 

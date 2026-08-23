@@ -1,5 +1,5 @@
 // Shared metronome controller — single source of truth for bpm/play state,
-// used by both the universal floating widget and the Other Tools page
+// used by both the universal floating widget and the Practice Tools page
 // metronome panel, so toggling or changing tempo in either place keeps
 // both in sync. No DOM here; pure state + Web Audio ticking.
 window.GlobalMetronome = (function () {

@@ -29,6 +29,19 @@
             return nav.querySelector('.section-nav-btn[aria-current="page"]') || btns[0];
         }
 
+        // Set the color immediately (no layout measurement needed for this
+        // part) so it's correct from the very first paint — including the
+        // instant the browser's cross-document View Transition captures
+        // this page's "new" pill state. Only the position needs to wait
+        // for requestAnimationFrame, since it depends on measuring a
+        // sibling's rendered layout.
+        (function setInitialColor() {
+            const btn = currentBtn();
+            if (!btn) return;
+            const cRgb = getComputedStyle(btn).getPropertyValue('--c-rgb').trim();
+            if (cRgb) pill.style.setProperty('--c-rgb', cRgb);
+        })();
+
         // Reveal the pill only once it has a real position, avoiding a
         // flash at the top-left corner before layout is measured.
         requestAnimationFrame(function () {

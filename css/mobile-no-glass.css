@@ -126,7 +126,7 @@
         color: rgb(var(--tool-light-rgb));
     }
 
-    /* The active link in the mobile hamburger drawer (e.g. "Other Tools"
+    /* The active link in the mobile hamburger drawer (e.g. "Practice Tools"
        when on tools.html) was still painting itself with the --glass-md
        token, so it kept a glassy look even after the token itself was
        flattened above. Match it to the same solid card treatment used

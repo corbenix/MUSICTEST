@@ -57,12 +57,12 @@
     font-size: 13px;
     font-weight: 700;
     padding: 9px 16px;
-    border-radius: 12px;
+    border-radius: 14px;
     background: rgba(var(--tool-rgb), 0.08);
     border: 1px solid rgba(var(--tool-light-rgb), 0.22);
     color: var(--text2);
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .35), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .06);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .35), 0 3px 0 rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .06);
     transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease);
 }
 .tool-tab:hover {
@@ -70,16 +70,15 @@
     background: rgba(var(--tool-rgb), 0.16);
     border-color: rgba(var(--tool-light-rgb), 0.4);
     color: var(--text);
-    box-shadow: 0 6px 12px rgba(var(--tool-rgb), .18), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .1);
+    box-shadow: 0 6px 12px rgba(var(--tool-rgb), .18), 0 3px 0 rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .1);
 }
 .tool-tab[aria-selected="true"] {
     color: #fff;
-    background: linear-gradient(180deg, rgba(var(--tool-rgb), .35), rgba(var(--tool-rgb), .15));
+    background: linear-gradient(160deg, rgba(var(--tool-light-rgb), .75), rgb(var(--tool-rgb)) 55%, rgba(var(--tool-rgb), .55) 100%);
     border: 1px solid rgba(var(--tool-light-rgb), .5);
-    border-bottom: 4px solid rgb(var(--tool-rgb));
     box-shadow:
         0 6px 14px rgba(var(--tool-rgb), .3),
-        0 3px 0 rgba(0, 0, 0, .3),
+        0 3px 0 rgba(0, 0, 0, .4),
         inset 0 1px 0 rgba(255, 255, 255, .15);
     transform: translateY(-0.5px);
 }

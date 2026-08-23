@@ -22,6 +22,14 @@
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* The named section-nav-pill (see .section-nav-pill below) gets its own
+   slightly longer, matching-eased morph so its cross-page slide feels
+   like the same motion as its in-page slide, not the generic crossfade. */
+::view-transition-group(section-nav-pill) {
+    animation-duration: 0.32s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
     @view-transition {
         navigation: none;
@@ -376,6 +384,13 @@ a { color: inherit; text-decoration: none; }
     transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1), background 0.32s var(--ease), border-color 0.32s var(--ease);
     pointer-events: none;
     z-index: 0;
+    /* Same name on every page's pill element (matched by the browser
+       across the old/new document snapshots) lets it morph position +
+       size natively during a cross-document navigation, instead of
+       just cross-fading in place with everything else under ::view-
+       transition-old/new(root). This is what actually makes the pill
+       *slide* from the old page's active tab to the new page's. */
+    view-transition-name: section-nav-pill;
 }
 /* No-JS / not-yet-measured fallback: keep the active button legible
    even before section-nav.js has positioned the pill on first paint. */

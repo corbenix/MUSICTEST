@@ -385,8 +385,8 @@
    this page's own accent color instead of gold. */
 #chord-lib-fretboard,
 #capo-fretboard {
-    --gf-violet: #8e44ad;
-    --gf-violet-l: #c48cde;
+    --gf-violet: #c34dff;
+    --gf-violet-l: #e6afff;
     --gf-violet-d: #4a2358;
 }
 
@@ -395,31 +395,31 @@
     background: linear-gradient(160deg, #b285d1 0%, var(--gf-violet-d) 55%, #2e1538 100%);
     border-color: #b285d1;
     color: #f5eafa;
-    box-shadow: 0 0 6px rgba(142, 68, 173, .40);
+    box-shadow: 0 0 6px rgba(195, 77, 255, .40);
 }
 #chord-lib-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]),
 #capo-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
-    background: linear-gradient(160deg, #d4aee8 0%, #8e44ad 40%, #4a2358 70%, #2a1330 100%) !important;
-    border-color: #c48cde !important;
-    box-shadow: 0 0 9px rgba(196, 140, 222, .65) !important;
+    background: linear-gradient(160deg, #d4aee8 0%, #c34dff 40%, #4a2358 70%, #2a1330 100%) !important;
+    border-color: #e6afff !important;
+    box-shadow: 0 0 9px rgba(230, 175, 255, .65) !important;
 }
 #chord-lib-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot,
 #capo-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot {
     background: linear-gradient(160deg, #cba0e0 0%, var(--gf-violet-d) 55%, #2a1330 100%);
     border-color: #e0c2f0;
     color: #2a1330;
-    box-shadow: 0 0 9px rgba(196, 140, 222, .55);
+    box-shadow: 0 0 9px rgba(230, 175, 255, .55);
 }
 
 /* Capo Explorer only — a bit more glow than Chord Library on the same dots */
 #capo-fretboard .gtr-fret-dot--shape {
-    box-shadow: 0 0 16px rgba(142, 68, 173, .8);
+    box-shadow: 0 0 16px rgba(195, 77, 255, .8);
 }
 #capo-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape:not([class*="caged-"]) {
-    box-shadow: 0 0 22px rgba(196, 140, 222, 1) !important;
+    box-shadow: 0 0 22px rgba(230, 175, 255, 1) !important;
 }
 #capo-fretboard .gtr-fret-cell.gtr-root-match .gtr-fret-dot {
-    box-shadow: 0 0 22px rgba(196, 140, 222, .9);
+    box-shadow: 0 0 22px rgba(230, 175, 255, .9);
 }
 
 /* Capo bar — page-accent clamp instead of gold (kept, same "identity color"

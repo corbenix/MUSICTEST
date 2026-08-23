@@ -69,8 +69,8 @@
     /* Per-tool accent colors — used on the hub cards, nav highlights,
        and inside each tool's own page. Keep any given tool's color the
        same across every file it appears in. */
-    --guitar-rgb:        142, 68, 173;   /* Plum (matches Chord Builder) */
-    --guitar-light-rgb:  196, 140, 222;
+    --guitar-rgb:        195, 77, 255;   /* Electric Amethyst */
+    --guitar-light-rgb:  230, 175, 255;
     --bass-rgb:          46, 196, 182;   /* Teal */
     --bass-light-rgb:    110, 230, 215;
     --keyboard-rgb:      56, 189, 248;   /* Sky Cyan */

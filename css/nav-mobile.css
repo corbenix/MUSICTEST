@@ -79,6 +79,17 @@
 .nclg-nav-link--text::after { content: none; }
 .nclg-guide-text { display: inline; }
 
+/* The Guide link is locked to a 48×48 icon-only square on desktop
+   (shared.css, #guide-nav-btn.nclg-nav-link--text) so it matches the
+   other circular nav buttons there. In the drawer every other link is
+   a full-width row instead, so that lock has to be undone here or
+   Guide sits as a small square while everything else stretches full width. */
+#guide-nav-btn.nclg-nav-link--text {
+    width: 100%;
+    height: auto;
+    padding: 13px 14px;
+}
+
 /* Dim + block the page behind the open drawer. */
 .nclg-nav-scrim {
     display: none;

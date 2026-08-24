@@ -1039,7 +1039,7 @@
     gap: 14px;
     margin-top: 28px;
 }
-.guitar_selection_nav .tool-tab {
+.guitar-tab {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -1050,76 +1050,69 @@
     border: 1px solid rgba(var(--tool-light-rgb), 0.22);
     color: var(--text2);
     font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
     box-shadow: inset 0 -6px 12px rgba(0, 0, 0, .3), inset 0 2px 3px rgba(255, 255, 255, .04);
     transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease);
 }
-.guitar_selection_nav .tool-tab-icon {
+.guitar-tab-icon {
+    flex-shrink: 0;
     font-size: 24px;
+    color: var(--text3);
 }
-.guitar_selection_nav .tool-tab-icon--img {
+.guitar-tab[aria-selected="true"] .guitar-tab-icon {
+    color: rgb(var(--tool-light-rgb));
+}
+.guitar-tab-icon--img {
     width: 26px;
     height: 26px;
+    object-fit: contain;
 }
-.guitar_selection_nav .tool-tab-label {
+.guitar-tab-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.guitar-tab-label {
     font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.guitar_selection_nav .tool-tab-desc {
+.guitar-tab-desc {
+    font-family: var(--font-body, inherit);
+    font-weight: 400;
     font-size: 12.5px;
+    color: var(--text3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.guitar_selection_nav .tool-tab:hover {
+.guitar-tab:hover {
     transform: translateY(-3px);
     background: rgba(var(--tool-rgb), 0.14);
     border-color: rgba(var(--tool-light-rgb), 0.35);
     color: var(--text);
     box-shadow: inset 0 -8px 14px rgba(0, 0, 0, .34), inset 0 2px 3px rgba(255, 255, 255, .06);
 }
-.guitar_selection_nav .tool-tab[aria-selected="true"] {
+.guitar-tab[aria-selected="true"] {
     background: linear-gradient(180deg, rgba(var(--tool-rgb), .35), rgba(var(--tool-rgb), .15));
     border: 1px solid rgba(var(--tool-light-rgb), .5);
     border-bottom: 4px solid rgb(var(--tool-rgb));
     box-shadow: inset 0 -10px 16px rgba(0, 0, 0, .38), inset 0 2px 4px rgba(255, 255, 255, .11);
     color: #fff;
 }
-/* Chord Library / Capo Explorer tabs now inherit the page's default
-   plum --tool-rgb like every other tab, for a single unified identity. */
-
-.tool-tab-icon {
-    flex-shrink: 0;
-    font-size: 20px;
-    color: var(--text3);
-}
-.tool-tab[aria-selected="true"] .tool-tab-icon {
-    color: rgb(var(--tool-light-rgb));
-}
-.tool-tab-icon--img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-}
-.tool-tab-text {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-.tool-tab-label {
-    font-weight: 700;
-    font-size: 13.5px;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.tool-tab-desc {
-    font-family: var(--font-body, inherit);
-    font-weight: 400;
-    font-size: 11.5px;
-    color: var(--text3);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+/* Fully self-contained: .guitar-tab and its sub-elements (.guitar-tab-icon,
+   .guitar-tab-label, .guitar-tab-desc, .guitar-tab-text) share no class
+   names with tool.css's generic .tool-tab component, so nothing here
+   depends on tool.css's cascade (font-size, font-weight, or otherwise).
+   The <button> keeps class="tool-tab guitar-tab" in guitar.html only so
+   js/guitar.js's existing `.tool-tab` tab-switching selector still finds
+   it — that's a JS hook, not a styling dependency. */
 
 
 
@@ -1484,12 +1477,9 @@
     .capo-card-arrow { font-size: 9.5px; }
     .capo-card-target { font-size: 17px; }
     .capo-card-quality { font-size: 9.5px; }
-    .guitar_selection_nav .tool-tab-icon { font-size: 23px; }
-    .guitar_selection_nav .tool-tab-label { font-size: 14px; }
-    .guitar_selection_nav .tool-tab-desc { font-size: 12px; }
-    .tool-tab-icon { font-size: 19px; }
-    .tool-tab-label { font-size: 13px; }
-    .tool-tab-desc { font-size: 11px; }
+    .guitar-tab-icon { font-size: 23px; }
+    .guitar-tab-label { font-size: 14px; }
+    .guitar-tab-desc { font-size: 12px; }
     .pedalboard-panel-label { font-size: 14px; }
     .pedal-box-label { font-size: 11px; }
     .pedal-box-icon { font-size: 24.5px; }

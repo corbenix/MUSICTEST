@@ -108,7 +108,7 @@ body::before {
     content: "";
     position: fixed;
     inset: -10%;
-    z-index: -2;
+    z-index: -4;
     pointer-events: none;
     background:
         radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.16), transparent 42%),
@@ -121,7 +121,7 @@ body::after {
     content: "";
     position: fixed;
     inset: 0;
-    z-index: -2;
+    z-index: -3;
     pointer-events: none;
     background-image:
         radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent),
@@ -155,7 +155,7 @@ body::after {
 .home-fx-layer {
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: -2;
     pointer-events: none;
     overflow: hidden;
 }

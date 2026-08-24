@@ -996,6 +996,11 @@
         capoSelectedFret = Math.max(0, Math.min(CAPO_MAX_FRET, f));
         renderCapoSlider();
         renderCapo();
+        // The card's tint depends on both the selected shape AND whether
+        // the fret is actually at 0 (see capoSyncChipStates), so it has
+        // to re-run here too — not just when a shape chip is clicked —
+        // or moving the slider back to "Open" won't reset the color.
+        capoSyncChipStates();
     }
 
     function renderCapoSlider() {
@@ -1052,9 +1057,12 @@
         // CAGED shape is currently active, so the card itself reads as
         // "orange" for C, "blue" for A, etc. — same palette as the shape
         // chips/cards elsewhere on this panel. Falls back to the neutral
-        // theme when nothing (or "All Shapes") is selected.
+        // theme when nothing (or "All Shapes") is selected, or when the
+        // capo fret is at 0 — a shape chip can stay "selected" even with
+        // no capo applied, and the card shouldn't look tinted/active for
+        // a capo position that isn't actually in effect yet.
         if (capoControlsCard) {
-            if (capoSelectedShape && !capoShowAllShapes) {
+            if (capoSelectedShape && !capoShowAllShapes && capoSelectedFret > 0) {
                 capoControlsCard.dataset.shape = capoSelectedShape;
             } else {
                 delete capoControlsCard.dataset.shape;

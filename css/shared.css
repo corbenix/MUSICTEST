@@ -107,15 +107,15 @@ body {
 body::before {
     content: "";
     position: fixed;
-    inset: -10%;
+    inset: -15%;
     z-index: -4;
     pointer-events: none;
     background:
-        radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.16), transparent 42%),
-        radial-gradient(circle at 82% 18%, rgba(124, 111, 224, 0.20), transparent 42%),
-        radial-gradient(circle at 50% 55%, rgba(90, 70, 220, 0.10), transparent 45%);
-    filter: blur(34px);
-    animation: home-bg-drift 18s ease-in-out infinite alternate;
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12), transparent 55%),
+        radial-gradient(circle at 85% 20%, rgba(124, 111, 224, 0.14), transparent 55%),
+        radial-gradient(circle at 50% 60%, rgba(90, 70, 220, 0.07), transparent 60%);
+    filter: blur(70px);
+    animation: home-bg-drift 20s ease-in-out infinite alternate;
 }
 body::after {
     content: "";
@@ -129,10 +129,18 @@ body::after {
         radial-gradient(1.5px 1.5px at 58% 30%, #fff, transparent),
         radial-gradient(1px 1px at 78% 72%, #fff, transparent),
         radial-gradient(1.5px 1.5px at 88% 15%, #fff, transparent),
-        radial-gradient(1px 1px at 6% 80%, #fff, transparent);
+        radial-gradient(1px 1px at 6% 80%, #fff, transparent),
+        radial-gradient(1px 1px at 22% 45%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 44% 85%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 10%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 92% 55%, #fff, transparent),
+        radial-gradient(1px 1px at 3% 40%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 72% 92%, #fff, transparent),
+        radial-gradient(1px 1px at 38% 8%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 55% 55%, #fff, transparent);
     background-repeat: repeat;
     background-size: 480px 380px;
-    opacity: 0.45;
+    opacity: 0.5;
 }
 body > * { position: relative; z-index: 1; }
 @keyframes home-bg-drift {
@@ -159,16 +167,6 @@ body::after {
     pointer-events: none;
     overflow: hidden;
 }
-.home-fx-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(18px);
-    animation: home-fx-pulse ease-in-out infinite;
-}
-@keyframes home-fx-pulse {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50%      { opacity: 1;   transform: scale(1.15); }
-}
 .home-fx-note {
     position: absolute;
     bottom: 10px;
@@ -184,7 +182,7 @@ body::after {
 }
 @media (prefers-reduced-motion: reduce) {
     body::after { animation: none; }
-    .home-fx-orb, .home-fx-note { animation: none; display: none; }
+    .home-fx-note { animation: none; display: none; }
 }
 
 img { max-width: 100%; display: block; }

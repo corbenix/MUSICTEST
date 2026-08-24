@@ -97,7 +97,7 @@ html { scroll-behavior: smooth; }
 body {
     margin: 0;
     position: relative;
-    background: linear-gradient(180deg, #0a0718 0%, #0f0c22 55%, #140f2c 100%);
+    background: linear-gradient(180deg, #050310 0%, #08061a 55%, #0c0820 100%);
     color: var(--text);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
@@ -111,9 +111,9 @@ body::before {
     z-index: -2;
     pointer-events: none;
     background:
-        radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.20), transparent 42%),
-        radial-gradient(circle at 82% 18%, rgba(124, 111, 224, 0.26), transparent 42%),
-        radial-gradient(circle at 50% 55%, rgba(90, 70, 220, 0.14), transparent 45%);
+        radial-gradient(circle at 18% 12%, rgba(56, 189, 248, 0.16), transparent 42%),
+        radial-gradient(circle at 82% 18%, rgba(124, 111, 224, 0.20), transparent 42%),
+        radial-gradient(circle at 50% 55%, rgba(90, 70, 220, 0.10), transparent 45%);
     filter: blur(34px);
     animation: home-bg-drift 18s ease-in-out infinite alternate;
 }
@@ -139,8 +139,52 @@ body > * { position: relative; z-index: 1; }
     from { transform: translate(0, 0) scale(1); }
     to   { transform: translate(-2.5%, 2.5%) scale(1.06); }
 }
+
+/* ── Site-wide atmosphere fx ────────────────────────────────────────────
+   Twinkling stars, pulsing color orbs, and drifting glow notes. Used to
+   be homepage-only; now applies on every page so the whole site shares
+   the same lively background, not just the landing page. */
+body::after {
+    animation: home-star-twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes home-star-twinkle {
+    from { opacity: 0.32; }
+    to   { opacity: 0.58; }
+}
+
+.home-fx-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.home-fx-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(18px);
+    animation: home-fx-pulse ease-in-out infinite;
+}
+@keyframes home-fx-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.15); }
+}
+.home-fx-note {
+    position: absolute;
+    bottom: 10px;
+    font-family: Georgia, serif;
+    text-shadow: 0 0 8px currentColor;
+    animation: home-fx-float linear infinite;
+}
+@keyframes home-fx-float {
+    0%   { transform: translateY(20px); opacity: 0; }
+    15%  { opacity: 0.9; }
+    85%  { opacity: 0.5; }
+    100% { transform: translateY(-260px); opacity: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
-    body::before { animation: none; }
+    body::after { animation: none; }
+    .home-fx-orb, .home-fx-note { animation: none; display: none; }
 }
 
 img { max-width: 100%; display: block; }

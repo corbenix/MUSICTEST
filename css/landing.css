@@ -7,49 +7,8 @@
    per-tool accent. */
 :root { --tool-rgb: 124, 111, 224; --tool-light-rgb: 194, 182, 255; }
 
-/* Homepage-only extra atmosphere: twinkling stars, pulsing orbs, drifting notes */
-body.page-home::after {
-    animation: home-star-twinkle 6s ease-in-out infinite alternate;
-}
-@keyframes home-star-twinkle {
-    from { opacity: 0.32; }
-    to   { opacity: 0.58; }
-}
-
-.home-fx-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-}
-.home-fx-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(18px);
-    animation: home-fx-pulse ease-in-out infinite;
-}
-@keyframes home-fx-pulse {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50%      { opacity: 1;   transform: scale(1.15); }
-}
-.home-fx-note {
-    position: absolute;
-    bottom: 10px;
-    font-family: Georgia, serif;
-    text-shadow: 0 0 8px currentColor;
-    animation: home-fx-float linear infinite;
-}
-@keyframes home-fx-float {
-    0%   { transform: translateY(20px); opacity: 0; }
-    15%  { opacity: 0.9; }
-    85%  { opacity: 0.5; }
-    100% { transform: translateY(-260px); opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-    body.page-home::after { animation: none; }
-    .home-fx-orb, .home-fx-note { animation: none; display: none; }
-}
+/* Twinkling stars / pulsing orbs / drifting notes now live site-wide in
+   shared.css (see "Site-wide atmosphere fx" block), not just here. */
 
 .hero {
     max-width: 1050px;

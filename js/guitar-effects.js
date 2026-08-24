@@ -182,7 +182,18 @@ window.GuitarEffects = (function () {
         const pedal = chain.pedals[id];
         const on = isEffectivelyOn(id);
         const t = chain.ctx.currentTime;
-        pedal.dry.gain.setTargetAtTime(on ? 0 : 1, t, 0.015);
+        // Delay and reverb are time-based/ambience effects: on a real
+        // pedalboard they layer their wet signal on top of the dry tone
+        // rather than replacing it, so the fundamental note keeps its
+        // full volume no matter how the Mix knob is set. A full
+        // dry->wet crossfade (like overdrive/chorus use, where the wet
+        // path *is* the whole tone once engaged) was cutting the dry
+        // signal to 0 here and left only the Mix-scaled wet signal
+        // (45%/40% by default) — a large, unintended volume drop.
+        // Overdrive and chorus keep the original full crossfade since
+        // that's how those pedal types are meant to behave.
+        const isAmbience = id === 'delay' || id === 'reverb';
+        pedal.dry.gain.setTargetAtTime(on && !isAmbience ? 0 : 1, t, 0.015);
         pedal.wet.gain.setTargetAtTime(on ? 1 : 0, t, 0.015);
     }
 

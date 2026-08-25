@@ -1,0 +1,168 @@
+/* ==========================================================================
+   MINI PLAYER — floating, site-wide (loaded on every page)
+   A small toggle button in the corner opens a compact panel for playing a
+   YouTube link or an uploaded MP3 while you practice. It's a per-page
+   component (state resets on navigation, since this isn't a single-page
+   app), but it remembers your last YouTube link across pages via
+   localStorage so picking it back up is quick.
+   ========================================================================== */
+
+.mp-toggle {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 40;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: linear-gradient(160deg, rgba(230, 175, 255, .9), rgba(195, 77, 255, .95));
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, .35), 0 8px 20px rgba(0, 0, 0, .4);
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+}
+.mp-toggle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, .35), 0 10px 24px rgba(0, 0, 0, .45);
+}
+.mp-toggle[aria-expanded="true"] {
+    background: linear-gradient(160deg, rgba(195, 77, 255, .95), rgba(120, 30, 170, .95));
+}
+
+.mp-panel {
+    position: fixed;
+    right: 20px;
+    bottom: 84px;
+    z-index: 40;
+    width: min(320px, calc(100vw - 40px));
+    background: linear-gradient(165deg, rgba(24, 21, 46, .96), rgba(10, 8, 22, .98));
+    border: 1px solid rgba(230, 175, 255, .3);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 0 rgba(0, 0, 0, .35), 0 16px 34px rgba(0, 0, 0, .5);
+    transform-origin: bottom right;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+}
+.mp-panel[hidden] {
+    display: none;
+}
+.mp-panel-title {
+    font-family: var(--font-display, inherit);
+    font-weight: 800;
+    font-size: 13.5px;
+    color: #fff;
+    margin: 0 0 10px;
+}
+.mp-source-row {
+    display: flex;
+    gap: 6px;
+}
+.mp-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(230, 175, 255, .22);
+    color: #fff;
+    font-size: 12.5px;
+    font-family: var(--font-body, inherit);
+}
+.mp-input:focus-visible {
+    outline: 2px solid rgba(195, 77, 255, .8);
+    outline-offset: 1px;
+}
+.mp-load-btn {
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: rgba(195, 77, 255, .9);
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.mp-load-btn:hover { background: rgba(195, 77, 255, 1); }
+
+.mp-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    color: #8b85ad;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.mp-divider::before,
+.mp-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(230, 175, 255, .18);
+}
+
+.mp-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.mp-upload-btn {
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: rgba(195, 77, 255, .18);
+    border: 1px solid rgba(195, 77, 255, .4);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.mp-upload-btn:hover { background: rgba(195, 77, 255, .28); }
+.mp-file-name {
+    font-size: 11.5px;
+    color: #aea8d0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mp-yt-wrap {
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #000;
+}
+.mp-yt-wrap[hidden] { display: none; }
+.mp-yt-embed,
+.mp-yt-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+.mp-audio {
+    width: 100%;
+    margin-top: 12px;
+}
+.mp-audio[hidden] { display: none; }
+
+.mp-error {
+    margin-top: 10px;
+    font-size: 11.5px;
+    color: #ff8a8a;
+}
+.mp-error[hidden] { display: none; }
+
+@media (max-width: 480px) {
+    .mp-toggle { right: 14px; bottom: 14px; }
+    .mp-panel { right: 14px; bottom: 76px; }
+}

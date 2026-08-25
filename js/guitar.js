@@ -1257,12 +1257,18 @@
     // ── Clear Fretboard — resets the capo back to Open and deselects any
     // shape/chord picked, same "wipe it all" behaviour as the other
     // panels' Clear buttons. ─────────────────────────────────────────────
+    // Capo Explorer's Clear Fretboard is intentionally lighter-touch than
+    // every other panel's: it only clears the highlighted notes on the
+    // fretboard and deselects the chosen chord-quality card
+    // (capoActiveKey) — it does NOT reset the capo fret position or the
+    // active CAGED shape pill, since those represent "where the capo is"
+    // and "which shape you're browsing," not "which chord is currently
+    // showing," and clearing them on every Clear click was more
+    // disruptive than useful here.
     if (capoClearBtn) {
         capoClearBtn.addEventListener('click', () => {
             stopCapoPlayback();
-            capoSelectedFret = 0;
-            capoResetSelection();
-            renderCapoSlider();
+            capoActiveKey = null;
             renderCapo();
         });
     }

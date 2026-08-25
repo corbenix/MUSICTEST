@@ -6,116 +6,14 @@
     // ── Tabs ────────────────────────────────────────────────────────────
     const tabs = document.querySelectorAll('.tool-tab');
     const panels = document.querySelectorAll('.tool-panel');
-    // panel-playalong is special-cased below: every other panel toggles
-    // via the `hidden` attribute (display:none) as before, but that
-    // would unload/reset an embedded YouTube iframe (and can pause/lose
-    // the position of an <audio> element in some browsers) the moment
-    // its container goes display:none. Instead it's kept technically
-    // "displayed" at all times and just moved off-screen + made
-    // non-interactive via .pa-offscreen, so playback keeps running
-    // uninterrupted while you use the other tabs.
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
-            panels.forEach(p => {
-                if (p.id === 'panel-playalong') {
-                    p.removeAttribute('hidden');
-                    p.classList.toggle('pa-offscreen', p.id !== tab.dataset.panel);
-                } else {
-                    p.setAttribute('hidden', '');
-                }
-            });
+            panels.forEach(p => p.setAttribute('hidden', ''));
             tab.setAttribute('aria-selected', 'true');
-            const target = document.getElementById(tab.dataset.panel);
-            if (target.id === 'panel-playalong') {
-                target.classList.remove('pa-offscreen');
-            } else {
-                target.removeAttribute('hidden');
-            }
+            document.getElementById(tab.dataset.panel).removeAttribute('hidden');
         });
     });
-
-    // ── Play Along (YouTube link or uploaded MP3) ─────────────────────────
-    const paYtInput = document.getElementById('playalong-yt-input');
-    const paYtLoad = document.getElementById('playalong-yt-load');
-    const paYtWrap = document.getElementById('playalong-yt-wrap');
-    const paYtEmbed = document.getElementById('playalong-yt-embed');
-    const paFileInput = document.getElementById('playalong-file-input');
-    const paFileName = document.getElementById('playalong-file-name');
-    const paAudio = document.getElementById('playalong-audio');
-    const paError = document.getElementById('playalong-error');
-    let paObjectUrl = null;
-
-    function paShowError(msg) {
-        paError.textContent = msg;
-        paError.hidden = false;
-    }
-    function paClearError() {
-        paError.hidden = true;
-        paError.textContent = '';
-    }
-    function paResetOtherSource(exclude) {
-        // Only one source (YouTube or uploaded file) plays at a time —
-        // loading one clears/hides the other instead of stacking both.
-        if (exclude !== 'yt') {
-            paYtWrap.hidden = true;
-            paYtEmbed.innerHTML = '';
-        }
-        if (exclude !== 'file') {
-            paAudio.pause();
-            paAudio.removeAttribute('src');
-            paAudio.hidden = true;
-            paFileName.textContent = 'No file selected';
-            if (paObjectUrl) { URL.revokeObjectURL(paObjectUrl); paObjectUrl = null; }
-        }
-    }
-
-    function paExtractYouTubeId(url) {
-        try {
-            const u = new URL(url.trim());
-            if (u.hostname === 'youtu.be') return u.pathname.slice(1);
-            if (u.hostname.includes('youtube.com')) {
-                if (u.pathname === '/watch') return u.searchParams.get('v');
-                if (u.pathname.startsWith('/embed/')) return u.pathname.split('/')[2];
-                if (u.pathname.startsWith('/shorts/')) return u.pathname.split('/')[2];
-            }
-        } catch (e) { /* not a valid URL at all */ }
-        return null;
-    }
-
-    function paLoadYouTube() {
-        paClearError();
-        const id = paExtractYouTubeId(paYtInput.value);
-        if (!id) {
-            paShowError('That doesn\u2019t look like a valid YouTube link. Try pasting the full URL.');
-            return;
-        }
-        paResetOtherSource('yt');
-        paYtEmbed.innerHTML =
-            '<iframe src="https://www.youtube.com/embed/' + id + '" ' +
-            'title="YouTube player" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-        paYtWrap.hidden = false;
-    }
-    if (paYtLoad) paYtLoad.addEventListener('click', paLoadYouTube);
-    if (paYtInput) paYtInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') paLoadYouTube(); });
-
-    if (paFileInput) {
-        paFileInput.addEventListener('change', () => {
-            paClearError();
-            const file = paFileInput.files && paFileInput.files[0];
-            if (!file) return;
-            if (!file.type.startsWith('audio/')) {
-                paShowError('Please choose an audio file (MP3, WAV, etc.).');
-                paFileInput.value = '';
-                return;
-            }
-            paResetOtherSource('file');
-            paObjectUrl = URL.createObjectURL(file);
-            paAudio.src = paObjectUrl;
-            paAudio.hidden = false;
-            paFileName.textContent = file.name;
-        });
-    }
 
     // ── Tuner ───────────────────────────────────────────────────────────
     const tunerStartBtn = document.getElementById('tuner-start');

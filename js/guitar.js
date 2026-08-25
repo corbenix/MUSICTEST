@@ -992,14 +992,26 @@
     const capoSliderMinus = document.querySelector('.capo-slider-btn-minus');
     const capoSliderPlus = document.querySelector('.capo-slider-btn-plus');
 
+    // Shared "back to Open" reset — same deselection Clear Fretboard does
+    // (minus stopping playback, which callers handle themselves if
+    // needed). Used both when the fret slider returns to 0 and by Clear
+    // Fretboard itself, so there's exactly one place that decides what
+    // "nothing selected" means instead of two logic paths that can
+    // silently drift apart.
+    function capoResetSelection() {
+        capoActiveKey = null;
+        capoSelectedShape = null;
+        capoShowAllShapes = false;
+        capoSyncChipStates();
+    }
+
     function setCapoFret(f) {
         capoSelectedFret = Math.max(0, Math.min(CAPO_MAX_FRET, f));
+        if (capoSelectedFret === 0) {
+            capoResetSelection();
+        }
         renderCapoSlider();
         renderCapo();
-        // The card's tint depends on both the selected shape AND whether
-        // the fret is actually at 0 (see capoSyncChipStates), so it has
-        // to re-run here too — not just when a shape chip is clicked —
-        // or moving the slider back to "Open" won't reset the color.
         capoSyncChipStates();
     }
 
@@ -1249,10 +1261,7 @@
         capoClearBtn.addEventListener('click', () => {
             stopCapoPlayback();
             capoSelectedFret = 0;
-            capoActiveKey = null;
-            capoSelectedShape = null;
-            capoShowAllShapes = false;
-            capoSyncChipStates();
+            capoResetSelection();
             renderCapoSlider();
             renderCapo();
         });

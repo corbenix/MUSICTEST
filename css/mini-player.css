@@ -9,7 +9,7 @@
 
 .mp-toggle {
     position: fixed;
-    right: 20px;
+    right: 82px;
     bottom: 20px;
     z-index: 40;
     width: 52px;
@@ -163,6 +163,6 @@
 .mp-error[hidden] { display: none; }
 
 @media (max-width: 480px) {
-    .mp-toggle { right: 14px; bottom: 14px; }
+    .mp-toggle { right: 68px; bottom: 14px; }
     .mp-panel { right: 14px; bottom: 76px; }
 }

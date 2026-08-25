@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/metronome-widget.css?v=2" />
     <link rel="stylesheet" href="css/coffee-widget.css?v=2" />
     <link rel="stylesheet" href="css/tool.css?v=3" />
-    <link rel="stylesheet" href="css/tools.css?v=2" />
+    <link rel="stylesheet" href="css/tools.css?v=3" />
     <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=4" media="(max-width: 768px)" />
     <link rel="stylesheet" href="css/mobile.css?v=4" media="(max-width: 768px)" />
     <link rel="stylesheet" href="css/nav-mobile.css?v=4" media="(max-width: 768px)" />
@@ -64,12 +64,38 @@
         </nav>
 
         <div class="tool-tabs" role="tablist">
-            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-tuner">Tuner</button>
+            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-playalong">Play Along</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-tuner">Tuner</button>
             <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-metro">Metronome</button>
             <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-analyzer">Song Analyzer</button>
         </div>
 
-        <section id="panel-tuner" class="tool-panel" role="tabpanel">
+        <section id="panel-playalong" class="tool-panel" role="tabpanel">
+            <div class="playalong-panel">
+                <p class="playalong-intro">Paste a YouTube link or upload an MP3 to play along with while you practice.</p>
+
+                <div class="playalong-source-row">
+                    <input id="playalong-yt-input" type="url" class="playalong-input" placeholder="Paste a YouTube link…" aria-label="YouTube link" />
+                    <button id="playalong-yt-load" type="button" class="tool-btn">Load</button>
+                </div>
+                <div class="playalong-divider"><span>or</span></div>
+                <div class="playalong-upload-row">
+                    <label class="playalong-upload-btn" for="playalong-file-input">Upload MP3</label>
+                    <input id="playalong-file-input" type="file" accept="audio/*" hidden />
+                    <span id="playalong-file-name" class="playalong-file-name">No file selected</span>
+                </div>
+
+                <div id="playalong-yt-wrap" class="playalong-yt-wrap" hidden>
+                    <div id="playalong-yt-embed" class="playalong-yt-embed"></div>
+                </div>
+
+                <audio id="playalong-audio" class="playalong-audio" controls hidden></audio>
+
+                <div id="playalong-error" class="playalong-error" hidden></div>
+            </div>
+        </section>
+
+        <section id="panel-tuner" class="tool-panel" role="tabpanel" hidden>
             <div class="tuner-panel">
                 <div id="tuner-note" class="tuner-note">—</div>
                 <div id="tuner-cents" class="tuner-cents">0 cents</div>
@@ -204,7 +230,7 @@
 
     <script src="js/metronome-core.js"></script>
     <script src="js/music-theory.js"></script>
-    <script src="js/tools.js"></script>
+    <script src="js/tools.js?v=2"></script>
     <script src="js/song-analyzer.js"></script>
     <script src="js/mobile-nav.js"></script>
     <script src="js/section-nav.js"></script>

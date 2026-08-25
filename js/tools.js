@@ -6,12 +6,32 @@
     // ── Tabs ────────────────────────────────────────────────────────────
     const tabs = document.querySelectorAll('.tool-tab');
     const panels = document.querySelectorAll('.tool-panel');
+    // panel-playalong is special-cased below: every other panel toggles
+    // via the `hidden` attribute (display:none) as before, but that
+    // would unload/reset an embedded YouTube iframe (and can pause/lose
+    // the position of an <audio> element in some browsers) the moment
+    // its container goes display:none. Instead it's kept technically
+    // "displayed" at all times and just moved off-screen + made
+    // non-interactive via .pa-offscreen, so playback keeps running
+    // uninterrupted while you use the other tabs.
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
-            panels.forEach(p => p.setAttribute('hidden', ''));
+            panels.forEach(p => {
+                if (p.id === 'panel-playalong') {
+                    p.removeAttribute('hidden');
+                    p.classList.toggle('pa-offscreen', p.id !== tab.dataset.panel);
+                } else {
+                    p.setAttribute('hidden', '');
+                }
+            });
             tab.setAttribute('aria-selected', 'true');
-            document.getElementById(tab.dataset.panel).removeAttribute('hidden');
+            const target = document.getElementById(tab.dataset.panel);
+            if (target.id === 'panel-playalong') {
+                target.classList.remove('pa-offscreen');
+            } else {
+                target.removeAttribute('hidden');
+            }
         });
     });
 

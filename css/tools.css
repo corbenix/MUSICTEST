@@ -5,6 +5,22 @@
 :root { --tool-rgb: var(--tools-rgb); --tool-light-rgb: var(--tools-light-rgb); }
 
 /* ── Tuner ────────────────────────────────────────────────────────────── */
+/* Keeps #panel-playalong technically "displayed" (never display:none)
+   while the user is on another tab, so an embedded YouTube iframe or
+   playing <audio> element isn't unloaded/reset by the tab switch. See
+   js/tools.js — .tool-panel's normal `hidden` attribute is intentionally
+   skipped for this one panel in favor of this class instead. */
+#panel-playalong.pa-offscreen {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
 .playalong-panel {
     background: var(--glass);
     border: 1px solid var(--glass-border);

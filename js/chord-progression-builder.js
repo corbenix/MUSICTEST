@@ -36,6 +36,29 @@
     let playIndex = -1;
     let playTimer = null;
 
+    // ── Persistence — the sequence survives a refresh/return visit to
+    // this page via localStorage. Saved every time renderSequence() runs
+    // (i.e. after every add/remove/clear), and restored once on load
+    // before the first render. Page-scoped only, same as everything
+    // else on this non-SPA site — visiting a different instrument page
+    // and coming back to Chord Builder still finds it here, but it
+    // doesn't carry between different pages. ──
+    const SEQUENCE_STORAGE_KEY = 'cpb-sequence';
+    function saveSequence() {
+        try {
+            localStorage.setItem(SEQUENCE_STORAGE_KEY, JSON.stringify(sequence));
+        } catch (e) { /* storage unavailable/full — fail silently */ }
+    }
+    function restoreSequence() {
+        try {
+            const raw = localStorage.getItem(SEQUENCE_STORAGE_KEY);
+            if (!raw) return;
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) sequence = parsed;
+        } catch (e) { /* corrupted/old data — start fresh */ }
+    }
+    restoreSequence();
+
     // ── Audio — delegated to the shared InstrumentSound module
     // (js/instrument-sound.js), which also backs the Chords by Key
     // section above, so both share one guitar/keyboard toggle. ──
@@ -126,6 +149,7 @@
     }
 
     function renderSequence() {
+        saveSequence();
         seqCountEl.textContent = `${sequence.length} / ${MAX_CHORDS} chords`;
         addBtn.disabled = sequence.length >= MAX_CHORDS;
         sequenceEl.innerHTML = '';

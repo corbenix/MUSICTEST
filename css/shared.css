@@ -4,6 +4,62 @@
    on top of this one.
    ========================================================================== */
 
+/* ==========================================================================
+   NAMING CONVENTIONS — read this before adding new files/variables.
+   The names below are similar on purpose (historical), which makes them
+   easy to mix up. This block is the canonical answer.
+
+   FILES
+   -----
+   css/tool.css   (singular) — SHARED base stylesheet, loaded on every
+                    instrument/tool page (guitar, bass, keyboard,
+                    chord-builder, tools). Defines generic, reusable
+                    components: .tool-tab, .tool-controls-card,
+                    .tool-panel, etc. Never put page-specific colors or
+                    one-off layout here — anything added here affects
+                    every page that loads it.
+   css/tools.css  (plural)   — PAGE-SPECIFIC stylesheet for tools.html
+                    ("Practice Tools") only. Styles that page's own
+                    unique panels: .tuner-panel, .metro-panel,
+                    .analyzer-panel. Loads *after* tool.css.
+   Every other instrument follows the plural pattern too: guitar.css,
+   bass.css, keyboard.css, chord-builder.css are each that page's own
+   stylesheet, loaded after tool.css + shared.css.
+
+   COLOR VARIABLES
+   ---------------
+   --tool-rgb / --tool-light-rgb  — a GENERIC, reusable variable pair
+                    that tool.css's shared components (.tool-tab,
+                    .tool-controls-card, etc.) read from. It has no
+                    color of its own — each page must set it once at
+                    :root by pointing it at that page's own dedicated
+                    variable, e.g.:
+                        guitar.css:        --tool-rgb: var(--guitar-rgb);
+                        chord-builder.css: --tool-rgb: var(--chordbuilder-rgb);
+                        tools.css:         --tool-rgb: var(--tools-rgb);
+                    Only pages that reuse tool.css's shared components
+                    need this bridge line at all.
+   --guitar-rgb, --bass-rgb, --keyboard-rgb, --chordbuilder-rgb,
+   --tools-rgb     — each page's actual, dedicated color (defined once
+                    below in :root). These are the source of truth —
+                    change a page's color here, not by hunting for
+                    hardcoded hex values in that page's CSS.
+   Bass and Keyboard were built with their own dedicated classes
+   (.bass-controls-panel, etc.) from the start and never adopted
+   tool.css's shared components, so they only ever use their own
+   --bass-rgb / --keyboard-rgb directly — no --tool-rgb bridge needed.
+
+   PITFALL TO AVOID
+   ----------------
+   If a page needs to override a shared tool.css component with fully
+   custom styling (see .guitar-tab in guitar.css for the reference
+   example), give it an entirely new, page-specific class name instead
+   of layering more specific selectors on top of the shared class name.
+   Piling specificity on top of a shared class leaves dead, silently-
+   overridden rules behind in tool.css and makes it unclear later
+   whether removing something from tool.css is safe.
+   ========================================================================== */
+
 /* Cross-document View Transitions: smooths navigation between the separate
    instrument pages (guitar.html <-> bass.html <-> keyboard.html, etc.),
    which are full page loads rather than an in-app tab switch. Opting in via

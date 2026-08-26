@@ -1,37 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chord Nexus</title>
-  <link rel="stylesheet" href="css/shared.css?v=2" />
-  <link rel="stylesheet" href="css/perf-low.css?v=1" />
-  <link rel="stylesheet" href="css/metronome-widget.css?v=2" />
-  <link rel="stylesheet" href="css/coffee-widget.css?v=2" />
-  <link rel="stylesheet" href="css/landing.css?v=2" />
-  <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=4" media="(max-width: 768px)" />
-  <link rel="stylesheet" href="css/mobile.css?v=4" media="(max-width: 768px)" />
-  <link rel="stylesheet" href="css/nav-mobile.css?v=4" media="(max-width: 768px)" />
-  <link rel="stylesheet" href="css/mobile-touch.css?v=4" media="(max-width: 768px)" />
-  <link rel="stylesheet" href="css/mobile-section-nav.css?v=4" media="(max-width: 768px)" />
-  <link rel="stylesheet" href="css/mobile-no-glass.css?v=11" media="(max-width: 768px)" />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/mini-player.css?v=1" />
-  <link rel="stylesheet" href="css/back-to-top.css?v=1" />
-  <link rel="stylesheet" href="css/circle-of-fifths.css?v=2" />
-  <link rel="stylesheet" href="css/tool.css?v=3" />
-  <link rel="stylesheet" href="css/fretboard.css?v=7" />
-  <link rel="stylesheet" href="css/guitar.css?v=8" />
-  <link rel="stylesheet" href="css/mobile-play-buttons.css?v=4" media="(max-width: 768px)" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-  <link rel="stylesheet" href="css/bass.css?v=2" />
-  <link rel="stylesheet" href="css/keyboard.css?v=2" />
-  <link rel="stylesheet" href="css/chord-builder.css?v=4" />
-  <link rel="stylesheet" href="css/tools.css?v=4" />
-  <style>.site-page { display: none; } .site-page.is-active { display: block; }</style>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="js/perf-detect.js?v=1"></script>
 
+    <title>Chord Nexus by CORBENIX Studio</title>
+    <meta name="description" content="Chord Nexus: free interactive music theory tools for musicians. Explore chords, scales, the Circle of Fifths, guitar fretboard, bass, piano, CAGED system, capo explorer, chord progressions and more." />
+    <meta name="keywords" content="Chord Nexus, music hub, music tools, guitar chords, circle of fifths, chord progression builder, CAGED system, capo explorer, bass, piano, music theory" />
+    <meta name="author" content="Chord Nexus" />
+    <link rel="canonical" href="https://chordex.pages.dev/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Chord Nexus — Guitar, Bass, Piano & Chord Tools" />
+    <meta property="og:description" content="Free interactive music theory tools for musicians. Chords, scales, Circle of Fifths, fretboard, CAGED, capo explorer and more." />
+    <meta property="og:image" content="https://chordex.pages.dev/assets/img/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:url" content="https://chordex.pages.dev/" />
+    <meta property="og:site_name" content="Chord Nexus" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Chord Nexus" />
+    <meta name="twitter:description" content="Free interactive music theory tools for musicians — chords, scales, fretboard, piano, CAGED, capo and more." />
+    <meta name="twitter:image" content="https://chordex.pages.dev/assets/img/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Chord Nexus",
+      "description": "Free interactive music theory tools for musicians: chords, scales, Circle of Fifths, guitar fretboard, bass, piano keyboard, CAGED system, capo explorer, and chord progression builder.",
+      "url": "https://chordex.pages.dev/",
+      "applicationCategory": "MusicApplication",
+      "operatingSystem": "All",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "publisher": { "@type": "Organization", "name": "Chord Nexus", "url": "https://chordex.pages.dev/" }
+    }
+    </script>
+
+    <link rel="stylesheet" href="css/shared.css?v=2" />
+    <link rel="stylesheet" href="css/perf-low.css?v=1" />
+    <link rel="stylesheet" href="css/metronome-widget.css?v=2" />
+    <link rel="stylesheet" href="css/coffee-widget.css?v=2" />
+    <link rel="stylesheet" href="css/landing.css?v=2" />
+    <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=4" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile.css?v=4" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/nav-mobile.css?v=4" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-touch.css?v=4" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-section-nav.css?v=4" media="(max-width: 768px)" />
+    <link rel="stylesheet" href="css/mobile-no-glass.css?v=11" media="(max-width: 768px)" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mini-player.css?v=1" />
+    <link rel="stylesheet" href="css/back-to-top.css?v=1" />
+</head>
+<body class="page-home">
     <div class="cn-bg" aria-hidden="true">
         <div class="cn-bg-glow cn-bg-glow--1"></div>
         <div class="cn-bg-glow cn-bg-glow--2"></div>
@@ -43,7 +69,7 @@
     </div>
 
     <nav class="nclg-nav">
-        <a class="nclg-nav-brand" href="#home">
+        <a class="nclg-nav-brand" href="index.html">
             <img src="assets/img/logo.png" alt="Chord Nexus logo" class="nclg-nav-logo" />
             <div class="nclg-nav-wordmark">
                 <strong>CHORD</strong>
@@ -56,19 +82,18 @@
             <span class="nclg-nav-toggle-bar"></span>
         </button>
         <div class="nclg-nav-links" id="nclg-nav-links">
-            <a class="nclg-nav-link" href="#guitar" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
-            <a class="nclg-nav-link" href="#bass" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
-            <a class="nclg-nav-link" href="#keyboard" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
-            <a class="nclg-nav-link" href="#chord-builder" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
-            <a class="nclg-nav-link" href="#tools" aria-label="Practice Tools" title="Practice Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+            <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
+            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
+            <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
+            <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
+            <a class="nclg-nav-link" href="tools.html" aria-label="Practice Tools" title="Practice Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
             <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn"><span class="nclg-nav-icon nclg-guide-icon" aria-hidden="true">📖</span><span class="nclg-guide-text">Guide</span></a>
         </div>
         <div class="nclg-nav-scrim"></div>
     </nav>
 
 
-    
-  <section class="site-page" id="page-index" data-page="index"><main>
+    <main>
         <section class="hero">
             <h1>Every chord, scale, and <em>string</em> — one hub.</h1>
             <p>Interactive music theory tools for guitar, bass, and piano. Explore the Circle of Fifths, CAGED shapes, capo positions, and build progressions you'll actually use.</p>
@@ -78,31 +103,31 @@
         </section>
 
         <section class="hub" aria-label="Tools">
-            <a class="hub-card hub-card--guitar" href="#guitar">
+            <a class="hub-card hub-card--guitar" href="guitar.html">
                 <div class="hub-card-icon">🎸</div>
                 <div class="hub-card-title">Guitar</div>
                 <div class="hub-card-desc">Fretboard scales, CAGED shapes, chord diagrams, and a capo explorer.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--bass" href="#bass">
+            <a class="hub-card hub-card--bass" href="bass.html">
                 <div class="hub-card-icon"><img class="hub-card-icon-img" src="assets/icons/bass_logo.png" alt="" /></div>
                 <div class="hub-card-title">Bass</div>
                 <div class="hub-card-desc">Full fretboard scale positions and interval maps for bass guitar.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--keyboard" href="#keyboard">
+            <a class="hub-card hub-card--keyboard" href="keyboard.html">
                 <div class="hub-card-icon">🎹</div>
                 <div class="hub-card-title">Keyboard</div>
                 <div class="hub-card-desc">Interactive piano keys with scale and chord highlighting.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--chords" href="#chord-builder">
+            <a class="hub-card hub-card--chords" href="chord-builder.html">
                 <div class="hub-card-icon">🎵</div>
                 <div class="hub-card-title">Chord Builder</div>
                 <div class="hub-card-desc">Build and hear chord progressions in any key, major or minor.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--tools" href="#tools">
+            <a class="hub-card hub-card--tools" href="tools.html">
                 <div class="hub-card-icon">🧰</div>
                 <div class="hub-card-title">Practice Tools</div>
                 <div class="hub-card-desc">Circle of Fifths, chromatic tuner, metronome, and song key analyzer.</div>
@@ -115,619 +140,7 @@
                 <div class="hub-card-string"></div>
             </a>
         </section>
-    </main></section>
-  <section class="site-page" id="page-guitar" data-page="guitar"><main>
-        <h1 class="sr-only">Guitar</h1>
-        <nav class="section-nav-card" aria-label="Tool navigation">
-            <a class="section-nav-btn" href="#guitar" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="#bass"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
-            <a class="section-nav-btn" href="#keyboard"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
-            <a class="section-nav-btn" href="#chord-builder"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
-            <a class="section-nav-btn" href="#tools"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
-        </nav>
-
-        <div id="circle-of-fifths-mount"></div>
-
-        <div class="tool-tabs guitar_selection_nav" role="tablist">
-            <button class="tool-tab guitar-tab" role="tab" aria-selected="true" data-panel="panel-chords">
-                <img class="guitar-tab-icon guitar-tab-icon--img" src="assets/icons/gchord_lib.png" alt="" />
-                <span class="guitar-tab-text">
-                    <span class="guitar-tab-label">Chord Library</span>
-                    <span class="guitar-tab-desc">Open chord shapes</span>
-                </span>
-            </button>
-            <button class="tool-tab guitar-tab" role="tab" aria-selected="false" data-panel="panel-capo">
-                <img class="guitar-tab-icon guitar-tab-icon--img" src="assets/icons/capo_logo.png" alt="" />
-                <span class="guitar-tab-text">
-                    <span class="guitar-tab-label">Capo Explorer</span>
-                    <span class="guitar-tab-desc">Find capo positions</span>
-                </span>
-            </button>
-            <button class="tool-tab guitar-tab" role="tab" aria-selected="false" data-panel="panel-scale">
-                <img class="guitar-tab-icon guitar-tab-icon--img" src="assets/icons/gscale_exp.png" alt="" />
-                <span class="guitar-tab-text">
-                    <span class="guitar-tab-label">Scale Explorer</span>
-                    <span class="guitar-tab-desc">Scales across the neck</span>
-                </span>
-            </button>
-            <button class="tool-tab guitar-tab" role="tab" aria-selected="false" data-panel="panel-caged">
-                <i class="ti ti-layout-grid guitar-tab-icon" aria-hidden="true"></i>
-                <span class="guitar-tab-text">
-                    <span class="guitar-tab-label">CAGED System</span>
-                    <span class="guitar-tab-desc">Learn the 5 shapes</span>
-                </span>
-            </button>
-        </div>
-
-        <section id="panel-scale" class="tool-panel" role="tabpanel" hidden>
-            <div class="tool-controls-card">
-                <div class="tool-controls-header">
-                    <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/gscale_exp.png" alt="" /> Scale Explorer</div>
-                    <button type="button" id="scale-note-toggle" class="reset-btn scale-note-toggle" title="Switch note names between sharps and flats">♯</button>
-                </div>
-                <p class="tool-controls-desc">Pick a root and scale to see it mapped across the fretboard.</p>
-                <div class="ps-row">
-                    <span class="ps-micro-label">Root</span>
-                    <div id="scale-root-pills" class="root-pill-row scale-root-pills"></div>
-                </div>
-                <select id="scale-type" class="scale-select"></select>
-            </div>
-            <div class="scale-fretboard-controls-row">
-                <button type="button" id="scale-play-btn" class="reset-btn scale-play-btn" title="Play this scale">
-                    ▶<span class="btn-label-text"> Play</span>
-                </button>
-                <div class="pill-group">
-                    <button type="button" id="scale-speed-toggle" class="reset-btn scale-speed-toggle" title="Playback speed">1x</button>
-                </div>
-                <div class="scale-fret-toggle-group" role="group" aria-label="Number of frets">
-                    <button type="button" id="scale-fret-toggle-12" class="scale-fret-toggle active">12</button>
-                    <button type="button" id="scale-fret-toggle-15" class="scale-fret-toggle">15</button>
-                    <button type="button" id="scale-fret-toggle-24" class="scale-fret-toggle">24</button>
-                </div>
-                <button type="button" id="scale-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
-            </div>
-            <div class="gtr-fretboard-panel">
-                <div id="scale-fretboard"></div>
-            </div>
-            <div class="scale-card">
-                <div class="scale-card-label">Scale Notes</div>
-                <div id="scale-chips" class="scale-pill-row"></div>
-            </div>
-        </section>
-
-        <section id="panel-caged" class="tool-panel" role="tabpanel" hidden>
-            <div class="tool-controls-card">
-                <div class="tool-controls-header">
-                    <div class="tool-controls-title">🎯 CAGED System</div>
-                    <button type="button" id="caged-note-toggle" class="reset-btn caged-note-toggle" title="Switch note names between sharps and flats">♯</button>
-                </div>
-                <p class="tool-controls-desc">Select a root to highlight all CAGED shape positions across the fretboard.</p>
-                <div class="ps-row">
-                    <span class="ps-micro-label">Root</span>
-                    <div id="caged-root-pills" class="root-pill-row caged-root-pills"></div>
-                </div>
-                <p id="caged-auto-label" class="tool-note"></p>
-                <div id="caged-legend" class="caged-legend"></div>
-            </div>
-            <div class="gtr-fretboard-panel">
-                <div id="caged-fretboard"></div>
-            </div>
-        </section>
-
-        <section id="panel-chords" class="tool-panel" role="tabpanel">
-            <div class="pedalboard-panel">
-                <div class="pedalboard-panel-label"><i class="ti ti-grid-dots" aria-hidden="true"></i> Effects Pedals</div>
-                <div class="pedalboard" id="chordlib-pedalboard"></div>
-            </div>
-            <div class="tool-controls-card gcv-card">
-                <div class="tool-controls-header">
-                    <div class="tool-controls-title">🎵 Chord Finder</div>
-                    <button type="button" id="chordlib-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
-                </div>
-                <p class="tool-controls-desc">Pick a root and chord type to see its notes highlighted across the fretboard.</p>
-                <div class="ps-block">
-                    <div class="ps-row">
-                        <span class="ps-micro-label">Root</span>
-                        <div id="chordlib-root-pills" class="root-pill-row gcv-root-pills"></div>
-                    </div>
-                    <div id="chordlib-type-row" class="ps-row ps-type-row">
-                        <span class="ps-micro-label">Type</span>
-                        <div id="chordlib-type-pills" class="ps-pills gcv-type-pills"></div>
-                    </div>
-                </div>
-                <div id="chordlib-display" class="chord-display gcv-display">
-                    <div class="chord-display-name gcv-display-name">Select a chord</div>
-                    <div class="chord-display-notes"></div>
-                </div>
-                <div id="chordlib-voicings-section" class="gcv-voicings-section" hidden>
-                    <div class="gcv-voicings-label">Voicings — tap to view on fretboard</div>
-                    <div id="chordlib-voicings-row" class="gcv-voicings-row"></div>
-                </div>
-            </div>
-            <div class="scale-fretboard-controls-row">
-                <button type="button" id="chordlib-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶<span class="btn-label-text"> Play</span></button>
-                <button type="button" id="chordlib-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
-                    <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
-                    <span class="chordlib-single-note-pill-label">Arpeggio</span>
-                </button>
-                <button type="button" id="chordlib-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
-            </div>
-            <div class="gtr-fretboard-panel" style="margin-top:18px;">
-                <div id="chord-lib-fretboard"></div>
-            </div>
-        </section>
-
-        <section id="panel-capo" class="tool-panel" role="tabpanel" hidden>
-            <div class="pedalboard-panel">
-                <div class="pedalboard-panel-label"><i class="ti ti-grid-dots" aria-hidden="true"></i> Effects Pedals</div>
-                <div class="pedalboard" id="capo-pedalboard"></div>
-            </div>
-            <div class="tool-controls-card" id="capo-controls-card">
-                <div class="tool-controls-header">
-                    <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/capo_logo.png" alt="" /> Capo Explorer</div>
-                    <button type="button" id="capo-note-toggle" class="reset-btn capo-note-toggle" title="Switch note names between sharps and flats" data-mode="sharp">♯</button>
-                </div>
-                <p class="tool-controls-desc">Select a capo position, then choose a chord shape to see the sounding chord.</p>
-
-                <div class="capo-slider" id="capo-slider">
-                    <div class="capo-slider-controls">
-                        <button type="button" class="capo-slider-btn capo-slider-btn-minus" data-step="-1" aria-label="Move capo down one fret">–</button>
-                        <div class="capo-slider-fret">
-                            <span class="capo-slider-fret-word" id="capo-slider-word"></span>
-                            <span class="capo-slider-fret-num" id="capo-slider-num"></span>
-                        </div>
-                        <button type="button" class="capo-slider-btn capo-slider-btn-plus" data-step="1" aria-label="Move capo up one fret">+</button>
-                    </div>
-                    <div class="capo-slider-track" id="capo-slider-track" role="slider" tabindex="0"
-                         aria-label="Capo fret" aria-valuemin="0" aria-valuemax="9">
-                        <div class="capo-slider-track-fill" id="capo-slider-fill"></div>
-                        <div class="capo-slider-track-dot" id="capo-slider-dot"></div>
-                    </div>
-                    <div class="capo-slider-divider"></div>
-                    <div class="capo-shape-row" id="capo-shape-row">
-                        <span class="capo-shape-row-label">Shape:</span>
-                        <div class="root-pill-row" id="capo-shape-chips"></div>
-                        <button type="button" id="capo-all-shapes-btn" class="capo-all-shapes-btn">All Shapes</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="capo-card-grid" id="capo-card-grid"></div>
-
-            <div class="scale-fretboard-controls-row">
-                <button type="button" id="capo-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶<span class="btn-label-text"> Play</span></button>
-                <button type="button" id="capo-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
-                    <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
-                    <span class="chordlib-single-note-pill-label">Arpeggio</span>
-                </button>
-                <button type="button" id="capo-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
-            </div>
-            <div class="gtr-fretboard-panel" style="margin-top:18px;">
-                <div id="capo-fretboard"></div>
-            </div>
-
-            <div id="capo-sounding-card" class="capo-sounding-card" hidden>
-                <div class="capo-sounding-row">
-                    <div class="capo-sounding-col capo-sounding-col-left">
-                        <span class="capo-sounding-eyebrow">Finger Shape</span>
-                        <span id="capo-shape-badge" class="capo-shape-big"></span>
-                        <span id="capo-shape-name" class="capo-shape-sub"></span>
-                    </div>
-                    <div class="capo-sounding-col capo-sounding-col-mid">
-                        <div class="capo-sounding-link">
-                            <span class="capo-sounding-link-line"></span>
-                            <span id="capo-fret-pill" class="capo-fret-pill"></span>
-                            <span class="capo-sounding-link-line"></span>
-                        </div>
-                        <span class="capo-sounding-sounds-like">sounds like</span>
-                        <span class="capo-sounding-link-arrow">→</span>
-                    </div>
-                    <div class="capo-sounding-col capo-sounding-col-right">
-                        <span class="capo-sounding-eyebrow">Real Sounding Chord</span>
-                        <span id="capo-sounding-chord" class="capo-sounding-chord-big"></span>
-                        <span id="capo-sounding-quality" class="capo-sounding-quality"></span>
-                    </div>
-                </div>
-                <div class="capo-sounding-divider"></div>
-                <div id="capo-sounding-notes" class="capo-sounding-notes"></div>
-            </div>
-        </section>
-    </main></section>
-  <section class="site-page" id="page-bass" data-page="bass"><main>
-        <h1 class="sr-only">Bass</h1>
-        <nav class="section-nav-card" aria-label="Tool navigation">
-            <a class="section-nav-btn" href="#guitar"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="#bass" aria-current="page"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
-            <a class="section-nav-btn" href="#keyboard"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
-            <a class="section-nav-btn" href="#chord-builder"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
-            <a class="section-nav-btn" href="#tools"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
-        </nav>
-
-        <div id="circle-of-fifths-mount"></div>
-
-        <section class="tool-panel">
-            <div class="bass-controls-panel scale-visualizer-card">
-                <div class="bass-panel-title"><img class="bass-panel-title-icon" src="assets/icons/gscale_exp.png" alt="" />Scale Explorer</div>
-                <p class="bass-panel-desc">Overlay any scale across the bass fretboard. Pick a root and mode to apply instantly.</p>
-                <div class="ps-row">
-                    <span class="ps-micro-label">Root</span>
-                    <div id="bass-scalevis-root-pills" class="root-pill-row"></div>
-                </div>
-                <select id="bass-scale-select" class="scale-select"></select>
-            </div>
-
-            <div class="bass-controls-panel">
-                <div class="bass-panel-title">🎯 Bass Root Note</div>
-                <p class="bass-panel-desc">Pick a root to mark it across the bass fretboard.</p>
-                <div class="ps-row">
-                    <span class="ps-micro-label">Root</span>
-                    <div id="bass-root-pills" class="root-pill-row"></div>
-                </div>
-            </div>
-
-            <div class="bass-toolbar">
-                <div class="bass-toolbar-group">
-                    <button type="button" id="bass-play-btn" class="reset-btn bass-play-btn" disabled title="Play the selected scale or root note">▶<span class="btn-label-text"> Play</span></button>
-                    <div class="pill-group">
-                        <button type="button" id="bass-speed-toggle" class="pill-btn" title="Playback speed">1x</button>
-                    </div>
-                    <div class="pill-group">
-                        <button type="button" id="fret-toggle-b-12" class="pill-btn">12</button>
-                        <button type="button" id="fret-toggle-b-15" class="pill-btn">15</button>
-                        <button type="button" id="fret-toggle-b-24" class="pill-btn">24</button>
-                    </div>
-                    <div class="pill-group">
-                        <button type="button" id="bass-4-btn" class="pill-btn">4-String</button>
-                        <button type="button" id="bass-5-btn" class="pill-btn">5-String</button>
-                    </div>
-                </div>
-                <div class="bass-toolbar-group">
-                    <div class="pill-group">
-                        <button type="button" id="note-display-toggle" class="pill-btn" title="Switch note names between sharps and flats">♯</button>
-                    </div>
-                    <button type="button" id="bass-clear-btn" class="reset-btn">Clear Fretboard</button>
-                </div>
-            </div>
-
-            <div class="fretboard-scroll-container">
-                <div class="fretboard-wrap" id="b-fretboard-wrap">
-                    <div class="fret-header-spacer"></div>
-                    <div class="fret-header-cells" id="b-fret-header"></div>
-                    <div class="marker-spacer"></div>
-                    <div id="b-marker-cells" style="display:flex;"></div>
-                </div>
-            </div>
-            <span class="scroll-hint">Swipe horizontally to navigate frets →</span>
-
-            <div class="scale-card">
-                <div class="scale-card-label">Scale Notes</div>
-                <div id="bass-scale-chips" class="scale-pill-row"></div>
-            </div>
-        </section>
-    </main></section>
-  <section class="site-page" id="page-keyboard" data-page="keyboard"><main>
-        <h1 class="sr-only">Keyboard</h1>
-        <nav class="section-nav-card" aria-label="Tool navigation">
-            <a class="section-nav-btn" href="#guitar"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="#bass"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
-            <a class="section-nav-btn" href="#keyboard" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
-            <a class="section-nav-btn" href="#chord-builder"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
-            <a class="section-nav-btn" href="#tools"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
-        </nav>
-
-        <div id="circle-of-fifths-mount"></div>
-
-        <section class="tool-panel">
-            <div class="tool-controls-card">
-                <div class="tool-controls-title">🎶 Scale Explorer</div>
-                <p class="tool-controls-desc">Pick a root and mode to see its notes highlighted across the keyboard.</p>
-                <div class="ps-row">
-                    <span class="ps-micro-label">Root</span>
-                    <div id="keyboard-scale-root-pills" class="root-pill-row"></div>
-                </div>
-                <select id="keyboard-scale-type" class="scale-select"></select>
-            </div>
-
-            <div class="tool-controls-card">
-                <div class="tool-controls-title">🎹 Chord Finder</div>
-                <p class="tool-controls-desc">Pick a root and chord type to see its notes highlighted across the keyboard.</p>
-                <div class="ps-block">
-                    <div class="ps-row">
-                        <span class="ps-micro-label">Root</span>
-                        <div id="chord-root-pills" class="ps-pills ps-root-pills root-pill-row"></div>
-                    </div>
-                    <div id="chord-type-row" class="ps-row ps-type-row">
-                        <span class="ps-micro-label">Type</span>
-                        <div id="chord-type-pills" class="ps-pills ps-type-pills"></div>
-                    </div>
-                </div>
-                <div id="chord-display" class="chord-display">
-                    <div class="chord-display-name">Select a chord</div>
-                    <div class="chord-display-notes"></div>
-                </div>
-            </div>
-
-            <div class="piano-panel">
-                <div class="piano-toolbar">
-                    <div class="toolbar-left">
-                        <div class="toolbar-row-1">
-                            <button type="button" id="keyboard-play-btn" class="reset-btn keyboard-play-btn" disabled title="Play the selected scale or chord">▶<span class="btn-label-text"> Play</span></button>
-                            <div class="pill-group">
-                                <button type="button" id="keyboard-speed-toggle" class="pill-btn" title="Playback speed">1x</button>
-                            </div>
-                            <div class="pill-group" id="toolbar-octave-group">
-                                <button type="button" id="octave-toggle-2" class="pill-btn">2 oct</button>
-                                <button type="button" id="octave-toggle-3" class="pill-btn">3 oct</button>
-                                <button type="button" id="octave-toggle-5" class="pill-btn">5 oct</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="toolbar-break" aria-hidden="true"></div>
-                    <div class="toolbar-center" id="toolbar-center">
-                        <button type="button" id="keyboard-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play chord notes one at a time instead of strumming">
-                            <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
-                            <span class="chordlib-single-note-pill-label">Arpeggio</span>
-                        </button>
-                        <div class="pill-group">
-                            <button type="button" id="sustain-toggle" class="pill-btn">Sustain</button>
-                        </div>
-                        <div class="pill-group">
-                            <button type="button" id="keyboard-note-display-toggle" class="pill-btn" title="Switch note names between sharps and flats">♯</button>
-                        </div>
-                    </div>
-                    <div class="piano-toolbar-right">
-                        <div class="toolbar-right-top">
-                            <div class="pill-group" id="kb-midi-toggle-group">
-                                <button type="button" id="kb-midi-toggle" class="pill-btn active" title="Toggle computer-keyboard piano input" aria-pressed="true">⌨ Keyboard: On</button>
-                            </div>
-                            <div class="pill-group">
-                                <button type="button" id="label-mode-toggle" class="pill-btn">Notes</button>
-                            </div>
-                        </div>
-                        <button type="button" id="chord-clear-btn" class="reset-btn">Clear Keys</button>
-                    </div>
-                </div>
-                
-                <div class="piano-scroll">
-                    <div class="piano-felt"></div>
-                    <div id="piano" class="piano"></div>
-                </div>
-            </div>
-
-            <p class="kb-computer-hint">⌨ The badges above each key's note show your computer-keyboard mapping. <b>Z / X</b> shifts it down/up an octave.</p>
-
-            <div class="scale-card">
-                <div class="scale-card-label">Scale Notes</div>
-                <div id="kb-scale-chips" class="scale-pill-row"></div>
-            </div>
-
-            <div id="inversions-panel" class="inversions-panel">
-                <div class="inversions-panel-header">
-                    <span class="inversions-panel-title">🎹 Chord Inversions</span>
-                    <span class="inversions-panel-hint">Click to highlight on keyboard</span>
-                </div>
-                <div id="inversion-cards" class="inversion-cards"></div>
-            </div>
-        </section>
-    </main></section>
-  <section class="site-page" id="page-chord-builder" data-page="chord-builder"><main>
-        <h1 class="sr-only">Chord Builder</h1>
-        <nav class="section-nav-card" aria-label="Tool navigation">
-            <a class="section-nav-btn" href="#guitar"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="#bass"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
-            <a class="section-nav-btn" href="#keyboard"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
-            <a class="section-nav-btn" href="#chord-builder" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
-            <a class="section-nav-btn" href="#tools"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
-        </nav>
-
-        <div id="circle-of-fifths-mount"></div>
-
-        <section class="tool-panel">
-            <div class="tool-controls-card global-sound-card">
-                <div class="ps-row">
-                    <span class="ps-micro-label">Sound (applies to both sections below)</span>
-                    <div id="global-sound-pills" class="ps-pills"></div>
-                </div>
-            </div>
-
-            <div class="tool-controls-card cpb-card" id="cpb-card">
-                <div class="tool-controls-header" id="cpb-header-toggle">
-                    <div class="tool-controls-title">🎹 Chord Progression Builder</div>
-                    <div class="tool-controls-header-actions">
-                        <button type="button" id="cpb-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
-                        <button type="button" id="cpb-collapse-btn" class="card-toggle-btn" aria-label="Collapse Chord Progression Builder">▾</button>
-                    </div>
-                </div>
-                <p class="tool-controls-desc">Pick a root · pick a quality · add to your sequence · play it back</p>
-
-                <div class="card-body-outer" id="cpb-body-outer">
-                <div class="card-body">
-                <div class="ps-block">
-                    <div class="ps-row">
-                        <span class="ps-micro-label">Root Note</span>
-                        <div id="cpb-root-pills" class="root-pill-row"></div>
-                    </div>
-                    <div class="ps-row">
-                        <span class="ps-micro-label">Quality</span>
-                        <div id="cpb-quality-pills" class="ps-pills"></div>
-                    </div>
-                </div>
-
-                <button type="button" id="cpb-add-btn" class="cpb-add-btn">+ Add to Sequence</button>
-
-                <div class="cpb-seq-header">
-                    <span class="ps-micro-label">Sequence</span>
-                    <span id="cpb-seq-count" class="cpb-seq-count">0 / 8 chords</span>
-                </div>
-                <div id="cpb-sequence" class="cpb-sequence">
-                    <div class="cpb-seq-empty">↑ Pick a root and quality above, then hit Add</div>
-                </div>
-
-                <div class="cpb-transport">
-                    <div class="cpb-transport-buttons">
-                        <button type="button" id="cpb-play-btn" class="cpb-tbtn cpb-tbtn--play" aria-label="Play">▶<span class="btn-label-text"> Play</span></button>
-                        <button type="button" id="cpb-stop-btn" class="cpb-tbtn">■ Stop</button>
-                        <button type="button" id="cpb-clear-btn" class="cpb-tbtn">🗑 Clear</button>
-                        <button type="button" id="cpb-copy-btn" class="cpb-tbtn">📋 Copy</button>
-                    </div>
-                    <div class="cpb-transport-settings">
-                        <span class="ps-micro-label">BPM</span>
-                        <input type="number" id="cpb-bpm" class="cpb-bpm-input" min="40" max="240" value="80" />
-                        <span class="ps-micro-label">Beats</span>
-                        <div id="cpb-beats-pills" class="pill-group"></div>
-                    </div>
-                </div>
-                </div>
-                </div>
-            </div>
-
-            <div class="tool-controls-card cbk-card" id="cbk-card">
-                <div class="tool-controls-header" id="cbk-header-toggle">
-                    <div class="tool-controls-title">🎼 Chords by Key</div>
-                    <div class="tool-controls-header-actions">
-                        <button type="button" id="key-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
-                        <button type="button" id="cbk-collapse-btn" class="card-toggle-btn" aria-label="Collapse Chords by Key">▾</button>
-                    </div>
-                </div>
-                <p class="tool-controls-desc">Pick a key and mode to see its diatonic chords and common progressions.</p>
-                <div class="card-body-outer" id="cbk-body-outer">
-                <div class="card-body">
-                <div class="ps-block">
-                    <div class="ps-row">
-                        <span class="ps-micro-label">Key</span>
-                        <div id="key-root-pills" class="root-pill-row"></div>
-                    </div>
-                    <div class="ps-row">
-                        <span class="ps-micro-label">Mode</span>
-                        <div id="key-mode-pills" class="ps-pills"></div>
-                    </div>
-                </div>
-                </div>
-                </div>
-                </div>
-            </div>
-
-            <h2 class="section-heading">Common progressions</h2>
-            <div class="progression-select-row">
-                <span class="ps-micro-label">Progression:</span>
-                <select id="progression-select" class="progression-select"></select>
-                <button type="button" id="progression-play-btn" class="progression-play-btn" aria-label="Play progression">▶<span class="btn-label-text"> Play</span></button>
-            </div>
-            <p id="progression-desc" class="progression-desc"></p>
-            <div id="progression-cards" class="diatonic-grid progression-cards"></div>
-        </section>
-    </main></section>
-  <section class="site-page" id="page-tools" data-page="tools"><main>
-        <h1 class="sr-only">Practice Tools</h1>
-        <nav class="section-nav-card" aria-label="Tool navigation">
-            <a class="section-nav-btn" href="#guitar"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
-            <a class="section-nav-btn" href="#bass"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
-            <a class="section-nav-btn" href="#keyboard"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
-            <a class="section-nav-btn" href="#chord-builder"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
-            <a class="section-nav-btn" href="#tools" aria-current="page"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
-        </nav>
-
-        <div class="tool-tabs" role="tablist">
-            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-tuner">Tuner</button>
-            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-metro">Metronome</button>
-            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-analyzer">Song Analyzer</button>
-        </div>
-
-        <section id="panel-tuner" class="tool-panel" role="tabpanel">
-            <div class="tuner-panel">
-                <div id="tuner-note" class="tuner-note">—</div>
-                <div id="tuner-cents" class="tuner-cents">0 cents</div>
-                <div class="tuner-gauge"><div id="tuner-needle" class="tuner-needle"></div></div>
-                <div id="tuner-status" class="tuner-status">Microphone off</div>
-                <button id="tuner-start" type="button" class="tool-btn">Start Tuner</button>
-            </div>
-        </section>
-
-        <section id="panel-metro" class="tool-panel" role="tabpanel" hidden>
-            <div class="metro-panel">
-                <div id="metro-dot" class="metro-dot"></div>
-                <div class="metro-scale">
-                    <div class="metro-slider-wrap">
-                        <input id="metro-slider" class="metro-slider" type="range" min="30" max="300" step="1" value="100" aria-label="Tempo (BPM)" />
-                        <span class="metro-snap-mark" style="--snap-pos: calc(9px + (100% - 18px) * 0.2593);" title="100 BPM"></span>
-                    </div>
-                    <div class="metro-scale-ticks">
-                        <span>30</span>
-                        <span>100</span>
-                        <span>200</span>
-                        <span>300</span>
-                    </div>
-                </div>
-                <div class="metro-bpm-row">
-                    <button id="metro-minus" type="button" class="metro-bpm-btn">−</button>
-                    <div>
-                        <input id="metro-bpm" class="metro-bpm-value" type="text" inputmode="numeric" value="100" maxlength="3" aria-label="BPM (editable)" />
-                        <div class="metro-bpm-label">BPM</div>
-                    </div>
-                    <button id="metro-plus" type="button" class="metro-bpm-btn">+</button>
-                </div>
-                <button id="metro-toggle" type="button" class="tool-btn">Start</button>
-            </div>
-        </section>
-
-        <section id="panel-analyzer" class="tool-panel" role="tabpanel" hidden>
-            <div class="analyzer-panel">
-                <label for="analyzer-file" id="analyzer-dropzone" class="analyzer-dropzone">
-                    <input type="file" id="analyzer-file" accept="audio/*" hidden />
-                    <span class="analyzer-dropzone-icon" aria-hidden="true">🎵</span>
-                    <span class="analyzer-dropzone-text" id="analyzer-dropzone-text">Click or drop an audio file</span>
-                </label>
-                <button id="analyzer-start" type="button" class="tool-btn" disabled>Analyze Song</button>
-
-                <div id="analyzer-progress" class="analyzer-progress" hidden>
-                    <div class="analyzer-progress-track"><div id="analyzer-progress-fill" class="analyzer-progress-fill"></div></div>
-                    <div id="analyzer-status" class="analyzer-status">Analyzing…</div>
-                </div>
-
-                <div id="analyzer-results" class="analyzer-results" hidden>
-                    <div class="analyzer-result-row">
-                        <div class="analyzer-result">
-                            <div id="analyzer-bpm" class="analyzer-result-value">—</div>
-                            <div class="analyzer-result-label">BPM</div>
-                        </div>
-                        <div class="analyzer-result">
-                            <div id="analyzer-key" class="analyzer-result-value">—</div>
-                            <div class="analyzer-result-label">Key</div>
-                        </div>
-                    </div>
-                    <div class="analyzer-note">Estimates are approximate — works best on full songs with a clear, steady beat.</div>
-                </div>
-
-                <div id="analyzer-chords" class="analyzer-chords" hidden>
-                    <div class="analyzer-chords-title">Chord Progression</div>
-                    <div id="analyzer-chords-list" class="analyzer-chords-list"></div>
-                    <div class="analyzer-note">Chords are estimated from pitch content per second — treat as a helpful guide, not sheet music.</div>
-                </div>
-
-                <div class="analyzer-stems">
-                    <button id="analyzer-stems-btn" type="button" class="tool-btn" hidden>Generate Stems (Beta)</button>
-                    <div id="analyzer-stems-progress" class="analyzer-status" hidden>Splitting stems…</div>
-                    <div id="analyzer-stems-results" class="analyzer-stems-results" hidden>
-                        <div class="analyzer-stem">
-                            <div class="analyzer-stem-label">Instrumental (vocal-reduced)</div>
-                            <audio id="analyzer-stem-instrumental" class="analyzer-stem-audio" controls></audio>
-                            <a id="analyzer-stem-instrumental-dl" class="analyzer-stem-download" download="instrumental.wav">Download WAV</a>
-                        </div>
-                        <div class="analyzer-stem">
-                            <div class="analyzer-stem-label">Center Channel (vocals + centered instruments)</div>
-                            <audio id="analyzer-stem-center" class="analyzer-stem-audio" controls></audio>
-                            <a id="analyzer-stem-center-dl" class="analyzer-stem-download" download="center-channel.wav">Download WAV</a>
-                        </div>
-                        <div class="analyzer-note">Basic phase-cancellation split, not full AI stem separation — works best on stereo tracks with center-panned vocals, and won't isolate drums/bass individually.</div>
-                    </div>
-                    <div id="analyzer-stems-error" class="analyzer-error" hidden></div>
-                </div>
-
-                <div id="analyzer-error" class="analyzer-error" hidden></div>
-            </div>
-        </section>
-    </main></section>
-
+    </main>
 
     <footer class="site-footer">
         <img src="assets/img/logo.png" alt="Chord Nexus logo" class="site-footer-logo" />
@@ -788,53 +201,13 @@
         </div>
     </div>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-  <script src="js/metronome-core.js?v=1"></script>
-  <script src="js/mobile-nav.js?v=1"></script>
-  <script src="js/background.js?v=1"></script>
-  <script src="js/metronome-widget.js?v=1"></script>
-  <script src="js/coffee-widget.js?v=1"></script>
-  <script src="js/bg-fx.js?v=1"></script>
-  <script src="js/mini-player.js?v=1"></script>
-  <script src="js/back-to-top.js?v=1"></script>
-  <script src="js/music-theory.js?v=1"></script>
-  <script src="js/note-display.js?v=1"></script>
-  <script src="js/fretboard.js?v=1"></script>
-  <script src="js/guitar-data.js?v=1"></script>
-  <script src="js/guitar-effects.js?v=2"></script>
-  <script src="js/guitar.js?v=2"></script>
-  <script src="js/section-nav.js?v=1"></script>
-  <script src="js/circle-of-fifths-single.js?v=1"></script>
-  <script src="js/bass.js?v=2"></script>
-  <script src="js/keyboard-data.js?v=1"></script>
-  <script src="js/keyboard-single.js?v=2"></script>
-  <script src="js/chord-builder-data.js?v=2"></script>
-  <script src="js/instrument-sound.js?v=2"></script>
-  <script src="js/chord-builder.js?v=2"></script>
-  <script src="js/chord-progression-builder.js?v=3"></script>
-  <script src="js/tools.js?v=3"></script>
-  <script src="js/song-analyzer.js?v=1"></script>
-  <script>{
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Chord Nexus",
-      "description": "Free interactive music theory tools for musicians: chords, scales, Circle of Fifths, guitar fretboard, bass, piano keyboard, CAGED system, capo explorer, and chord progression builder.",
-      "url": "https://chordex.pages.dev/",
-      "applicationCategory": "MusicApplication",
-      "operatingSystem": "All",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "publisher": { "@type": "Organization", "name": "Chord Nexus", "url": "https://chordex.pages.dev/" }
-    }</script>
-  <script>(function () {
+    <script src="js/metronome-core.js?v=1"></script>
+    <script src="js/mobile-nav.js?v=1"></script>
+    <script src="js/background.js?v=1"></script>
+    <script src="js/metronome-widget.js?v=1"></script>
+    <script src="js/coffee-widget.js?v=1"></script>
+    <script>
+        (function () {
             const openBtn = document.getElementById('guide-nav-btn');
             const tipsCard = document.getElementById('quick-tips-card');
             const modal = document.getElementById('guide-modal');
@@ -852,94 +225,10 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
             });
-        })();</script>
-  <script>if (window.GuitarEffects) {
-            window.GuitarEffects.renderPedalboard(document.getElementById('chordlib-pedalboard'));
-            window.GuitarEffects.renderPedalboard(document.getElementById('capo-pedalboard'));
-        }
-        (function () {
-            const openBtn = document.getElementById('guide-nav-btn');
-            const modal = document.getElementById('guide-modal');
-            const backdrop = document.getElementById('guide-modal-backdrop');
-            const closeBtn = document.getElementById('guide-modal-close');
-            if (!openBtn || !modal) return;
-            function open() { modal.classList.add('guide-modal--open'); }
-            function close() { modal.classList.remove('guide-modal--open'); }
-            openBtn.addEventListener('click', e => { e.preventDefault(); open(); });
-            backdrop.addEventListener('click', close);
-            closeBtn.addEventListener('click', close);
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
-            });
-        })();</script>
-  <script>/* Mobile-only toolbar reorder: row 1 = Play, speed,
-                       Sustain, sharp-flat (left) / Keyboard, Notes
-                       (right). Row 2 = Arpeggio, octave range (left) /
-                       Clear Keys (right). Runs inline (not in
-                       keyboard.js) so it happens before first paint — no
-                       flash of the desktop order. Desktop (pointer:
-                       fine) is untouched, keeping its existing
-                       three-zone centered layout. */
-                    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
-                        var row1 = document.querySelector('.toolbar-row-1');
-                        var octaveGroup = document.getElementById('toolbar-octave-group');
-                        var center = document.getElementById('toolbar-center');
-                        var arpeggio = document.getElementById('keyboard-single-note-toggle');
-                        var toolbar = document.querySelector('.piano-toolbar');
-                        var toolbarRight = document.querySelector('.piano-toolbar-right');
-                        var kbGroup = document.getElementById('kb-midi-toggle-group');
-                        var clearBtn = document.getElementById('chord-clear-btn');
-                        if (row1 && octaveGroup && center && arpeggio && toolbar && toolbarRight && clearBtn) {
-                            center.querySelectorAll('.pill-group').forEach(function (el) {
-                                row1.appendChild(el);
-                            });
-                            center.remove();
-                            toolbar.insertBefore(octaveGroup, toolbarRight);
-                            toolbar.insertBefore(arpeggio, octaveGroup);
-                            toolbar.insertBefore(clearBtn, toolbarRight);
-                            clearBtn.classList.add('toolbar-row-1-end');
-                            var rightTop = document.querySelector('.toolbar-right-top');
-                            if (rightTop) {
-                                rightTop.classList.add('toolbar-row-1-end');
-                                row1.appendChild(rightTop);
-                            }
-                            toolbarRight.remove();
-                        }
-                    }</script>
-  <script>(function () {
-            const openBtn = document.getElementById('guide-nav-btn');
-            const modal = document.getElementById('guide-modal');
-            const backdrop = document.getElementById('guide-modal-backdrop');
-            const closeBtn = document.getElementById('guide-modal-close');
-            if (!openBtn || !modal) return;
-
-            function open() { modal.classList.add('guide-modal--open'); }
-            function close() { modal.classList.remove('guide-modal--open'); }
-
-            openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });
-            closeBtn.addEventListener('click', close);
-            backdrop.addEventListener('click', close);
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('guide-modal--open')) close();
-            });
-        })();</script>
-  <script>
-    (() => {
-      const pages = new Set(['index','guitar','bass','keyboard','chord-builder','tools']);
-      function route() {
-        let page = location.hash.slice(1).toLowerCase();
-        if (page === 'home' || !pages.has(page)) page = 'index';
-        document.querySelectorAll('.site-page').forEach(s => s.classList.toggle('is-active', s.dataset.page === page));
-        document.querySelectorAll('.nclg-nav-link, .section-nav-btn').forEach(link => {
-          const target = (link.getAttribute('href') || '').replace(/^#/, '');
-          link.toggleAttribute('aria-current', target === page || (page === 'index' && target === 'home'));
-        });
-        scrollTo(0, 0);
-      }
-      addEventListener('hashchange', route);
-      document.addEventListener('click', e => { const a = e.target.closest('a[href^="#"]'); if (a && (pages.has(a.hash.slice(1)) || a.hash === '#home')) { e.preventDefault(); location.hash = a.hash; } });
-      route();
-    })();
-  </script>
+        })();
+    </script>
+    <script src="js/bg-fx.js?v=1"></script>
+    <script src="js/mini-player.js?v=1"></script>
+    <script src="js/back-to-top.js?v=1"></script>
 </body>
 </html>

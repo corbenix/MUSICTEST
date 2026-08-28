@@ -579,6 +579,7 @@
     const CHORD_FINDER_TYPE_GROUPS = [
         [['Major', 'Maj'], ['Minor', 'Min'], ['Sus2', 'Sus2'], ['Sus4', 'Sus4'], ['Diminished', 'Dim'], ['Augmented', 'Aug']],
         [['Dominant 7', 'Dom7'], ['Major 7', 'Maj7'], ['Minor 7', 'Min7'], ['7sus4', '7sus4'], ['Add9', 'Add9']],
+        [['Major 6', 'Maj6'], ['Minor 6', 'Min6']],
         [['Major 9', 'Maj9'], ['Minor 9', 'Min9'], ['Dominant 9', 'Dom9']],
         [['5th', '5th']],
     ];

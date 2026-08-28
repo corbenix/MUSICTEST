@@ -6,10 +6,10 @@
     const MT = window.MusicTheory;
 
     const MAX_CHORDS = 8;
-    const QUALITIES = ['Major', 'Minor', 'Diminished', 'Augmented', 'Sus2', 'Sus4', 'Major 7', 'Minor 7', 'Dominant 7', '7sus4', 'Add9', 'Major 9', 'Minor 9', 'Dominant 9'];
+    const QUALITIES = ['Major', 'Minor', 'Diminished', 'Augmented', 'Sus2', 'Sus4', 'Major 6', 'Minor 6', 'Major 7', 'Minor 7', 'Dominant 7', '7sus4', 'Add9', 'Major 9', 'Minor 9', 'Dominant 9'];
     const QUALITY_SUFFIX = {
         'Major': '', 'Minor': 'm', 'Diminished': '°', 'Augmented': '+',
-        'Sus2': 'sus2', 'Sus4': 'sus4', 'Major 7': 'maj7', 'Minor 7': 'm7', 'Dominant 7': '7', '7sus4': '7sus4', 'Add9': 'add9',
+        'Sus2': 'sus2', 'Sus4': 'sus4', 'Major 6': '6', 'Minor 6': 'm6', 'Major 7': 'maj7', 'Minor 7': 'm7', 'Dominant 7': '7', '7sus4': '7sus4', 'Add9': 'add9',
         'Major 9': 'maj9', 'Minor 9': 'm9', 'Dominant 9': '9',
     };
 

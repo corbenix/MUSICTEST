@@ -25,6 +25,8 @@ window.MusicTheory = (function () {
         'Augmented':    [0,4,8],
         'Sus2':         [0,2,7],
         'Sus4':         [0,5,7],
+        'Major 6':      [0,4,7,9],
+        'Minor 6':      [0,3,7,9],
         'Major 7':      [0,4,7,11],
         'Minor 7':      [0,3,7,10],
         'Dominant 7':   [0,4,7,10],

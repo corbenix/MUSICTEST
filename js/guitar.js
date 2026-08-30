@@ -131,8 +131,8 @@
     });
 
     // ── Scale Explorer ─────────────────────────────────────────────────
-    const scaleRootPills = document.getElementById('scale-root-pills');
-    const scaleType = document.getElementById('scale-type');
+    const scaleRootPills = document.getElementById('guitar-scale-root-pills');
+    const scaleType = document.getElementById('guitar-scale-type');
     const scaleChips = document.getElementById('scale-chips');
     const scaleBoard = document.getElementById('scale-fretboard');
     const scalePlayBtn = document.getElementById('scale-play-btn');

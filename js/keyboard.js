@@ -285,7 +285,7 @@
     // the choice persists across the Keyboard, Bass, Guitar, and Chord
     // Builder pages instead of resetting per page.
     let noteDisplayMode = window.NoteDisplay.getMode();
-    const noteDisplayToggle = document.getElementById('note-display-toggle');
+    const noteDisplayToggle = document.getElementById('keyboard-note-display-toggle');
 
     function toDisplayNote(sharpVal) {
         return window.NoteDisplay.toDisplayNote(sharpVal, noteDisplayMode);
@@ -470,8 +470,8 @@
     // Root picker: naturals + accidental pills (C#/D♭ etc.), always
     // visible. Their spelling (sharp vs flat) is driven entirely by the
     // global note-display toggle in the piano toolbar.
-    const scaleRootPills = document.getElementById('scale-root-pills');
-    const scaleType = document.getElementById('scale-type');
+    const scaleRootPills = document.getElementById('keyboard-scale-root-pills');
+    const scaleType = document.getElementById('keyboard-scale-type');
     var scaleRootValue = '';
 
     Object.keys(MT.SCALES).forEach(name => {

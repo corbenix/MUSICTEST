@@ -191,7 +191,7 @@
     // spelling of every accidental pill on this page and persists across
     // the Keyboard/Guitar/Chord Builder pages too.
     let noteDisplayMode = window.NoteDisplay.getMode();
-    const noteDisplayToggle = document.getElementById('note-display-toggle');
+    const noteDisplayToggle = document.getElementById('bass-note-display-toggle');
 
     function refreshAccidentalPills() {
         rowState.forEach(state => {

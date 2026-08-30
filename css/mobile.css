@@ -188,7 +188,7 @@
 
     .bass-toolbar #bass-play-btn { order: 1; }
     .bass-toolbar .pill-group:has(#bass-speed-toggle) { order: 2; }
-    .bass-toolbar .pill-group:has(#note-display-toggle) { order: 3; }
+    .bass-toolbar .pill-group:has(#bass-note-display-toggle) { order: 3; }
     .bass-toolbar .pill-group:has(#fret-toggle-b-12) { order: 4; margin-left: auto; }
 
     .bass-toolbar::after {

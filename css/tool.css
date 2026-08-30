@@ -57,30 +57,30 @@
     font-size: 13px;
     font-weight: 700;
     padding: 9px 16px;
-    border-radius: 12px;
-    background: rgba(var(--tool-rgb), 0.08);
-    border: 1px solid rgba(var(--tool-light-rgb), 0.22);
+    border-radius: 999px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
     color: var(--text2);
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .35), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .06);
-    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease);
+    transition: all 0.15s var(--ease);
 }
 .tool-tab:hover {
-    transform: translateY(-3px);
-    background: rgba(var(--tool-rgb), 0.16);
-    border-color: rgba(var(--tool-light-rgb), 0.4);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%);
     color: var(--text);
-    box-shadow: 0 6px 12px rgba(var(--tool-rgb), .18), 0 2px 0 rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 .tool-tab[aria-selected="true"] {
-    color: #fff;
-    background: linear-gradient(180deg, rgba(var(--tool-rgb), .35), rgba(var(--tool-rgb), .15));
-    border: 1px solid rgba(var(--tool-light-rgb), .5);
-    border-bottom: 4px solid rgb(var(--tool-rgb));
+    color: var(--text);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%),
+        rgba(var(--tool-rgb), 0.16);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 2px solid rgba(var(--tool-rgb), 0.9);
     box-shadow:
-        0 6px 14px rgba(var(--tool-rgb), .3),
-        0 3px 0 rgba(0, 0, 0, .3),
-        inset 0 1px 0 rgba(255, 255, 255, .15);
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 3px 10px rgba(var(--tool-rgb), 0.22);
     transform: translateY(-0.5px);
 }
 
@@ -323,7 +323,8 @@
 .scale-note-toggle,
 .capo-note-toggle,
 .sf-toggle,
-#note-display-toggle {
+#bass-note-display-toggle,
+#keyboard-note-display-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -347,7 +348,8 @@
 .scale-note-toggle[data-mode="sharp"],
 .capo-note-toggle[data-mode="sharp"],
 .sf-toggle[data-mode="sharp"],
-#note-display-toggle[data-mode="sharp"] {
+#bass-note-display-toggle[data-mode="sharp"],
+#keyboard-note-display-toggle[data-mode="sharp"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
     border-color: rgba(125, 223, 255, .55);
     color: #fff;
@@ -359,7 +361,8 @@
 .scale-note-toggle[data-mode="flat"],
 .capo-note-toggle[data-mode="flat"],
 .sf-toggle[data-mode="flat"],
-#note-display-toggle[data-mode="flat"] {
+#bass-note-display-toggle[data-mode="flat"],
+#keyboard-note-display-toggle[data-mode="flat"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
     border-color: rgba(255, 209, 102, .55);
     color: #fff;
@@ -598,7 +601,8 @@
     .caged-note-toggle,
     .scale-note-toggle,
     .capo-note-toggle,
-    #note-display-toggle {
+    #bass-note-display-toggle,
+    #keyboard-note-display-toggle {
         transform: translate(1px, -1px);
     }
     .tool-header-icon { font-size: 19px; }

@@ -376,7 +376,7 @@
    one switch that drives accidental spelling everywhere on the page
    (black keys, root pills, chord name). Blue = sharp, amber = flat,
    matching the accent colors already used by the per-row toggles. ── */
-/* Sharp/flat colors for #note-display-toggle now live centrally in
+/* Sharp/flat colors for #bass-note-display-toggle / #keyboard-note-display-toggle now live centrally in
    tool.css (shared by every tool page) rather than duplicated here. */
 /* Sharp/flat centering now lives centrally in tool.css (shared by
    every tool page) rather than duplicated here. */

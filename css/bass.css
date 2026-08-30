@@ -291,13 +291,13 @@
    every instrument page (see js/note-display.js). Blue = sharp,
    amber = flat, matching the accent colors used by the accidental
    pills below. ──────────────────────────────────────────────────────── */
-#note-display-toggle[data-mode="sharp"] {
+#bass-note-display-toggle[data-mode="sharp"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .28), rgba(0, 150, 255, .60));
     color: #fff;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .40), 0 3px 12px rgba(0, 150, 255, .38);
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
-#note-display-toggle[data-mode="flat"] {
+#bass-note-display-toggle[data-mode="flat"] {
     background: linear-gradient(150deg, rgba(255, 255, 255, .30), rgba(255, 209, 102, .75));
     color: #fff;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 3px 12px rgba(255, 209, 102, .45);
@@ -657,7 +657,7 @@
        it needlessly wide on narrow screens. The ♯ glyph's own ink isn't
        perfectly centered within its font line-box; that's invisible at
        desktop's wider size but noticeable here, so nudge it slightly. */
-    #note-display-toggle { padding: 6px 10px; }
+    #bass-note-display-toggle { padding: 6px 10px; }
     .ps-micro-label { font-size: 10.5px; }
     .root-pill { font-size: 11.5px; }
     .sf-toggle { font-size: 11.5px; }

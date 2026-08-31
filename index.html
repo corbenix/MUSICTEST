@@ -7,38 +7,31 @@
 
     <title>Chord Nexus by CORBENIX Studio</title>
     <meta name="description" content="Chord Nexus: free interactive music theory tools for musicians. Explore chords, scales, the Circle of Fifths, guitar fretboard, bass, piano, CAGED system, capo explorer, chord progressions and more." />
-    <meta name="keywords" content="Chord Nexus, music hub, music tools, guitar chords, circle of fifths, chord progression builder, CAGED system, capo explorer, bass, piano, music theory" />
-    <meta name="author" content="Chord Nexus" />
     <link rel="canonical" href="https://chordex.pages.dev/" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Chord Nexus — Guitar, Bass, Piano & Chord Tools" />
-    <meta property="og:description" content="Free interactive music theory tools for musicians. Chords, scales, Circle of Fifths, fretboard, CAGED, capo explorer and more." />
-    <meta property="og:image" content="https://chordex.pages.dev/assets/img/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:url" content="https://chordex.pages.dev/" />
-    <meta property="og:site_name" content="Chord Nexus" />
+    <!-- ==========================================================================
+         SPA MERGE — PHASE 1 (in progress)
+         This file (app.html) is the new single-page shell that will eventually
+         replace index.html / guitar.html / bass.html / keyboard.html /
+         chord-builder.html / tools.html as separate documents.
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Chord Nexus" />
-    <meta name="twitter:description" content="Free interactive music theory tools for musicians — chords, scales, fretboard, piano, CAGED, capo and more." />
-    <meta name="twitter:image" content="https://chordex.pages.dev/assets/img/og-image.png" />
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Chord Nexus",
-      "description": "Free interactive music theory tools for musicians: chords, scales, Circle of Fifths, guitar fretboard, bass, piano keyboard, CAGED system, capo explorer, and chord progression builder.",
-      "url": "https://chordex.pages.dev/",
-      "applicationCategory": "MusicApplication",
-      "operatingSystem": "All",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "publisher": { "@type": "Organization", "name": "Chord Nexus", "url": "https://chordex.pages.dev/" }
-    }
-    </script>
+         What's live right now:
+         - Shared chrome: header/nav, Guide modal, mini-player, back-to-top,
+           metronome widget, footer — each exactly ONE copy, same markup/IDs
+           the old pages used for these (already de-duplicated, see the ID
+           collision audit done before this file was created).
+         - The Home section is fully wired and working, content moved
+           directly from the old index.html.
+         - Guitar / Bass / Keyboard / Chord Builder / Practice Tools are
+           PLACEHOLDER sections only (#section-guitar etc.) — clearly marked
+           below with a TODO comment. Their real content, CSS, and JS get
+           merged in one at a time in follow-up passes, each tested before
+           moving to the next, rather than all at once.
+         - Nav links now call showSection(id) via JS instead of navigating to
+           a different HTML file, so switching sections no longer reloads
+           the page — this is what makes things like the mini-player's
+           YouTube video keep playing across "instrument switches."
+         ========================================================================== -->
 
     <link rel="stylesheet" href="css/shared.css?v=2" />
     <link rel="stylesheet" href="css/perf-low.css?v=1" />
@@ -56,20 +49,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Nunito:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/mini-player.css?v=1" />
     <link rel="stylesheet" href="css/back-to-top.css?v=1" />
+
+    <!-- Practice Tools (Phase 2, merged) -->
+    <link rel="stylesheet" href="css/tool.css?v=4" />
+    <link rel="stylesheet" href="css/tools.css?v=4" />
+
+    <!-- TODO (next passes): css/guitar.css, css/fretboard.css, css/bass.css,
+         css/keyboard.css, css/chord-builder.css get added here — one
+         instrument's stylesheet per pass, right before that instrument's
+         placeholder section below gets its real content. -->
 </head>
 <body class="page-home">
+
     <div class="cn-bg" aria-hidden="true">
         <div class="cn-bg-glow cn-bg-glow--1"></div>
         <div class="cn-bg-glow cn-bg-glow--2"></div>
-        <svg class="cn-bg-orbit" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-            <circle class="cn-orbit-ring cn-orbit-ring--1" cx="400" cy="400" r="260"></circle>
-            <circle class="cn-orbit-ring cn-orbit-ring--2" cx="400" cy="400" r="330"></circle>
-        </svg>
-        <div class="cn-bg-sparkles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="cn-bg-orbit"></div>
+        <div class="cn-bg-sparkles" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
     </div>
 
+    <!-- ── Shared nav (one copy) — links now switch sections via JS instead
+         of navigating to a separate HTML file. ───────────────────────────── -->
     <nav class="nclg-nav">
-        <a class="nclg-nav-brand" href="index.html">
+        <a class="nclg-nav-brand" href="#" data-section-link="home">
             <img src="assets/img/logo.png" alt="Chord Nexus logo" class="nclg-nav-logo" />
             <div class="nclg-nav-wordmark">
                 <strong>CHORD</strong>
@@ -82,18 +86,32 @@
             <span class="nclg-nav-toggle-bar"></span>
         </button>
         <div class="nclg-nav-links" id="nclg-nav-links">
-            <a class="nclg-nav-link" href="guitar.html" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
-            <a class="nclg-nav-link" href="bass.html" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
-            <a class="nclg-nav-link" href="keyboard.html" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
-            <a class="nclg-nav-link" href="chord-builder.html" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
-            <a class="nclg-nav-link" href="tools.html" aria-label="Practice Tools" title="Practice Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+            <a class="nclg-nav-link" href="#" data-section-link="guitar" aria-label="Guitar" title="Guitar"><span class="nclg-nav-icon" aria-hidden="true">🎸</span></a>
+            <a class="nclg-nav-link" href="#" data-section-link="bass" aria-label="Bass" title="Bass"><img class="nclg-nav-icon nclg-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /></a>
+            <a class="nclg-nav-link" href="#" data-section-link="keyboard" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
+            <a class="nclg-nav-link" href="#" data-section-link="chord-builder" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
+            <a class="nclg-nav-link" href="#" data-section-link="tools" aria-label="Practice Tools" title="Practice Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
             <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn"><span class="nclg-nav-icon nclg-guide-icon" aria-hidden="true">📖</span><span class="nclg-guide-text">Guide</span></a>
         </div>
         <div class="nclg-nav-scrim"></div>
     </nav>
 
 
-    <main>
+    <!-- ── Shared secondary nav (one copy) — the "Guitar / Bass / Keyboard /
+         Chord Builder / Practice Tools" pill row that used to be duplicated
+         at the top of every instrument page's own <main>. Hidden on Home,
+         same as the original pages never showing it there. Links call
+         AppShowSection via js/section-nav.js instead of navigating. ────── -->
+    <nav class="section-nav-card" id="section-nav-card" aria-label="Tool navigation" hidden>
+        <a class="section-nav-btn" href="#" data-section-link="guitar"><span class="section-nav-icon" aria-hidden="true">🎸</span><span class="section-nav-label">Guitar</span></a>
+        <a class="section-nav-btn" href="#" data-section-link="bass"><img class="section-nav-icon section-nav-icon--img" src="assets/icons/bass_logo.png" alt="" aria-hidden="true" /><span class="section-nav-label">Bass</span></a>
+        <a class="section-nav-btn" href="#" data-section-link="keyboard"><span class="section-nav-icon" aria-hidden="true">🎹</span><span class="section-nav-label">Keyboard</span></a>
+        <a class="section-nav-btn" href="#" data-section-link="chord-builder"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
+        <a class="section-nav-btn" href="#" data-section-link="tools"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
+    </nav>
+
+    <!-- ── Section: Home (fully working, moved from index.html) ──────────── -->
+    <main data-app-section="home">
         <section class="hero">
             <h1>Every chord, scale, and <em>string</em> — one hub.</h1>
             <p>Interactive music theory tools for guitar, bass, and piano. Explore the Circle of Fifths, CAGED shapes, capo positions, and build progressions you'll actually use.</p>
@@ -103,31 +121,31 @@
         </section>
 
         <section class="hub" aria-label="Tools">
-            <a class="hub-card hub-card--guitar" href="guitar.html">
+            <a class="hub-card hub-card--guitar" href="#" data-section-link="guitar">
                 <div class="hub-card-icon">🎸</div>
                 <div class="hub-card-title">Guitar</div>
                 <div class="hub-card-desc">Fretboard scales, CAGED shapes, chord diagrams, and a capo explorer.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--bass" href="bass.html">
+            <a class="hub-card hub-card--bass" href="#" data-section-link="bass">
                 <div class="hub-card-icon"><img class="hub-card-icon-img" src="assets/icons/bass_logo.png" alt="" /></div>
                 <div class="hub-card-title">Bass</div>
                 <div class="hub-card-desc">Full fretboard scale positions and interval maps for bass guitar.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--keyboard" href="keyboard.html">
+            <a class="hub-card hub-card--keyboard" href="#" data-section-link="keyboard">
                 <div class="hub-card-icon">🎹</div>
                 <div class="hub-card-title">Keyboard</div>
                 <div class="hub-card-desc">Interactive piano keys with scale and chord highlighting.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--chords" href="chord-builder.html">
+            <a class="hub-card hub-card--chords" href="#" data-section-link="chord-builder">
                 <div class="hub-card-icon">🎵</div>
                 <div class="hub-card-title">Chord Builder</div>
                 <div class="hub-card-desc">Build and hear chord progressions in any key, major or minor.</div>
                 <div class="hub-card-string"></div>
             </a>
-            <a class="hub-card hub-card--tools" href="tools.html">
+            <a class="hub-card hub-card--tools" href="#" data-section-link="tools">
                 <div class="hub-card-icon">🧰</div>
                 <div class="hub-card-title">Practice Tools</div>
                 <div class="hub-card-desc">Circle of Fifths, chromatic tuner, metronome, and song key analyzer.</div>
@@ -142,12 +160,149 @@
         </section>
     </main>
 
+    <!-- ── Section stubs: Guitar / Bass / Keyboard / Chord Builder /
+         Practice Tools. TODO — filled in one at a time in follow-up passes.
+         Each will get: its real body markup (moved from the old page), its
+         stylesheet(s) added to <head> above, its script(s) added near
+         </body> below, and a pass to confirm nothing in that page's JS
+         assumes "I only ever run once, right after a full page load" in a
+         way that breaks on a second visit to this section. ─────────────── -->
+    <main data-app-section="guitar" hidden>
+        <div class="spa-todo-stub">
+            <h2>🎸 Guitar</h2>
+            <p>Not merged in yet — this section is a placeholder for Phase 2 of the SPA merge.</p>
+        </div>
+    </main>
+    <main data-app-section="bass" hidden>
+        <div class="spa-todo-stub">
+            <h2>Bass</h2>
+            <p>Not merged in yet — placeholder for a follow-up pass.</p>
+        </div>
+    </main>
+    <main data-app-section="keyboard" hidden>
+        <div class="spa-todo-stub">
+            <h2>🎹 Keyboard</h2>
+            <p>Not merged in yet — placeholder for a follow-up pass.</p>
+        </div>
+    </main>
+    <main data-app-section="chord-builder" hidden>
+        <div class="spa-todo-stub">
+            <h2>🎵 Chord Builder</h2>
+            <p>Not merged in yet — placeholder for a follow-up pass.</p>
+        </div>
+    </main>
+    <main data-app-section="tools" hidden>
+        <h1 class="sr-only">Practice Tools</h1>
+
+        <div class="tool-tabs" role="tablist">
+            <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-tuner">Tuner</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-metro">Metronome</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-analyzer">Song Analyzer</button>
+        </div>
+
+        <section id="panel-tuner" class="tool-panel" role="tabpanel">
+            <div class="tuner-panel">
+                <div id="tuner-note" class="tuner-note">—</div>
+                <div id="tuner-cents" class="tuner-cents">0 cents</div>
+                <div class="tuner-gauge"><div id="tuner-needle" class="tuner-needle"></div></div>
+                <div id="tuner-status" class="tuner-status">Microphone off</div>
+                <button id="tuner-start" type="button" class="tool-btn">Start Tuner</button>
+            </div>
+        </section>
+
+        <section id="panel-metro" class="tool-panel" role="tabpanel" hidden>
+            <div class="metro-panel">
+                <div id="metro-dot" class="metro-dot"></div>
+                <div class="metro-scale">
+                    <div class="metro-slider-wrap">
+                        <input id="metro-slider" class="metro-slider" type="range" min="30" max="300" step="1" value="100" aria-label="Tempo (BPM)" />
+                        <span class="metro-snap-mark" style="--snap-pos: calc(9px + (100% - 18px) * 0.2593);" title="100 BPM"></span>
+                    </div>
+                    <div class="metro-scale-ticks">
+                        <span>30</span>
+                        <span>100</span>
+                        <span>200</span>
+                        <span>300</span>
+                    </div>
+                </div>
+                <div class="metro-bpm-row">
+                    <button id="metro-minus" type="button" class="metro-bpm-btn">−</button>
+                    <div>
+                        <input id="metro-bpm" class="metro-bpm-value" type="text" inputmode="numeric" value="100" maxlength="3" aria-label="BPM (editable)" />
+                        <div class="metro-bpm-label">BPM</div>
+                    </div>
+                    <button id="metro-plus" type="button" class="metro-bpm-btn">+</button>
+                </div>
+                <button id="metro-toggle" type="button" class="tool-btn">Start</button>
+            </div>
+        </section>
+
+        <section id="panel-analyzer" class="tool-panel" role="tabpanel" hidden>
+            <div class="analyzer-panel">
+                <label for="analyzer-file" id="analyzer-dropzone" class="analyzer-dropzone">
+                    <input type="file" id="analyzer-file" accept="audio/*" hidden />
+                    <span class="analyzer-dropzone-icon" aria-hidden="true">🎵</span>
+                    <span class="analyzer-dropzone-text" id="analyzer-dropzone-text">Click or drop an audio file</span>
+                </label>
+                <button id="analyzer-start" type="button" class="tool-btn" disabled>Analyze Song</button>
+
+                <div id="analyzer-progress" class="analyzer-progress" hidden>
+                    <div class="analyzer-progress-track"><div id="analyzer-progress-fill" class="analyzer-progress-fill"></div></div>
+                    <div id="analyzer-status" class="analyzer-status">Analyzing…</div>
+                </div>
+
+                <div id="analyzer-results" class="analyzer-results" hidden>
+                    <div class="analyzer-result-row">
+                        <div class="analyzer-result">
+                            <div id="analyzer-bpm" class="analyzer-result-value">—</div>
+                            <div class="analyzer-result-label">BPM</div>
+                        </div>
+                        <div class="analyzer-result">
+                            <div id="analyzer-key" class="analyzer-result-value">—</div>
+                            <div class="analyzer-result-label">Key</div>
+                        </div>
+                    </div>
+                    <div class="analyzer-note">Estimates are approximate — works best on full songs with a clear, steady beat.</div>
+                </div>
+
+                <div id="analyzer-chords" class="analyzer-chords" hidden>
+                    <div class="analyzer-chords-title">Chord Progression</div>
+                    <div id="analyzer-chords-list" class="analyzer-chords-list"></div>
+                    <div class="analyzer-note">Chords are estimated from pitch content per second — treat as a helpful guide, not sheet music.</div>
+                </div>
+
+                <div class="analyzer-stems">
+                    <button id="analyzer-stems-btn" type="button" class="tool-btn" hidden>Generate Stems (Beta)</button>
+                    <div id="analyzer-stems-progress" class="analyzer-status" hidden>Splitting stems…</div>
+                    <div id="analyzer-stems-results" class="analyzer-stems-results" hidden>
+                        <div class="analyzer-stem">
+                            <div class="analyzer-stem-label">Instrumental (vocal-reduced)</div>
+                            <audio id="analyzer-stem-instrumental" class="analyzer-stem-audio" controls></audio>
+                            <a id="analyzer-stem-instrumental-dl" class="analyzer-stem-download" download="instrumental.wav">Download WAV</a>
+                        </div>
+                        <div class="analyzer-stem">
+                            <div class="analyzer-stem-label">Center Channel (vocals + centered instruments)</div>
+                            <audio id="analyzer-stem-center" class="analyzer-stem-audio" controls></audio>
+                            <a id="analyzer-stem-center-dl" class="analyzer-stem-download" download="center-channel.wav">Download WAV</a>
+                        </div>
+                        <div class="analyzer-note">Basic phase-cancellation split, not full AI stem separation — works best on stereo tracks with center-panned vocals, and won't isolate drums/bass individually.</div>
+                    </div>
+                    <div id="analyzer-stems-error" class="analyzer-error" hidden></div>
+                </div>
+
+                <div id="analyzer-error" class="analyzer-error" hidden></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ── Shared footer (one copy) ────────────────────────────────────── -->
     <footer class="site-footer">
         <img src="assets/img/logo.png" alt="Chord Nexus logo" class="site-footer-logo" />
         <span class="site-footer-text">© <span id="footer-year"></span> Chord Nexus by CORBENIX Studio</span>
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
+    <!-- ── Shared Guide modal (one copy) ───────────────────────────────── -->
     <div class="guide-modal" id="guide-modal">
         <div class="guide-modal-backdrop" id="guide-modal-backdrop"></div>
         <div class="guide-modal-panel" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
@@ -159,42 +314,42 @@
                     <div class="guide-modal-item-icon">🎸</div>
                     <div>
                         <div class="guide-modal-item-title">Guitar</div>
-                        <p>Chord Library, Capo Explorer, Scale Explorer, and the CAGED system, plus effects pedals for chord and capo tones.</p>
+                        <p>Fretboard scales, CAGED shapes, chord diagrams, and a capo explorer.</p>
                     </div>
                 </div>
                 <div class="guide-modal-item">
                     <div class="guide-modal-item-icon"><img src="assets/icons/bass_logo.png" alt="" /></div>
                     <div>
                         <div class="guide-modal-item-title">Bass</div>
-                        <p>Full fretboard scale positions and root-note maps for 4- and 5-string bass.</p>
+                        <p>Full fretboard scale positions and interval maps for bass guitar.</p>
                     </div>
                 </div>
                 <div class="guide-modal-item">
                     <div class="guide-modal-item-icon">🎹</div>
                     <div>
                         <div class="guide-modal-item-title">Keyboard</div>
-                        <p>An interactive piano with a Scale Explorer, Chord Finder, and chord inversions.</p>
+                        <p>Interactive piano keys with scale and chord highlighting.</p>
                     </div>
                 </div>
                 <div class="guide-modal-item">
                     <div class="guide-modal-item-icon">🎵</div>
                     <div>
                         <div class="guide-modal-item-title">Chord Builder</div>
-                        <p>Build and hear chord progressions in any key, or browse common progressions by key.</p>
+                        <p>Build and hear chord progressions in any key, major or minor.</p>
                     </div>
                 </div>
                 <div class="guide-modal-item">
                     <div class="guide-modal-item-icon">🧰</div>
                     <div>
                         <div class="guide-modal-item-title">Practice Tools</div>
-                        <p>A chromatic tuner, metronome, and a song key analyzer that detects key and chords from an audio file.</p>
+                        <p>Circle of Fifths, chromatic tuner, metronome, and song key analyzer.</p>
                     </div>
                 </div>
                 <div class="guide-modal-item">
                     <div class="guide-modal-item-icon">🙏</div>
                     <div>
                         <div class="guide-modal-item-title">Credits</div>
-                        <p>Real instrument samples power this app's sound — Piano: Salamander Grand Piano, recorded by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>). Guitar: University of Iowa Electronic Music Studios. Bass: Karoryfer Samples. Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>.</p>
+                        <p>Built by CORBENIX Studio. Thanks for practicing with Chord Nexus.</p>
                     </div>
                 </div>
             </div>
@@ -203,9 +358,48 @@
 
     <script src="js/metronome-core.js?v=1"></script>
     <script src="js/mobile-nav.js?v=1"></script>
+    <script src="js/section-nav.js?v=2"></script>
     <script src="js/background.js?v=1"></script>
     <script src="js/metronome-widget.js?v=1"></script>
     <script src="js/coffee-widget.js?v=1"></script>
+
+    <!-- ── Section switcher — replaces cross-document navigation. Shows one
+         data-app-section at a time; nav links / hub cards call this instead
+         of following a real href. ─────────────────────────────────────── -->
+    <script>
+        (function () {
+            const sections = document.querySelectorAll('[data-app-section]');
+            const navLinks = document.querySelectorAll('[data-section-link]');
+
+            function showSection(id) {
+                sections.forEach((s) => { s.hidden = s.dataset.appSection !== id; });
+                navLinks.forEach((a) => {
+                    if (a.dataset.sectionLink === id) {
+                        a.setAttribute('aria-current', 'page');
+                    } else {
+                        a.removeAttribute('aria-current');
+                    }
+                });
+                const secondaryNav = document.getElementById('section-nav-card');
+                if (secondaryNav) secondaryNav.hidden = id === 'home';
+                document.body.classList.toggle('page-home', id === 'home');
+                window.scrollTo(0, 0);
+                window.dispatchEvent(new CustomEvent('app:sectionchange', { detail: id }));
+            }
+
+            navLinks.forEach((a) => {
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection(a.dataset.sectionLink);
+                });
+            });
+
+            // Expose for other scripts (e.g. the Quick Tips card, or a
+            // future section's own "back to home" link) to call directly.
+            window.AppShowSection = showSection;
+        })();
+    </script>
+
     <script>
         (function () {
             const openBtn = document.getElementById('guide-nav-btn');
@@ -230,5 +424,15 @@
     <script src="js/bg-fx.js?v=1"></script>
     <script src="js/mini-player.js?v=1"></script>
     <script src="js/back-to-top.js?v=1"></script>
+
+    <!-- Practice Tools (Phase 2, merged) -->
+    <script src="js/music-theory.js?v=2"></script>
+    <script src="js/tools.js?v=3"></script>
+    <script src="js/song-analyzer.js?v=1"></script>
+
+    <!-- TODO (next passes): each remaining instrument's own <script> tags
+         get added here, in the same order they currently load in that
+         instrument's standalone page, right after that section's real
+         markup replaces its placeholder above. -->
 </body>
 </html>

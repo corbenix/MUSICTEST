@@ -54,10 +54,15 @@
     <link rel="stylesheet" href="css/tool.css?v=4" />
     <link rel="stylesheet" href="css/tools.css?v=4" />
 
+    <!-- Chord Builder (Phase 2, merged) -->
+    <link rel="stylesheet" href="css/circle-of-fifths.css?v=2" />
+    <link rel="stylesheet" href="css/chord-builder.css?v=4" />
+    <link rel="stylesheet" href="css/mobile-play-buttons.css?v=4" media="(max-width: 768px)" />
+
     <!-- TODO (next passes): css/guitar.css, css/fretboard.css, css/bass.css,
-         css/keyboard.css, css/chord-builder.css get added here — one
-         instrument's stylesheet per pass, right before that instrument's
-         placeholder section below gets its real content. -->
+         css/keyboard.css get added here — one instrument's stylesheet per
+         pass, right before that instrument's placeholder section below
+         gets its real content. -->
 </head>
 <body class="page-home">
 
@@ -109,6 +114,13 @@
         <a class="section-nav-btn" href="#" data-section-link="chord-builder"><span class="section-nav-icon" aria-hidden="true">🎵</span><span class="section-nav-label">Chord Builder</span></a>
         <a class="section-nav-btn" href="#" data-section-link="tools"><span class="section-nav-icon" aria-hidden="true">🧰</span><span class="section-nav-label">Practice Tools</span></a>
     </nav>
+
+    <!-- ── Shared Circle of Fifths widget mount (one copy) — injected by
+         js/circle-of-fifths.js. Originally duplicated identically on
+         guitar/bass/keyboard/chord-builder's own pages; shown/hidden per
+         section here instead of being four separate copies. Not shown on
+         Home or Practice Tools, matching the original pages' behavior. -->
+    <div id="circle-of-fifths-mount" hidden></div>
 
     <!-- ── Section: Home (fully working, moved from index.html) ──────────── -->
     <main data-app-section="home">
@@ -186,10 +198,101 @@
         </div>
     </main>
     <main data-app-section="chord-builder" hidden>
-        <div class="spa-todo-stub">
-            <h2>🎵 Chord Builder</h2>
-            <p>Not merged in yet — placeholder for a follow-up pass.</p>
-        </div>
+        <h1 class="sr-only">Chord Builder</h1>
+
+        <section class="tool-panel">
+            <div class="tool-controls-card global-sound-card">
+                <div class="ps-row">
+                    <span class="ps-micro-label">Sound (applies to both sections below)</span>
+                    <div id="global-sound-pills" class="ps-pills"></div>
+                </div>
+            </div>
+
+            <div class="tool-controls-card cpb-card" id="cpb-card">
+                <div class="tool-controls-header" id="cpb-header-toggle">
+                    <div class="tool-controls-title">🎹 Chord Progression Builder</div>
+                    <div class="tool-controls-header-actions">
+                        <button type="button" id="cpb-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                        <button type="button" id="cpb-collapse-btn" class="card-toggle-btn" aria-label="Collapse Chord Progression Builder">▾</button>
+                    </div>
+                </div>
+                <p class="tool-controls-desc">Pick a root · pick a quality · add to your sequence · play it back</p>
+
+                <div class="card-body-outer" id="cpb-body-outer">
+                <div class="card-body">
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Root Note</span>
+                        <div id="cpb-root-pills" class="root-pill-row"></div>
+                    </div>
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Quality</span>
+                        <div id="cpb-quality-pills" class="ps-pills"></div>
+                    </div>
+                </div>
+
+                <button type="button" id="cpb-add-btn" class="cpb-add-btn">+ Add to Sequence</button>
+
+                <div class="cpb-seq-header">
+                    <span class="ps-micro-label">Sequence</span>
+                    <span id="cpb-seq-count" class="cpb-seq-count">0 / 8 chords</span>
+                </div>
+                <div id="cpb-sequence" class="cpb-sequence">
+                    <div class="cpb-seq-empty">↑ Pick a root and quality above, then hit Add</div>
+                </div>
+
+                <div class="cpb-transport">
+                    <div class="cpb-transport-buttons">
+                        <button type="button" id="cpb-play-btn" class="cpb-tbtn cpb-tbtn--play" aria-label="Play">▶<span class="btn-label-text"> Play</span></button>
+                        <button type="button" id="cpb-stop-btn" class="cpb-tbtn">■ Stop</button>
+                        <button type="button" id="cpb-clear-btn" class="cpb-tbtn">🗑 Clear</button>
+                        <button type="button" id="cpb-copy-btn" class="cpb-tbtn">📋 Copy</button>
+                    </div>
+                    <div class="cpb-transport-settings">
+                        <span class="ps-micro-label">BPM</span>
+                        <input type="number" id="cpb-bpm" class="cpb-bpm-input" min="40" max="240" value="80" />
+                        <span class="ps-micro-label">Beats</span>
+                        <div id="cpb-beats-pills" class="pill-group"></div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="tool-controls-card cbk-card" id="cbk-card">
+                <div class="tool-controls-header" id="cbk-header-toggle">
+                    <div class="tool-controls-title">🎼 Chords by Key</div>
+                    <div class="tool-controls-header-actions">
+                        <button type="button" id="key-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                        <button type="button" id="cbk-collapse-btn" class="card-toggle-btn" aria-label="Collapse Chords by Key">▾</button>
+                    </div>
+                </div>
+                <p class="tool-controls-desc">Pick a key and mode to see its diatonic chords and common progressions.</p>
+                <div class="card-body-outer" id="cbk-body-outer">
+                <div class="card-body">
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Key</span>
+                        <div id="key-root-pills" class="root-pill-row"></div>
+                    </div>
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Mode</span>
+                        <div id="key-mode-pills" class="ps-pills"></div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+
+            <h2 class="section-heading">Common progressions</h2>
+            <div class="progression-select-row">
+                <span class="ps-micro-label">Progression:</span>
+                <select id="progression-select" class="progression-select"></select>
+                <button type="button" id="progression-play-btn" class="progression-play-btn" aria-label="Play progression">▶<span class="btn-label-text"> Play</span></button>
+            </div>
+            <p id="progression-desc" class="progression-desc"></p>
+            <div id="progression-cards" class="diatonic-grid progression-cards"></div>
+        </section>
     </main>
     <main data-app-section="tools" hidden>
         <h1 class="sr-only">Practice Tools</h1>
@@ -382,6 +485,8 @@
                 });
                 const secondaryNav = document.getElementById('section-nav-card');
                 if (secondaryNav) secondaryNav.hidden = id === 'home';
+                const cofMount = document.getElementById('circle-of-fifths-mount');
+                if (cofMount) cofMount.hidden = (id === 'home' || id === 'tools');
                 document.body.classList.toggle('page-home', id === 'home');
                 window.scrollTo(0, 0);
                 window.dispatchEvent(new CustomEvent('app:sectionchange', { detail: id }));
@@ -429,6 +534,14 @@
     <script src="js/music-theory.js?v=2"></script>
     <script src="js/tools.js?v=3"></script>
     <script src="js/song-analyzer.js?v=1"></script>
+
+    <!-- Chord Builder (Phase 2, merged) -->
+    <script src="js/note-display.js?v=1"></script>
+    <script src="js/chord-builder-data.js?v=2"></script>
+    <script src="js/instrument-sound.js?v=2"></script>
+    <script src="js/chord-builder.js?v=2"></script>
+    <script src="js/chord-progression-builder.js?v=4"></script>
+    <script src="js/circle-of-fifths.js?v=1"></script>
 
     <!-- TODO (next passes): each remaining instrument's own <script> tags
          get added here, in the same order they currently load in that

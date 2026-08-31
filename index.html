@@ -59,7 +59,10 @@
     <link rel="stylesheet" href="css/chord-builder.css?v=4" />
     <link rel="stylesheet" href="css/mobile-play-buttons.css?v=4" media="(max-width: 768px)" />
 
-    <!-- TODO (next passes): css/guitar.css, css/fretboard.css, css/bass.css,
+    <!-- Bass (Phase 2, merged) -->
+    <link rel="stylesheet" href="css/bass.css?v=3" />
+
+    <!-- TODO (next passes): css/guitar.css, css/fretboard.css,
          css/keyboard.css get added here — one instrument's stylesheet per
          pass, right before that instrument's placeholder section below
          gets its real content. -->
@@ -186,10 +189,67 @@
         </div>
     </main>
     <main data-app-section="bass" hidden>
-        <div class="spa-todo-stub">
-            <h2>Bass</h2>
-            <p>Not merged in yet — placeholder for a follow-up pass.</p>
-        </div>
+        <h1 class="sr-only">Bass</h1>
+
+        <section class="tool-panel">
+            <div class="bass-controls-panel scale-visualizer-card">
+                <div class="bass-panel-title"><img class="bass-panel-title-icon" src="assets/icons/gscale_exp.png" alt="" />Scale Explorer</div>
+                <p class="bass-panel-desc">Overlay any scale across the bass fretboard. Pick a root and mode to apply instantly.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="bass-scalevis-root-pills" class="root-pill-row"></div>
+                </div>
+                <select id="bass-scale-select" class="scale-select"></select>
+            </div>
+
+            <div class="bass-controls-panel">
+                <div class="bass-panel-title">🎯 Bass Root Note</div>
+                <p class="bass-panel-desc">Pick a root to mark it across the bass fretboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="bass-root-pills" class="root-pill-row"></div>
+                </div>
+            </div>
+
+            <div class="bass-toolbar">
+                <div class="bass-toolbar-group">
+                    <button type="button" id="bass-play-btn" class="reset-btn bass-play-btn" disabled title="Play the selected scale or root note">▶<span class="btn-label-text"> Play</span></button>
+                    <div class="pill-group">
+                        <button type="button" id="bass-speed-toggle" class="pill-btn" title="Playback speed">1x</button>
+                    </div>
+                    <div class="pill-group">
+                        <button type="button" id="fret-toggle-b-12" class="pill-btn">12</button>
+                        <button type="button" id="fret-toggle-b-15" class="pill-btn">15</button>
+                        <button type="button" id="fret-toggle-b-24" class="pill-btn">24</button>
+                    </div>
+                    <div class="pill-group">
+                        <button type="button" id="bass-4-btn" class="pill-btn">4-String</button>
+                        <button type="button" id="bass-5-btn" class="pill-btn">5-String</button>
+                    </div>
+                </div>
+                <div class="bass-toolbar-group">
+                    <div class="pill-group">
+                        <button type="button" id="bass-note-display-toggle" class="pill-btn" title="Switch note names between sharps and flats">♯</button>
+                    </div>
+                    <button type="button" id="bass-clear-btn" class="reset-btn">Clear Fretboard</button>
+                </div>
+            </div>
+
+            <div class="fretboard-scroll-container">
+                <div class="fretboard-wrap" id="b-fretboard-wrap">
+                    <div class="fret-header-spacer"></div>
+                    <div class="fret-header-cells" id="b-fret-header"></div>
+                    <div class="marker-spacer"></div>
+                    <div id="b-marker-cells" style="display:flex;"></div>
+                </div>
+            </div>
+            <span class="scroll-hint">Swipe horizontally to navigate frets →</span>
+
+            <div class="scale-card">
+                <div class="scale-card-label">Scale Notes</div>
+                <div id="bass-scale-chips" class="scale-pill-row"></div>
+            </div>
+        </section>
     </main>
     <main data-app-section="keyboard" hidden>
         <div class="spa-todo-stub">
@@ -542,6 +602,9 @@
     <script src="js/chord-builder.js?v=2"></script>
     <script src="js/chord-progression-builder.js?v=4"></script>
     <script src="js/circle-of-fifths.js?v=1"></script>
+
+    <!-- Bass (Phase 2, merged) -->
+    <script src="js/bass.js?v=3"></script>
 
     <!-- TODO (next passes): each remaining instrument's own <script> tags
          get added here, in the same order they currently load in that

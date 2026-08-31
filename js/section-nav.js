@@ -3,6 +3,16 @@
 // position and color (--c-rgb, set per-link in shared.css) are computed
 // here rather than in CSS alone, since CSS can't measure a sibling's
 // rendered width/offset to slide a separate element to it.
+//
+// SPA MERGE UPDATE: this component is now shared chrome (one copy) in
+// app.html instead of being duplicated per page, and its links call
+// window.AppShowSection(id) instead of doing a real navigation — which
+// means the pill now genuinely slides via live DOM animation on every
+// click, the way it was always meant to. The old View Transitions CSS
+// workaround (see css/shared.css's @view-transition block) is no longer
+// needed for this component now that there's no cross-document
+// navigation to smooth over, though it's left in place harmlessly for
+// any other browser-level page transitions.
 (function () {
     'use strict';
 
@@ -29,12 +39,14 @@
             return nav.querySelector('.section-nav-btn[aria-current="page"]') || btns[0];
         }
 
-        // Set the color immediately (no layout measurement needed for this
-        // part) so it's correct from the very first paint — including the
-        // instant the browser's cross-document View Transition captures
-        // this page's "new" pill state. Only the position needs to wait
-        // for requestAnimationFrame, since it depends on measuring a
-        // sibling's rendered layout.
+        function setActive(btn) {
+            btns.forEach((b) => {
+                if (b === btn) b.setAttribute('aria-current', 'page');
+                else b.removeAttribute('aria-current');
+            });
+            movePill(btn);
+        }
+
         (function setInitialColor() {
             const btn = currentBtn();
             if (!btn) return;
@@ -53,10 +65,25 @@
             movePill(currentBtn());
         });
 
-        // Reference app has each tool as a full page navigation rather
-        // than an in-page tab switch, so there's no click-to-switch state
-        // here — the pill simply reflects whichever link the server/HTML
-        // has marked aria-current="page" on load.
+        // Clicking a link now switches sections in place (see app.html's
+        // showSection) instead of triggering a real page navigation, and
+        // the pill slides to match immediately.
+        btns.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.dataset.sectionLink;
+                if (!id) return; // no SPA target wired up — let it navigate normally
+                e.preventDefault();
+                setActive(btn);
+                if (window.AppShowSection) window.AppShowSection(id);
+            });
+        });
+
+        // If some other control also changes the active section (e.g. a
+        // hub card on Home, or the top nclg-nav), keep this pill in sync.
+        window.addEventListener('app:sectionchange', (e) => {
+            const btn = nav.querySelector('.section-nav-btn[data-section-link="' + e.detail + '"]');
+            if (btn) setActive(btn);
+        });
     }
 
     function init() {

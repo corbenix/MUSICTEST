@@ -62,10 +62,13 @@
     <!-- Bass (Phase 2, merged) -->
     <link rel="stylesheet" href="css/bass.css?v=3" />
 
-    <!-- TODO (next passes): css/guitar.css, css/fretboard.css,
-         css/keyboard.css get added here — one instrument's stylesheet per
-         pass, right before that instrument's placeholder section below
-         gets its real content. -->
+    <!-- Keyboard (Phase 2, merged) -->
+    <link rel="stylesheet" href="css/keyboard.css?v=3" />
+
+    <!-- Guitar (Phase 2, merged — final page) -->
+    <link rel="stylesheet" href="css/fretboard.css?v=7" />
+    <link rel="stylesheet" href="css/guitar.css?v=8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 </head>
 <body class="page-home">
 
@@ -183,10 +186,212 @@
          assumes "I only ever run once, right after a full page load" in a
          way that breaks on a second visit to this section. ─────────────── -->
     <main data-app-section="guitar" hidden>
-        <div class="spa-todo-stub">
-            <h2>🎸 Guitar</h2>
-            <p>Not merged in yet — this section is a placeholder for Phase 2 of the SPA merge.</p>
+        <h1 class="sr-only">Guitar</h1>
+
+        <div class="tool-tabs guitar_selection_nav" role="tablist">
+            <button class="tool-tab guitar-tab" role="tab" aria-selected="true" data-panel="panel-chords">
+                <img class="guitar-tab-icon guitar-tab-icon--img" src="assets/icons/gchord_lib.png" alt="" />
+                <span class="guitar-tab-text">
+                    <span class="guitar-tab-label">Chord Library</span>
+                    <span class="guitar-tab-desc">Open chord shapes</span>
+                </span>
+            </button>
+            <button class="tool-tab guitar-tab" role="tab" aria-selected="false" data-panel="panel-capo">
+                <img class="guitar-tab-icon guitar-tab-icon--img" src="assets/icons/capo_logo.png" alt="" />
+                <span class="guitar-tab-text">
+                    <span class="guitar-tab-label">Capo Explorer</span>
+                    <span class="guitar-tab-desc">Find capo positions</span>
+                </span>
+            </button>
+            <button class="tool-tab guitar-tab" role="tab" aria-selected="false" data-panel="panel-scale">
+                <img class="guitar-tab-icon guitar-tab-icon--img" src="assets/icons/gscale_exp.png" alt="" />
+                <span class="guitar-tab-text">
+                    <span class="guitar-tab-label">Scale Explorer</span>
+                    <span class="guitar-tab-desc">Scales across the neck</span>
+                </span>
+            </button>
+            <button class="tool-tab guitar-tab" role="tab" aria-selected="false" data-panel="panel-caged">
+                <i class="ti ti-layout-grid guitar-tab-icon" aria-hidden="true"></i>
+                <span class="guitar-tab-text">
+                    <span class="guitar-tab-label">CAGED System</span>
+                    <span class="guitar-tab-desc">Learn the 5 shapes</span>
+                </span>
+            </button>
         </div>
+
+        <section id="panel-scale" class="tool-panel" role="tabpanel" hidden>
+            <div class="tool-controls-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/gscale_exp.png" alt="" /> Scale Explorer</div>
+                    <button type="button" id="scale-note-toggle" class="reset-btn scale-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                </div>
+                <p class="tool-controls-desc">Pick a root and scale to see it mapped across the fretboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="guitar-scale-root-pills" class="root-pill-row scale-root-pills"></div>
+                </div>
+                <select id="guitar-scale-type" class="scale-select"></select>
+            </div>
+            <div class="scale-fretboard-controls-row">
+                <button type="button" id="scale-play-btn" class="reset-btn scale-play-btn" title="Play this scale">
+                    ▶<span class="btn-label-text"> Play</span>
+                </button>
+                <div class="pill-group">
+                    <button type="button" id="scale-speed-toggle" class="reset-btn scale-speed-toggle" title="Playback speed">1x</button>
+                </div>
+                <div class="scale-fret-toggle-group" role="group" aria-label="Number of frets">
+                    <button type="button" id="scale-fret-toggle-12" class="scale-fret-toggle active">12</button>
+                    <button type="button" id="scale-fret-toggle-15" class="scale-fret-toggle">15</button>
+                    <button type="button" id="scale-fret-toggle-24" class="scale-fret-toggle">24</button>
+                </div>
+                <button type="button" id="scale-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
+            </div>
+            <div class="gtr-fretboard-panel">
+                <div id="scale-fretboard"></div>
+            </div>
+            <div class="scale-card">
+                <div class="scale-card-label">Scale Notes</div>
+                <div id="scale-chips" class="scale-pill-row"></div>
+            </div>
+        </section>
+
+        <section id="panel-caged" class="tool-panel" role="tabpanel" hidden>
+            <div class="tool-controls-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title">🎯 CAGED System</div>
+                    <button type="button" id="caged-note-toggle" class="reset-btn caged-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                </div>
+                <p class="tool-controls-desc">Select a root to highlight all CAGED shape positions across the fretboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="caged-root-pills" class="root-pill-row caged-root-pills"></div>
+                </div>
+                <p id="caged-auto-label" class="tool-note"></p>
+                <div id="caged-legend" class="caged-legend"></div>
+            </div>
+            <div class="gtr-fretboard-panel">
+                <div id="caged-fretboard"></div>
+            </div>
+        </section>
+
+        <section id="panel-chords" class="tool-panel" role="tabpanel">
+            <div class="pedalboard-panel">
+                <div class="pedalboard-panel-label"><i class="ti ti-grid-dots" aria-hidden="true"></i> Effects Pedals</div>
+                <div class="pedalboard" id="chordlib-pedalboard"></div>
+            </div>
+            <div class="tool-controls-card gcv-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title">🎵 Chord Finder</div>
+                    <button type="button" id="chordlib-note-toggle" class="reset-btn chordlib-note-toggle" title="Switch note names between sharps and flats">♯</button>
+                </div>
+                <p class="tool-controls-desc">Pick a root and chord type to see its notes highlighted across the fretboard.</p>
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Root</span>
+                        <div id="chordlib-root-pills" class="root-pill-row gcv-root-pills"></div>
+                    </div>
+                    <div id="chordlib-type-row" class="ps-row ps-type-row">
+                        <span class="ps-micro-label">Type</span>
+                        <div id="chordlib-type-pills" class="ps-pills gcv-type-pills"></div>
+                    </div>
+                </div>
+                <div id="chordlib-display" class="chord-display gcv-display">
+                    <div class="chord-display-name gcv-display-name">Select a chord</div>
+                    <div class="chord-display-notes"></div>
+                </div>
+                <div id="chordlib-voicings-section" class="gcv-voicings-section" hidden>
+                    <div class="gcv-voicings-label">Voicings — tap to view on fretboard</div>
+                    <div id="chordlib-voicings-row" class="gcv-voicings-row"></div>
+                </div>
+            </div>
+            <div class="scale-fretboard-controls-row">
+                <button type="button" id="chordlib-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶<span class="btn-label-text"> Play</span></button>
+                <button type="button" id="chordlib-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
+                    <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
+                    <span class="chordlib-single-note-pill-label">Arpeggio</span>
+                </button>
+                <button type="button" id="chordlib-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
+            </div>
+            <div class="gtr-fretboard-panel" style="margin-top:18px;">
+                <div id="chord-lib-fretboard"></div>
+            </div>
+        </section>
+
+        <section id="panel-capo" class="tool-panel" role="tabpanel" hidden>
+            <div class="pedalboard-panel">
+                <div class="pedalboard-panel-label"><i class="ti ti-grid-dots" aria-hidden="true"></i> Effects Pedals</div>
+                <div class="pedalboard" id="capo-pedalboard"></div>
+            </div>
+            <div class="tool-controls-card" id="capo-controls-card">
+                <div class="tool-controls-header">
+                    <div class="tool-controls-title"><img class="tool-controls-title-icon" src="assets/icons/capo_logo.png" alt="" /> Capo Explorer</div>
+                    <button type="button" id="capo-note-toggle" class="reset-btn capo-note-toggle" title="Switch note names between sharps and flats" data-mode="sharp">♯</button>
+                </div>
+                <p class="tool-controls-desc">Select a capo position, then choose a chord shape to see the sounding chord.</p>
+
+                <div class="capo-slider" id="capo-slider">
+                    <div class="capo-slider-controls">
+                        <button type="button" class="capo-slider-btn capo-slider-btn-minus" data-step="-1" aria-label="Move capo down one fret">–</button>
+                        <div class="capo-slider-fret">
+                            <span class="capo-slider-fret-word" id="capo-slider-word"></span>
+                            <span class="capo-slider-fret-num" id="capo-slider-num"></span>
+                        </div>
+                        <button type="button" class="capo-slider-btn capo-slider-btn-plus" data-step="1" aria-label="Move capo up one fret">+</button>
+                    </div>
+                    <div class="capo-slider-track" id="capo-slider-track" role="slider" tabindex="0"
+                         aria-label="Capo fret" aria-valuemin="0" aria-valuemax="9">
+                        <div class="capo-slider-track-fill" id="capo-slider-fill"></div>
+                        <div class="capo-slider-track-dot" id="capo-slider-dot"></div>
+                    </div>
+                    <div class="capo-slider-divider"></div>
+                    <div class="capo-shape-row" id="capo-shape-row">
+                        <span class="capo-shape-row-label">Shape:</span>
+                        <div class="root-pill-row" id="capo-shape-chips"></div>
+                        <button type="button" id="capo-all-shapes-btn" class="capo-all-shapes-btn">All Shapes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="capo-card-grid" id="capo-card-grid"></div>
+
+            <div class="scale-fretboard-controls-row">
+                <button type="button" id="capo-play-btn" class="reset-btn scale-play-btn" title="Play this chord" disabled>▶<span class="btn-label-text"> Play</span></button>
+                <button type="button" id="capo-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play notes one at a time instead of strumming">
+                    <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
+                    <span class="chordlib-single-note-pill-label">Arpeggio</span>
+                </button>
+                <button type="button" id="capo-clear-btn" class="reset-btn scale-clear-btn fretboard-clear-btn">Clear Fretboard</button>
+            </div>
+            <div class="gtr-fretboard-panel" style="margin-top:18px;">
+                <div id="capo-fretboard"></div>
+            </div>
+
+            <div id="capo-sounding-card" class="capo-sounding-card" hidden>
+                <div class="capo-sounding-row">
+                    <div class="capo-sounding-col capo-sounding-col-left">
+                        <span class="capo-sounding-eyebrow">Finger Shape</span>
+                        <span id="capo-shape-badge" class="capo-shape-big"></span>
+                        <span id="capo-shape-name" class="capo-shape-sub"></span>
+                    </div>
+                    <div class="capo-sounding-col capo-sounding-col-mid">
+                        <div class="capo-sounding-link">
+                            <span class="capo-sounding-link-line"></span>
+                            <span id="capo-fret-pill" class="capo-fret-pill"></span>
+                            <span class="capo-sounding-link-line"></span>
+                        </div>
+                        <span class="capo-sounding-sounds-like">sounds like</span>
+                        <span class="capo-sounding-link-arrow">→</span>
+                    </div>
+                    <div class="capo-sounding-col capo-sounding-col-right">
+                        <span class="capo-sounding-eyebrow">Real Sounding Chord</span>
+                        <span id="capo-sounding-chord" class="capo-sounding-chord-big"></span>
+                        <span id="capo-sounding-quality" class="capo-sounding-quality"></span>
+                    </div>
+                </div>
+                <div class="capo-sounding-divider"></div>
+                <div id="capo-sounding-notes" class="capo-sounding-notes"></div>
+            </div>
+        </section>
     </main>
     <main data-app-section="bass" hidden>
         <h1 class="sr-only">Bass</h1>
@@ -252,10 +457,135 @@
         </section>
     </main>
     <main data-app-section="keyboard" hidden>
-        <div class="spa-todo-stub">
-            <h2>🎹 Keyboard</h2>
-            <p>Not merged in yet — placeholder for a follow-up pass.</p>
-        </div>
+        <h1 class="sr-only">Keyboard</h1>
+
+        <section class="tool-panel">
+            <div class="tool-controls-card">
+                <div class="tool-controls-title">🎶 Scale Explorer</div>
+                <p class="tool-controls-desc">Pick a root and mode to see its notes highlighted across the keyboard.</p>
+                <div class="ps-row">
+                    <span class="ps-micro-label">Root</span>
+                    <div id="keyboard-scale-root-pills" class="root-pill-row"></div>
+                </div>
+                <select id="keyboard-scale-type" class="scale-select"></select>
+            </div>
+
+            <div class="tool-controls-card">
+                <div class="tool-controls-title">🎹 Chord Finder</div>
+                <p class="tool-controls-desc">Pick a root and chord type to see its notes highlighted across the keyboard.</p>
+                <div class="ps-block">
+                    <div class="ps-row">
+                        <span class="ps-micro-label">Root</span>
+                        <div id="chord-root-pills" class="ps-pills ps-root-pills root-pill-row"></div>
+                    </div>
+                    <div id="chord-type-row" class="ps-row ps-type-row">
+                        <span class="ps-micro-label">Type</span>
+                        <div id="chord-type-pills" class="ps-pills ps-type-pills"></div>
+                    </div>
+                </div>
+                <div id="chord-display" class="chord-display">
+                    <div class="chord-display-name">Select a chord</div>
+                    <div class="chord-display-notes"></div>
+                </div>
+            </div>
+
+            <div class="piano-panel">
+                <div class="piano-toolbar">
+                    <div class="toolbar-left">
+                        <div class="toolbar-row-1">
+                            <button type="button" id="keyboard-play-btn" class="reset-btn keyboard-play-btn" disabled title="Play the selected scale or chord">▶<span class="btn-label-text"> Play</span></button>
+                            <div class="pill-group">
+                                <button type="button" id="keyboard-speed-toggle" class="pill-btn" title="Playback speed">1x</button>
+                            </div>
+                            <div class="pill-group" id="toolbar-octave-group">
+                                <button type="button" id="octave-toggle-2" class="pill-btn">2 oct</button>
+                                <button type="button" id="octave-toggle-3" class="pill-btn">3 oct</button>
+                                <button type="button" id="octave-toggle-5" class="pill-btn">5 oct</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="toolbar-break" aria-hidden="true"></div>
+                    <div class="toolbar-center" id="toolbar-center">
+                        <button type="button" id="keyboard-single-note-toggle" class="chordlib-single-note-pill" aria-pressed="false" title="Play chord notes one at a time instead of strumming">
+                            <span class="chordlib-single-note-pill-icon" aria-hidden="true">♪</span>
+                            <span class="chordlib-single-note-pill-label">Arpeggio</span>
+                        </button>
+                        <div class="pill-group">
+                            <button type="button" id="sustain-toggle" class="pill-btn">Sustain</button>
+                        </div>
+                        <div class="pill-group">
+                            <button type="button" id="keyboard-note-display-toggle" class="pill-btn" title="Switch note names between sharps and flats">♯</button>
+                        </div>
+                    </div>
+                    <div class="piano-toolbar-right">
+                        <div class="toolbar-right-top">
+                            <div class="pill-group" id="kb-midi-toggle-group">
+                                <button type="button" id="kb-midi-toggle" class="pill-btn active" title="Toggle computer-keyboard piano input" aria-pressed="true">⌨ Keyboard: On</button>
+                            </div>
+                            <div class="pill-group">
+                                <button type="button" id="label-mode-toggle" class="pill-btn">Notes</button>
+                            </div>
+                        </div>
+                        <button type="button" id="chord-clear-btn" class="reset-btn">Clear Keys</button>
+                    </div>
+                </div>
+                <script>
+                    /* Mobile-only toolbar reorder: row 1 = Play, speed,
+                       Sustain, sharp-flat (left) / Keyboard, Notes
+                       (right). Row 2 = Arpeggio, octave range (left) /
+                       Clear Keys (right). Runs inline (not in
+                       keyboard.js) so it happens before first paint — no
+                       flash of the desktop order. Desktop (pointer:
+                       fine) is untouched, keeping its existing
+                       three-zone centered layout. */
+                    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+                        var row1 = document.querySelector('.toolbar-row-1');
+                        var octaveGroup = document.getElementById('toolbar-octave-group');
+                        var center = document.getElementById('toolbar-center');
+                        var arpeggio = document.getElementById('keyboard-single-note-toggle');
+                        var toolbar = document.querySelector('.piano-toolbar');
+                        var toolbarRight = document.querySelector('.piano-toolbar-right');
+                        var kbGroup = document.getElementById('kb-midi-toggle-group');
+                        var clearBtn = document.getElementById('chord-clear-btn');
+                        if (row1 && octaveGroup && center && arpeggio && toolbar && toolbarRight && clearBtn) {
+                            center.querySelectorAll('.pill-group').forEach(function (el) {
+                                row1.appendChild(el);
+                            });
+                            center.remove();
+                            toolbar.insertBefore(octaveGroup, toolbarRight);
+                            toolbar.insertBefore(arpeggio, octaveGroup);
+                            toolbar.insertBefore(clearBtn, toolbarRight);
+                            clearBtn.classList.add('toolbar-row-1-end');
+                            var rightTop = document.querySelector('.toolbar-right-top');
+                            if (rightTop) {
+                                rightTop.classList.add('toolbar-row-1-end');
+                                row1.appendChild(rightTop);
+                            }
+                            toolbarRight.remove();
+                        }
+                    }
+                </script>
+                <div class="piano-scroll">
+                    <div class="piano-felt"></div>
+                    <div id="piano" class="piano"></div>
+                </div>
+            </div>
+
+            <p class="kb-computer-hint">⌨ The badges above each key's note show your computer-keyboard mapping. <b>Z / X</b> shifts it down/up an octave.</p>
+
+            <div class="scale-card">
+                <div class="scale-card-label">Scale Notes</div>
+                <div id="kb-scale-chips" class="scale-pill-row"></div>
+            </div>
+
+            <div id="inversions-panel" class="inversions-panel">
+                <div class="inversions-panel-header">
+                    <span class="inversions-panel-title">🎹 Chord Inversions</span>
+                    <span class="inversions-panel-hint">Click to highlight on keyboard</span>
+                </div>
+                <div id="inversion-cards" class="inversion-cards"></div>
+            </div>
+        </section>
     </main>
     <main data-app-section="chord-builder" hidden>
         <h1 class="sr-only">Chord Builder</h1>
@@ -606,9 +936,14 @@
     <!-- Bass (Phase 2, merged) -->
     <script src="js/bass.js?v=3"></script>
 
-    <!-- TODO (next passes): each remaining instrument's own <script> tags
-         get added here, in the same order they currently load in that
-         instrument's standalone page, right after that section's real
-         markup replaces its placeholder above. -->
+    <!-- Keyboard (Phase 2, merged) -->
+    <script src="js/keyboard-data.js?v=1"></script>
+    <script src="js/keyboard.js?v=5"></script>
+
+    <!-- Guitar (Phase 2, merged — final page) -->
+    <script src="js/fretboard.js?v=1"></script>
+    <script src="js/guitar-data.js?v=3"></script>
+    <script src="js/guitar-effects.js?v=2"></script>
+    <script src="js/guitar.js?v=4"></script>
 </body>
 </html>

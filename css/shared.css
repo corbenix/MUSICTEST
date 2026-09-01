@@ -60,6 +60,39 @@
    whether removing something from tool.css is safe.
    ========================================================================== */
 
+/* ==========================================================================
+   SPA MERGE FIX — per-section --tool-rgb scoping.
+   Every page's own CSS file sets --tool-rgb at :root (see guitar.css,
+   bass.css, keyboard.css, chord-builder.css, tools.css, landing.css) —
+   correct and harmless when each page was its own separate document, but
+   now that app.html loads all of them into ONE document, :root is global,
+   so only the last one loaded was winning for the entire page regardless
+   of which section was showing (e.g. Chord Builder's panels rendering in
+   whatever color happened to load last, not its own indigo).
+
+   Fix: re-scope each section's accent to its own <main data-app-section>
+   container instead of :root. A selector like `main[data-app-section=...]`
+   has higher specificity than the plain `:root` pseudo-class the page
+   files use, so these win regardless of load order, and since CSS custom
+   properties inherit down the DOM tree, only elements actually inside
+   that section see this value — no more cross-section bleeding. The
+   original :root rules in each page's own CSS are left as-is (still
+   correct and needed for that page's standalone .html file); this block
+   simply overrides them within the merged app.html context only, since
+   these selectors don't match anything on the standalone pages. */
+main[data-app-section="home"]          { --tool-rgb: 124, 111, 224; --tool-light-rgb: 194, 182, 255; }
+main[data-app-section="guitar"]        { --tool-rgb: var(--guitar-rgb); --tool-light-rgb: var(--guitar-light-rgb); }
+main[data-app-section="bass"]          { --tool-rgb: var(--bass-rgb); --tool-light-rgb: var(--bass-light-rgb); }
+main[data-app-section="keyboard"]      { --tool-rgb: var(--keyboard-rgb); --tool-light-rgb: var(--keyboard-light-rgb); }
+main[data-app-section="chord-builder"] { --tool-rgb: var(--chordbuilder-rgb); --tool-light-rgb: var(--chordbuilder-light-rgb); }
+main[data-app-section="tools"]         { --tool-rgb: var(--tools-rgb); --tool-light-rgb: var(--tools-light-rgb); }
+/* Shared chrome that sits outside any one section (the secondary
+   .section-nav-card pill row, the #circle-of-fifths-mount widget) still
+   needs *some* --tool-rgb since a few of their child rules reference it
+   — falls back to the same neutral purple Home uses. */
+.section-nav-card, #circle-of-fifths-mount { --tool-rgb: 124, 111, 224; --tool-light-rgb: 194, 182, 255; }
+
+
 /* Cross-document View Transitions: smooths navigation between the separate
    instrument pages (guitar.html <-> bass.html <-> keyboard.html, etc.),
    which are full page loads rather than an in-app tab switch. Opting in via
@@ -553,11 +586,11 @@ a { color: inherit; text-decoration: none; }
 
 /* Per-tool accent, read by section-nav.js and applied to the pill's
    --c-rgb custom property when that tab becomes active. */
-.section-nav-btn[href="guitar.html"]        { --c-rgb: 195, 77, 255; }
-.section-nav-btn[href="bass.html"]          { --c-rgb: 45, 197, 168; }
-.section-nav-btn[href="keyboard.html"]      { --c-rgb: 79, 179, 245; }
-.section-nav-btn[href="chord-builder.html"] { --c-rgb: 102, 64, 232; }
-.section-nav-btn[href="tools.html"]         { --c-rgb: 148, 148, 168; }
+.section-nav-btn[href="guitar.html"],        .section-nav-btn[data-section-link="guitar"]        { --c-rgb: 195, 77, 255; }
+.section-nav-btn[href="bass.html"],          .section-nav-btn[data-section-link="bass"]          { --c-rgb: 45, 197, 168; }
+.section-nav-btn[href="keyboard.html"],      .section-nav-btn[data-section-link="keyboard"]      { --c-rgb: 79, 179, 245; }
+.section-nav-btn[href="chord-builder.html"], .section-nav-btn[data-section-link="chord-builder"] { --c-rgb: 102, 64, 232; }
+.section-nav-btn[href="tools.html"],         .section-nav-btn[data-section-link="tools"]         { --c-rgb: 148, 148, 168; }
 
 /* Shrink padding/font before dropping labels, so all 5 items always fit
    on one line without scrolling or clipping. */

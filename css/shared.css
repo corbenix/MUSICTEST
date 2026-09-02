@@ -92,6 +92,25 @@ main[data-app-section="tools"]         { --tool-rgb: var(--tools-rgb); --tool-li
    — falls back to the same neutral purple Home uses. */
 .section-nav-card, #circle-of-fifths-mount { --tool-rgb: 124, 111, 224; --tool-light-rgb: 194, 182, 255; }
 
+/* Same collision, different shape: bass.css, guitar.css, and keyboard.css
+   each redefine the shared .tool-panel class itself (not just a custom
+   property) to strip tool.css's base 24px side padding, since their own
+   fretboard/piano content needs full-bleed width. With all three loaded
+   in one document, the last one loaded (guitar.css) was silently winning
+   globally — stripping Chord Builder's padding too, which its .cpb-card /
+   .cbk-card negative-margin alignment trick (see chord-builder.css)
+   specifically depends on existing. Re-declaring each page's own
+   zero-padding version scoped to its own section here has higher
+   specificity than their bare, unscoped originals, so it wins regardless
+   of CSS file load order, and leaves every other section's .tool-panel
+   alone. */
+[data-app-section="guitar"] .tool-panel,
+[data-app-section="bass"] .tool-panel,
+[data-app-section="keyboard"] .tool-panel {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 
 /* Cross-document View Transitions: smooths navigation between the separate
    instrument pages (guitar.html <-> bass.html <-> keyboard.html, etc.),

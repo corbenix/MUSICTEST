@@ -364,7 +364,8 @@
    cards 48px narrower than the circle. Break these two cards out of that
    padding so their outer edges line up with the circle exactly. */
 .cpb-card,
-.cbk-card {
+.cbk-card,
+.global-sound-card {
     width: calc(100% + 48px);
     max-width: 1200px;
     margin-left: -24px;

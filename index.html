@@ -864,6 +864,31 @@
             const sections = document.querySelectorAll('[data-app-section]');
             const navLinks = document.querySelectorAll('[data-section-link]');
 
+            // Runtime alignment correction for Chord Builder's cards.
+            // CSS-only (.cpb-card/.cbk-card/.global-sound-card's negative-
+            // margin breakout vs .circle-section's independent max-width:
+            // 1200 + margin:auto) SHOULD produce identical left/right
+            // edges by the math, but something in the merged-document
+            // context is offsetting them a small amount that couldn't be
+            // pinned down statically. Rather than guess further, this
+            // measures the real rendered edges and forces a pixel-exact
+            // match, recalculated whenever Chord Builder becomes visible
+            // or the window resizes.
+            function alignChordBuilderCards() {
+                const circle = document.querySelector('#circle-of-fifths-mount .circle-section');
+                const cards = document.querySelectorAll('[data-app-section="chord-builder"] .cpb-card, [data-app-section="chord-builder"] .cbk-card, [data-app-section="chord-builder"] .global-sound-card');
+                if (!circle || !cards.length) return;
+                const target = circle.getBoundingClientRect();
+                cards.forEach((card) => {
+                    const parent = card.parentElement.getBoundingClientRect();
+                    card.style.marginLeft = (target.left - parent.left) + 'px';
+                    card.style.marginRight = (parent.right - target.right) + 'px';
+                    card.style.width = target.width + 'px';
+                    card.style.maxWidth = 'none';
+                });
+            }
+            window.addEventListener('resize', alignChordBuilderCards);
+
             function showSection(id) {
                 sections.forEach((s) => { s.hidden = s.dataset.appSection !== id; });
                 navLinks.forEach((a) => {
@@ -880,6 +905,9 @@
                 document.body.classList.toggle('page-home', id === 'home');
                 window.scrollTo(0, 0);
                 window.dispatchEvent(new CustomEvent('app:sectionchange', { detail: id }));
+                if (id === 'chord-builder') {
+                    requestAnimationFrame(alignChordBuilderCards);
+                }
             }
 
             navLinks.forEach((a) => {

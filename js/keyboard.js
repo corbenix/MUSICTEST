@@ -744,8 +744,22 @@
     // notes just like clicking the Sustain button, and lets go the
     // moment Shift is released. Doesn't require the computer-keyboard
     // note input to be enabled, since it also applies to mouse clicks.
+    // SPA MERGE GUARD: in the merged app.html, this whole script stays
+    // loaded (and its listeners live) even while the Keyboard section
+    // isn't the one showing — unlike the old standalone keyboard.html,
+    // where simply not being on that page meant this script never ran
+    // at all. Without this check, typing anywhere on the site (e.g.
+    // while on Guitar or Chord Builder) would trigger piano notes and
+    // sustain. Returns true on the standalone page too, since there's
+    // no [data-app-section] wrapper there to check.
+    function isKeyboardSectionVisible() {
+        const section = document.querySelector('[data-app-section="keyboard"]');
+        return !section || !section.hidden;
+    }
+
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Shift' || e.repeat || isTypingTarget(e)) return;
+        if (!isKeyboardSectionVisible()) return;
         setSustain(true);
     });
     document.addEventListener('keyup', (e) => {
@@ -975,6 +989,7 @@
         if (e.repeat) return; // ignore OS auto-repeat
         if (e.metaKey || e.ctrlKey || e.altKey) return; // don't hijack browser shortcuts
         if (isTypingTarget(e)) return;
+        if (!isKeyboardSectionVisible()) return; // SPA merge guard, see definition above
 
         const key = normalizeComputerKey(e);
 
@@ -1031,4 +1046,26 @@
     applyComputerKeyLabels();
     renderScale();
     renderChord();
+
+    // SPA MERGE NOTE: buildPiano()'s C4-centering scroll logic measures
+    // real layout (offsetLeft/clientWidth), which is all zero while this
+    // section starts `hidden` in app.html — so the very first buildPiano()
+    // call above silently fails to center the keyboard, since it ran
+    // before the section was ever visible. Re-running buildPiano() once
+    // the Keyboard section is actually shown for the first time fixes
+    // this without needing to change buildPiano() itself.
+    let keyboardSectionEverShown = false;
+    window.addEventListener('app:sectionchange', (e) => {
+        if (e.detail === 'keyboard' && !keyboardSectionEverShown) {
+            keyboardSectionEverShown = true;
+            requestAnimationFrame(buildPiano);
+        }
+        // Release any physically-held computer-keyboard notes the moment
+        // you switch away from Keyboard, so a note can't stay stuck
+        // sounding (or stuck lit) just because its keyup never reaches
+        // this now-hidden section.
+        if (e.detail !== 'keyboard') {
+            resetComputerKeyboardInput();
+        }
+    });
 })();

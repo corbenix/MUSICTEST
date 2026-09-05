@@ -973,5 +973,16 @@
     <script src="js/guitar-data.js?v=3"></script>
     <script src="js/guitar-effects.js?v=2"></script>
     <script src="js/guitar.js?v=4"></script>
+    <script>
+        // This was an inline snippet on the original standalone guitar.html
+        // (not part of any .js file), easy to miss when moving Guitar's
+        // content into this merged shell — GuitarEffects.renderPedalboard()
+        // is what actually builds the pedal UI into these two containers;
+        // without this call they just stay empty divs.
+        if (window.GuitarEffects) {
+            window.GuitarEffects.renderPedalboard(document.getElementById('chordlib-pedalboard'));
+            window.GuitarEffects.renderPedalboard(document.getElementById('capo-pedalboard'));
+        }
+    </script>
 </body>
 </html>

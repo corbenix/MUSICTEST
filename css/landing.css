@@ -167,11 +167,11 @@
     display: none;
 }
 
-.hub-card--guitar   { --c-rgb: 255,111,111; --c2-rgb: 255,181,111; }
-.hub-card--bass     { --c-rgb: 46,196,182;  --c2-rgb: 111,230,210; }
-.hub-card--keyboard { --c-rgb: 56,189,248;  --c2-rgb: 124,111,224; }
-.hub-card--chords   { --c-rgb: 225,225,235; --c2-rgb: 168,158,240; }
-.hub-card--tools    { --c-rgb: 124,141,176; --c2-rgb: 169,184,214; }
+.hub-card--guitar   { --c-rgb: 195,77,255;  --c2-rgb: 230,175,255; }
+.hub-card--bass     { --c-rgb: 46,196,182;  --c2-rgb: 110,230,215; }
+.hub-card--keyboard { --c-rgb: 56,189,248;  --c2-rgb: 130,220,255; }
+.hub-card--chords   { --c-rgb: 102,64,232;  --c2-rgb: 165,140,245; }
+.hub-card--tools    { --c-rgb: 124,141,176; --c2-rgb: 170,185,215; }
 .hub-card--tips     { --c-rgb: 255,209,102; --c2-rgb: 255,159,111; }
 
 @media (max-width: 768px) {

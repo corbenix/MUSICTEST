@@ -34,6 +34,7 @@
             <div class="mp-yt-embed" id="mp-yt-embed"></div>
         </div>
         <audio class="mp-audio" id="mp-audio" controls hidden></audio>
+        <button type="button" class="mp-clear-btn" id="mp-clear-btn" hidden>Clear</button>
         <div class="mp-error" id="mp-error" hidden></div>
     `;
 
@@ -51,6 +52,7 @@
         const fileInput = panel.querySelector('#mp-file-input');
         const fileName = panel.querySelector('#mp-file-name');
         const audio = panel.querySelector('#mp-audio');
+        const clearBtn = panel.querySelector('#mp-clear-btn');
         const errorEl = panel.querySelector('#mp-error');
         let objectUrl = null;
 
@@ -68,6 +70,9 @@
             errorEl.hidden = true;
             errorEl.textContent = '';
         }
+        function updateClearButtonVisibility() {
+            clearBtn.hidden = ytWrap.hidden && audio.hidden;
+        }
         function resetOtherSource(exclude) {
             if (exclude !== 'yt') {
                 ytWrap.hidden = true;
@@ -80,7 +85,16 @@
                 fileName.textContent = 'No file selected';
                 if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             }
+            updateClearButtonVisibility();
         }
+
+        clearBtn.addEventListener('click', () => {
+            resetOtherSource(null); // exclude nothing — clears both sources
+            ytInput.value = '';
+            fileInput.value = '';
+            clearError();
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* storage unavailable */ }
+        });
 
         function extractYouTubeId(url) {
             try {
@@ -109,6 +123,7 @@
                 '<iframe src="https://www.youtube.com/embed/' + id + (opts && opts.autoplay ? '?autoplay=1' : '') + '" ' +
                 'title="YouTube player" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
             ytWrap.hidden = false;
+            updateClearButtonVisibility();
             try { localStorage.setItem(STORAGE_KEY, url.trim()); } catch (e) { /* storage unavailable */ }
         }
 
@@ -129,6 +144,7 @@
             audio.src = objectUrl;
             audio.hidden = false;
             fileName.textContent = file.name;
+            updateClearButtonVisibility();
         });
 
         // Pre-fill (but don't auto-load/autoplay) the last YouTube link

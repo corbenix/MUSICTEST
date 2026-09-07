@@ -795,57 +795,18 @@
         <span class="site-footer-tagline">Connect. Learn. Create.</span>
     </footer>
 
-    <!-- ── Shared Guide modal (one copy) ───────────────────────────────── -->
+    <!-- ── Shared Guide modal (one copy) — content is now populated
+         dynamically per active section by js below, since each of the
+         6 original standalone pages had its OWN, genuinely different
+         guide content (not just this site-wide overview). See the
+         GUIDE_CONTENT data object further down. ──────────────────── -->
     <div class="guide-modal" id="guide-modal">
         <div class="guide-modal-backdrop" id="guide-modal-backdrop"></div>
         <div class="guide-modal-panel" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
             <button type="button" class="guide-modal-close" id="guide-modal-close" aria-label="Close guide">✕</button>
-            <h2 id="guide-modal-title">🎶 Quick Start Guide</h2>
-            <p class="guide-modal-intro">Chord Nexus in a nutshell — what's in each section, and where to go for what.</p>
-            <div class="guide-modal-list">
-                <div class="guide-modal-item">
-                    <div class="guide-modal-item-icon">🎸</div>
-                    <div>
-                        <div class="guide-modal-item-title">Guitar</div>
-                        <p>Fretboard scales, CAGED shapes, chord diagrams, and a capo explorer.</p>
-                    </div>
-                </div>
-                <div class="guide-modal-item">
-                    <div class="guide-modal-item-icon"><img src="assets/icons/bass_logo.png" alt="" /></div>
-                    <div>
-                        <div class="guide-modal-item-title">Bass</div>
-                        <p>Full fretboard scale positions and interval maps for bass guitar.</p>
-                    </div>
-                </div>
-                <div class="guide-modal-item">
-                    <div class="guide-modal-item-icon">🎹</div>
-                    <div>
-                        <div class="guide-modal-item-title">Keyboard</div>
-                        <p>Interactive piano keys with scale and chord highlighting.</p>
-                    </div>
-                </div>
-                <div class="guide-modal-item">
-                    <div class="guide-modal-item-icon">🎵</div>
-                    <div>
-                        <div class="guide-modal-item-title">Chord Builder</div>
-                        <p>Build and hear chord progressions in any key, major or minor.</p>
-                    </div>
-                </div>
-                <div class="guide-modal-item">
-                    <div class="guide-modal-item-icon">🧰</div>
-                    <div>
-                        <div class="guide-modal-item-title">Practice Tools</div>
-                        <p>Circle of Fifths, chromatic tuner, metronome, and song key analyzer.</p>
-                    </div>
-                </div>
-                <div class="guide-modal-item">
-                    <div class="guide-modal-item-icon">🙏</div>
-                    <div>
-                        <div class="guide-modal-item-title">Credits</div>
-                        <p>Built by CORBENIX Studio. Thanks for practicing with Chord Nexus.</p>
-                    </div>
-                </div>
-            </div>
+            <h2 id="guide-modal-title"></h2>
+            <p class="guide-modal-intro" id="guide-modal-intro"></p>
+            <div class="guide-modal-list" id="guide-modal-list"></div>
         </div>
     </div>
 
@@ -920,19 +881,110 @@
             // Expose for other scripts (e.g. the Quick Tips card, or a
             // future section's own "back to home" link) to call directly.
             window.AppShowSection = showSection;
+            window.AppCurrentSection = 'home';
+            window.addEventListener('app:sectionchange', (e) => {
+                window.AppCurrentSection = e.detail;
+            });
         })();
     </script>
 
     <script>
         (function () {
+            const GUIDE_CONTENT = {
+                home: {
+                    title: '🎶 Quick Start Guide',
+                    intro: "Chord Nexus in a nutshell — what's in each section, and where to go for what.",
+                    items: [
+                        { icon: '🎸', title: 'Guitar', desc: 'Fretboard scales, CAGED shapes, chord diagrams, and a capo explorer.' },
+                        { icon: '<img src="assets/icons/bass_logo.png" alt="" />', title: 'Bass', desc: 'Full fretboard scale positions and interval maps for bass guitar.' },
+                        { icon: '🎹', title: 'Keyboard', desc: 'Interactive piano keys with scale and chord highlighting.' },
+                        { icon: '🎵', title: 'Chord Builder', desc: 'Build and hear chord progressions in any key, major or minor.' },
+                        { icon: '🧰', title: 'Practice Tools', desc: 'Circle of Fifths, chromatic tuner, metronome, and song key analyzer.' },
+                        { icon: '🙏', title: 'Credits', desc: 'Built by CORBENIX Studio. Thanks for practicing with Chord Nexus.' },
+                    ],
+                },
+                guitar: {
+                    title: '🎸 Quick Guide',
+                    intro: 'A fast tour of what each part of the Guitar page does.',
+                    items: [
+                        { icon: '<img src="assets/icons/gchord_lib.png" alt="" />', title: 'Chord Library', desc: 'Pick a root and chord type to see fingerings, then tap a voicing to view it on the fretboard.' },
+                        { icon: '<img src="assets/icons/capo_logo.png" alt="" />', title: 'Capo Explorer', desc: 'Slide the capo to a fret and choose a shape to hear and see the sounding chord.' },
+                        { icon: '<img src="assets/icons/gscale_exp.png" alt="" />', title: 'Scale Explorer', desc: 'Browse scales across the whole neck, with degrees marked on every note.' },
+                        { icon: '<i class="ti ti-layout-grid" aria-hidden="true"></i>', title: 'CAGED System', desc: 'Learn the 5 CAGED shapes and how they connect up the neck.' },
+                        { icon: '<i class="ti ti-grid-dots" aria-hidden="true"></i>', title: 'Effects Pedals', desc: 'In Chord Library and Capo Explorer, tap a pedal to open its controls and the footswitch to turn it on. Amp swaps in an electric guitar tone; Overdrive needs Amp on first.' },
+                        { icon: '🙏', title: 'Credits', desc: 'Guitar samples — University of Iowa Electronic Music Studios. Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>. Thanks to everyone who shared these samples.' },
+                    ],
+                },
+                bass: {
+                    title: '🎸 Quick Guide',
+                    intro: 'A fast tour of what each part of the Bass page does.',
+                    items: [
+                        { icon: '<img src="assets/icons/gscale_exp.png" alt="" />', title: 'Scale Explorer', desc: 'Overlay any scale across the bass fretboard. Pick a root and mode to apply it instantly.' },
+                        { icon: '🎯', title: 'Bass Root Note', desc: 'Pick a root to mark it across the fretboard, independent of the current scale.' },
+                        { icon: '▶', title: 'Play & String Count', desc: 'Hear the selected scale or root, adjust playback speed, and switch between 12/15/24 frets or 4-/5-string layouts.' },
+                        { icon: '🙏', title: 'Credits', desc: 'Bass samples — Karoryfer Samples. Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>. Thanks to everyone who shared these samples.' },
+                    ],
+                },
+                keyboard: {
+                    title: '🎹 Quick Guide',
+                    intro: 'A fast tour of what each part of the Keyboard page does.',
+                    items: [
+                        { icon: '🎶', title: 'Scale Explorer', desc: 'Pick a root and mode to see its notes highlighted across the keyboard.' },
+                        { icon: '🎹', title: 'Chord Finder', desc: 'Pick a root and chord type to see its notes highlighted, then browse chord inversions below the keyboard.' },
+                        { icon: '⌨', title: 'Play & Computer Keyboard', desc: 'Toggle Arpeggio, octave range, sustain, and sharps/flats. With Keyboard input on, your computer keys play notes — Z/X shifts the octave down/up.' },
+                        { icon: '🙏', title: 'Credits', desc: 'Piano samples — Salamander Grand Piano, recorded by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>). Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>.' },
+                    ],
+                },
+                'chord-builder': {
+                    title: '🎵 Quick Guide',
+                    intro: 'A fast tour of what each part of the Chord Builder page does.',
+                    items: [
+                        { icon: '🎹', title: 'Chord Progression Builder', desc: 'Add chords to a progression and play it back to hear how it sounds.' },
+                        { icon: '🎼', title: 'Chords by Key', desc: 'Pick a key to see its diatonic chords, ready to tap into your progression.' },
+                        { icon: '🎵', title: 'Common Progressions', desc: 'Browse popular progressions and load one in as a starting point.' },
+                        { icon: '🙏', title: 'Credits', desc: 'Playback switches between two real sample sets — Guitar: University of Iowa Electronic Music Studios. Piano: Salamander Grand Piano, recorded by Alexander Holm (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>). Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>.' },
+                    ],
+                },
+                tools: {
+                    title: '🧰 Quick Guide',
+                    intro: 'A fast tour of what each part of the Practice Tools page does.',
+                    items: [
+                        { icon: '🎯', title: 'Tuner', desc: 'Start the tuner to use your mic — the needle and cents readout show how close you are to pitch.' },
+                        { icon: '🥁', title: 'Metronome', desc: 'Set a BPM from 20–300, then tap ▶ to click along.' },
+                        { icon: '🎼', title: 'Song Analyzer', desc: 'Drop in an audio file to detect its BPM, key, and chord progression.' },
+                    ],
+                },
+            };
+
             const openBtn = document.getElementById('guide-nav-btn');
             const tipsCard = document.getElementById('quick-tips-card');
             const modal = document.getElementById('guide-modal');
             const backdrop = document.getElementById('guide-modal-backdrop');
             const closeBtn = document.getElementById('guide-modal-close');
+            const titleEl = document.getElementById('guide-modal-title');
+            const introEl = document.getElementById('guide-modal-intro');
+            const listEl = document.getElementById('guide-modal-list');
             if (!openBtn || !modal) return;
 
-            function open() { modal.classList.add('guide-modal--open'); }
+            function populateGuide(sectionId) {
+                const data = GUIDE_CONTENT[sectionId] || GUIDE_CONTENT.home;
+                titleEl.textContent = data.title;
+                introEl.textContent = data.intro;
+                listEl.innerHTML = data.items.map((item) => `
+                    <div class="guide-modal-item">
+                        <div class="guide-modal-item-icon">${item.icon}</div>
+                        <div>
+                            <div class="guide-modal-item-title">${item.title}</div>
+                            <p>${item.desc}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function open() {
+                populateGuide(window.AppCurrentSection || 'home');
+                modal.classList.add('guide-modal--open');
+            }
             function close() { modal.classList.remove('guide-modal--open'); }
 
             openBtn.addEventListener('click', (e) => { e.preventDefault(); open(); });

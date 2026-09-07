@@ -9,16 +9,16 @@
 
 .mp-toggle {
     position: fixed;
-    right: 82px;
-    bottom: 20px;
+    left: 20px;
+    bottom: 72px; /* coffee button's bottom(20px) + height(40px) + 12px gap */
     z-index: 40;
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 17px;
     background: linear-gradient(160deg, rgba(230, 175, 255, .9), rgba(195, 77, 255, .95));
     color: #fff;
     border: none;
@@ -36,8 +36,8 @@
 
 .mp-panel {
     position: fixed;
-    right: 20px;
-    bottom: 84px;
+    left: 20px;
+    bottom: 120px;
     z-index: 40;
     width: min(320px, calc(100vw - 40px));
     background: linear-gradient(165deg, rgba(24, 21, 46, .96), rgba(10, 8, 22, .98));
@@ -45,7 +45,7 @@
     border-radius: 16px;
     padding: 16px;
     box-shadow: 0 8px 0 rgba(0, 0, 0, .35), 0 16px 34px rgba(0, 0, 0, .5);
-    transform-origin: bottom right;
+    transform-origin: bottom left;
     transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
 }
 .mp-panel[hidden] {
@@ -184,6 +184,6 @@
 .mp-error[hidden] { display: none; }
 
 @media (max-width: 480px) {
-    .mp-toggle { right: 68px; bottom: 14px; }
-    .mp-panel { right: 14px; bottom: 76px; }
+    .mp-toggle { left: 20px; bottom: 66px; }
+    .mp-panel { left: 14px; bottom: 112px; }
 }

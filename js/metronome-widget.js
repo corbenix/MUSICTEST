@@ -13,6 +13,14 @@
             '<svg class="gmw-icon-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>' +
             '<span class="gmw-fab-dot" aria-hidden="true"></span>';
         document.body.appendChild(fab);
+
+        var tooltip = document.createElement('span');
+        tooltip.className = 'gmw-tooltip';
+        tooltip.textContent = 'Metronome';
+        document.body.appendChild(tooltip);
+        fab.addEventListener('mouseenter', function () { tooltip.classList.add('gmw-tooltip--visible'); });
+        fab.addEventListener('mouseleave', function () { tooltip.classList.remove('gmw-tooltip--visible'); });
+
         return fab;
     }
 

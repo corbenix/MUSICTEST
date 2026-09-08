@@ -41,6 +41,14 @@
     document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(toggle);
         document.body.appendChild(panel);
+
+        const tooltip = document.createElement('span');
+        tooltip.className = 'mp-tooltip';
+        tooltip.textContent = 'Play Along';
+        document.body.appendChild(tooltip);
+        toggle.addEventListener('mouseenter', () => tooltip.classList.add('mp-tooltip--visible'));
+        toggle.addEventListener('mouseleave', () => tooltip.classList.remove('mp-tooltip--visible'));
+
         init();
     });
 

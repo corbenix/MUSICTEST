@@ -532,6 +532,7 @@ a { color: inherit; text-decoration: none; }
     position: relative;
     z-index: 1;
 }
+.section-nav-card[hidden] { display: none; }
 
 /* Sliding indicator — a single element positioned/colored via JS
    (js/section-nav.js) rather than restyling each button independently,

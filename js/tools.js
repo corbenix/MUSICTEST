@@ -4,8 +4,17 @@
     document.documentElement.style.setProperty('--fret-accent-rgb', getComputedStyle(document.documentElement).getPropertyValue('--tools-rgb'));
 
     // ── Tabs ────────────────────────────────────────────────────────────
-    const tabs = document.querySelectorAll('.tool-tab');
-    const panels = document.querySelectorAll('.tool-panel');
+    // SPA MERGE FIX: these were `document.querySelectorAll('.tool-tab' /
+    // '.tool-panel')` — document-wide, not scoped to this page. Since
+    // .tool-panel/.tool-tab are the same generic classes Guitar and Chord
+    // Builder also use for their own sub-tabs, clicking a tab here used
+    // to hide EVERY section's sub-panels across the whole merged
+    // document (including Guitar's currently-visible one), leaving
+    // Guitar/Bass/Keyboard/Chord Builder empty until a hard refresh.
+    // Scoping the query to this page's own <main> container fixes it.
+    const toolsRoot = document.querySelector('[data-app-section="tools"]') || document;
+    const tabs = toolsRoot.querySelectorAll('.tool-tab');
+    const panels = toolsRoot.querySelectorAll('.tool-panel');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             tabs.forEach(t => t.setAttribute('aria-selected', 'false'));

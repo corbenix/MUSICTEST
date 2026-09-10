@@ -119,8 +119,13 @@
     }
 
     // ── Tabs ────────────────────────────────────────────────────────────
-    const tabs = document.querySelectorAll('.tool-tab');
-    const panels = document.querySelectorAll('.tool-panel');
+    // SPA MERGE FIX: same scoping fix as tools.js — see that file's
+    // comment for the full explanation of why an unscoped
+    // document-wide .tool-tab/.tool-panel query breaks every other
+    // section's sub-panels once all pages share one document.
+    const guitarRoot = document.querySelector('[data-app-section="guitar"]') || document;
+    const tabs = guitarRoot.querySelectorAll('.tool-tab');
+    const panels = guitarRoot.querySelectorAll('.tool-panel');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             tabs.forEach(t => t.setAttribute('aria-selected', 'false'));

@@ -33,7 +33,7 @@
            YouTube video keep playing across "instrument switches."
          ========================================================================== -->
 
-    <link rel="stylesheet" href="css/shared.css?v=2" />
+    <link rel="stylesheet" href="css/shared.css?v=3" />
     <link rel="stylesheet" href="css/perf-low.css?v=1" />
     <link rel="stylesheet" href="css/metronome-widget.css?v=3" />
     <link rel="stylesheet" href="css/coffee-widget.css?v=2" />
@@ -102,6 +102,7 @@
             <a class="nclg-nav-link" href="#" data-section-link="keyboard" aria-label="Keyboard" title="Keyboard"><span class="nclg-nav-icon" aria-hidden="true">🎹</span></a>
             <a class="nclg-nav-link" href="#" data-section-link="chord-builder" aria-label="Chord Builder" title="Chord Builder"><span class="nclg-nav-icon" aria-hidden="true">🎵</span></a>
             <a class="nclg-nav-link" href="#" data-section-link="tools" aria-label="Practice Tools" title="Practice Tools"><span class="nclg-nav-icon" aria-hidden="true">🧰</span></a>
+            <a class="nclg-nav-link" href="#" data-section-link="learn" aria-label="How to Play" title="How to Play"><span class="nclg-nav-icon" aria-hidden="true">🎓</span></a>
             <a class="nclg-nav-link nclg-nav-link--text" href="#" id="guide-nav-btn"><span class="nclg-nav-icon nclg-guide-icon" aria-hidden="true">📖</span><span class="nclg-guide-text">Guide</span></a>
         </div>
         <div class="nclg-nav-scrim"></div>
@@ -185,6 +186,71 @@
          </body> below, and a pass to confirm nothing in that page's JS
          assumes "I only ever run once, right after a full page load" in a
          way that breaks on a second visit to this section. ─────────────── -->
+    <!-- ── Section: How to Play (self-paced starter guide, no verification —
+         just practical "how do I actually play this" explanations). ────── -->
+    <main data-app-section="learn" hidden>
+        <div class="learn-panel">
+            <div class="learn-intro">
+                <h1>How to Play</h1>
+                <p>A quick starter guide to reading what's on screen and turning it into real fingers on real strings/keys. No music theory here — just the practical basics. Go at your own pace, jump around however you like.</p>
+            </div>
+
+            <div class="learn-group">
+                <h2 class="learn-group-title">🎸 Guitar &amp; 🎸 Bass</h2>
+
+                <div class="learn-topic">
+                    <h3>Reading a Chord Diagram</h3>
+                    <p>Every diagram is a tiny picture of the neck, standing straight up. The <strong>vertical lines</strong> are strings (low E on the left, high E on the right), and the <strong>horizontal lines</strong> are frets. A <strong>colored dot</strong> means "put a finger here." An <strong>O</strong> above a string means play it open (no finger). An <strong>X</strong> means don't play that string at all.</p>
+                    <button type="button" class="learn-try-btn" data-section-link="guitar">Try it in Chord Library →</button>
+                </div>
+
+                <div class="learn-topic">
+                    <h3>Finding the Root Note</h3>
+                    <p>The root is just the note the chord (or scale) is named after — a "C" chord's root is the note C. On the fretboard, the app marks the root with a slightly brighter or ringed dot so you can always spot "home base" even inside a bigger shape.</p>
+                    <button type="button" class="learn-try-btn" data-section-link="bass">Try it in Bass →</button>
+                </div>
+
+                <div class="learn-topic">
+                    <h3>What a Capo Actually Does</h3>
+                    <p>Clamping a capo on a fret shortens every string by that many frets — it's like moving the guitar's "zero" point up the neck. So the exact same finger shape you already know now makes a <em>different</em> chord ring out. The Capo Explorer shows you both sides: the shape you're actually fretting, and the real chord it sounds like.</p>
+                    <button type="button" class="learn-try-btn" data-section-link="guitar">Try it in Capo Explorer →</button>
+                </div>
+
+                <div class="learn-topic">
+                    <h3>CAGED Shapes, Simply</h3>
+                    <p>Five basic open-chord shapes — C, A, G, E, D — can each be picked up and slid anywhere on the neck to become a different chord, as long as you know where the root lands. That's the whole idea behind "CAGED": one shape, movable everywhere. The CAGED System tool shows all five shapes for the same root, stacked up the neck.</p>
+                    <button type="button" class="learn-try-btn" data-section-link="guitar">Try it in CAGED System →</button>
+                </div>
+
+                <div class="learn-topic">
+                    <h3>Strumming vs. Picking One Note at a Time</h3>
+                    <p>Strumming plays every note in the chord at once, in one motion. Picking the notes one at a time (often called "arpeggiating") plays them individually in sequence instead — same notes, different feel. Look for the <strong>Arpeggio</strong> toggle next to Play in Chord Library, Capo Explorer, and Chord Builder to hear the difference yourself.</p>
+                </div>
+            </div>
+
+            <div class="learn-group">
+                <h2 class="learn-group-title">🎹 Keyboard</h2>
+
+                <div class="learn-topic">
+                    <h3>Reading the Keyboard Layout</h3>
+                    <p>White keys are the natural notes (C, D, E, F, G, A, B), repeating in order left to right. Black keys sit between most white keys in groups of 2-then-3 — that pattern is your landmark for finding any note fast, since C is always the white key right before a group of 2 black keys.</p>
+                    <button type="button" class="learn-try-btn" data-section-link="keyboard">Try it in Keyboard →</button>
+                </div>
+
+                <div class="learn-topic">
+                    <h3>How Highlighted Keys Map to a Chord/Scale</h3>
+                    <p>When you pick a chord or scale, the matching keys light up right on the keyboard — so you can see exactly which fingers to use and how they're spaced, instead of just reading a name like "Am7" and guessing.</p>
+                    <button type="button" class="learn-try-btn" data-section-link="keyboard">Try it in Keyboard →</button>
+                </div>
+
+                <div class="learn-topic">
+                    <h3>Playing with Your Computer Keyboard</h3>
+                    <p>No piano handy? Toggle "Keyboard: On" and your computer's keys play notes directly — handy little badges above each key show exactly which key triggers which note, and Z / X shift you down or up an octave.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <main data-app-section="guitar" hidden>
         <h1 class="sr-only">Guitar</h1>
 

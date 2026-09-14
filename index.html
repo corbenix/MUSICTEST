@@ -928,7 +928,7 @@
                 const secondaryNav = document.getElementById('section-nav-card');
                 if (secondaryNav) secondaryNav.hidden = id === 'home';
                 const cofMount = document.getElementById('circle-of-fifths-mount');
-                if (cofMount) cofMount.hidden = (id === 'home' || id === 'tools');
+                if (cofMount) cofMount.hidden = (id === 'home' || id === 'tools' || id === 'learn');
                 document.body.classList.toggle('page-home', id === 'home');
                 window.scrollTo(0, 0);
                 window.dispatchEvent(new CustomEvent('app:sectionchange', { detail: id }));

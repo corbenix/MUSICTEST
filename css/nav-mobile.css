@@ -77,7 +77,7 @@
 }
 .nclg-nav-link--text { justify-content: flex-start; }
 .nclg-nav-link--text::after { content: none; }
-.nclg-guide-text { display: inline; }
+.nclg-nav-label { display: inline; }
 
 /* The Guide link is locked to a 48×48 icon-only square on desktop
    (shared.css, #guide-nav-btn.nclg-nav-link--text) so it matches the

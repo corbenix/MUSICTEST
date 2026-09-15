@@ -298,9 +298,20 @@ img { max-width: 100%; display: block; }
 
 /* ── How to Play (Learn) section ────────────────────────────────────── */
 .learn-panel {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 24px auto 80px;
     padding: 0 24px;
+}
+.learn-groups {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+@media (min-width: 860px) {
+    .learn-groups {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
 }
 .learn-intro { text-align: center; margin-bottom: 36px; }
 .learn-intro h1 {

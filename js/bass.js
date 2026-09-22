@@ -19,6 +19,7 @@
     let scaleVisRoot = '';
     let bassRootNote = '';
     let activeScale = '';
+    let bassRootShowAll = false;
 
     // ── DOM refs ────────────────────────────────────────────────────────
     const fretHeader = document.getElementById('b-fret-header');
@@ -36,6 +37,7 @@
     const rootPillRows = [scalevisPillRow, bassRootPillRow];
     const scaleSelect = document.getElementById('bass-scale-select');
     const scaleChips = document.getElementById('bass-scale-chips');
+    const rootShowAllToggle = document.getElementById('bass-root-showall-toggle');
 
     // Scale Notes card — sits under the fretboard, mirrors the Guitar
     // page's version but styled in the bass (teal) theme via --tool-rgb.
@@ -186,6 +188,19 @@
         repaint();
     }
 
+    // ── Show-all-positions toggle for the Bass Root Note picker. Off by
+    // default: only a single, easily-playable occurrence of the chosen
+    // root is marked (see findSingleRootPosition below). Turning this on
+    // reverts to marking every occurrence of that root across the whole
+    // fretboard, same as the Scale Explorer overlay does.
+    if (rootShowAllToggle) {
+        rootShowAllToggle.addEventListener('click', () => {
+            bassRootShowAll = !bassRootShowAll;
+            rootShowAllToggle.classList.toggle('active', bassRootShowAll);
+            repaint();
+        });
+    }
+
     // ── Global sharp/flat display mode ──────────────────────────────────
     // One switch for the whole *site* (see js/note-display.js): flips the
     // spelling of every accidental pill on this page and persists across
@@ -241,6 +256,8 @@
     clearBtn.addEventListener('click', () => {
         scaleVisRoot = '';
         bassRootNote = '';
+        bassRootShowAll = false;
+        if (rootShowAllToggle) rootShowAllToggle.classList.remove('active');
         rootPillRows.forEach(row => row.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active')));
         document.querySelectorAll('.fret-cell.active, .open-badge.active').forEach(c => c.classList.remove('active'));
         repaint();
@@ -416,6 +433,28 @@
     }
     if (bassPlayBtn) bassPlayBtn.addEventListener('click', playActiveNotes);
 
+    // Picks exactly one occurrence of the given pitch class to mark as
+    // the "Bass Root Note" — the lowest-fret occurrence on the board
+    // (closest to the nut, so it's actually easy to play), breaking ties
+    // in favor of the lower string. Nodes are walked in DOM order, which
+    // buildBoard() lays out string by string from highest to lowest, so
+    // among same-fret ties the later (lower) string naturally wins.
+    function findSingleRootPosition(rootIdx) {
+        if (rootIdx === null) return null;
+        let best = null;
+        let bestFret = null;
+        fretboardWrap.querySelectorAll('.open-badge, .fret-cell').forEach(node => {
+            const pc = Number(node.dataset.pc);
+            if (pc !== rootIdx) return;
+            const fret = node.classList.contains('open-badge') ? 0 : Number(node.dataset.fret);
+            if (bestFret === null || fret <= bestFret) {
+                bestFret = fret;
+                best = node;
+            }
+        });
+        return best;
+    }
+
     function repaint() {
         const preferFlats = noteDisplayMode === 'flat';
         const scaleNotesSet = activeScale && scaleVisRoot
@@ -423,12 +462,13 @@
             : null;
         const rootIdx = bassRootNote ? MT.noteIndex(bassRootNote) : null;
         const scaleRootIdx = scaleVisRoot ? MT.noteIndex(scaleVisRoot) : null;
+        const singleRootNode = (rootIdx !== null && !bassRootShowAll) ? findSingleRootPosition(rootIdx) : null;
 
         document.querySelectorAll('.fret-cell').forEach(cell => {
             const dot = cell.querySelector('.fret-dot');
             const pc = Number(dot.dataset.pc);
             const isScaleMatch = scaleNotesSet && scaleNotesSet.has(pc);
-            const isRootMatch = rootIdx !== null && pc === rootIdx;
+            const isRootMatch = rootIdx !== null && pc === rootIdx && (bassRootShowAll || cell === singleRootNode);
             const isScaleRoot = isScaleMatch && scaleRootIdx !== null && pc === scaleRootIdx;
 
             cell.classList.toggle('bass-scale-match', !!isScaleMatch);
@@ -441,7 +481,7 @@
         document.querySelectorAll('.open-badge').forEach(badge => {
             const pc = Number(badge.dataset.pc);
             const isScaleMatch = scaleNotesSet && scaleNotesSet.has(pc);
-            const isRootMatch = rootIdx !== null && pc === rootIdx;
+            const isRootMatch = rootIdx !== null && pc === rootIdx && (bassRootShowAll || badge === singleRootNode);
             const isScaleRoot = isScaleMatch && scaleRootIdx !== null && pc === scaleRootIdx;
 
             badge.classList.toggle('bass-scale-match', !!isScaleMatch);

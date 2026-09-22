@@ -477,10 +477,15 @@
 
             <div class="bass-controls-panel">
                 <div class="bass-panel-title">🎯 Bass Root Note</div>
-                <p class="bass-panel-desc">Pick a root to mark it across the bass fretboard.</p>
+                <p class="bass-panel-desc">Pick a root to mark one playable position on the fretboard.</p>
                 <div class="ps-row">
                     <span class="ps-micro-label">Root</span>
                     <div id="bass-root-pills" class="root-pill-row"></div>
+                </div>
+                <div class="ps-row">
+                    <div class="pill-group">
+                        <button type="button" id="bass-root-showall-toggle" class="pill-btn" title="Show every occurrence of this root across the fretboard">Show All Positions</button>
+                    </div>
                 </div>
             </div>
 
@@ -988,7 +993,7 @@
                     intro: 'A fast tour of what each part of the Bass page does.',
                     items: [
                         { icon: '<img src="assets/icons/gscale_exp.png" alt="" />', title: 'Scale Explorer', desc: 'Overlay any scale across the bass fretboard. Pick a root and mode to apply it instantly.' },
-                        { icon: '🎯', title: 'Bass Root Note', desc: 'Pick a root to mark it across the fretboard, independent of the current scale.' },
+                        { icon: '🎯', title: 'Bass Root Note', desc: 'Pick a root to mark a single playable position on the fretboard, independent of the current scale. Toggle "Show All Positions" to see every occurrence of that root instead.' },
                         { icon: '▶', title: 'Play & String Count', desc: 'Hear the selected scale or root, adjust playback speed, and switch between 12/15/24 frets or 4-/5-string layouts.' },
                         { icon: '🙏', title: 'Credits', desc: 'Bass samples — Karoryfer Samples. Packaged via <a href="https://github.com/nbrosowsky/tonejs-instruments" target="_blank">tonejs-instruments</a>. Thanks to everyone who shared these samples.' },
                     ],

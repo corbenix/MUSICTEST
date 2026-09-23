@@ -375,10 +375,12 @@
         const cell = badge ? null : e.target.closest('.gtr-fret-cell');
         const target = badge || cell;
         if (!target || target.dataset.abs === undefined) return;
-        target.classList.toggle('gtr-user-picked');
-        const abs = Number(target.dataset.abs);
-        const preferFlats = scaleNoteDisplayMode === 'flat';
-        playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
+        const isNowActive = target.classList.toggle('gtr-user-picked');
+        if (isNowActive) {
+            const abs = Number(target.dataset.abs);
+            const preferFlats = scaleNoteDisplayMode === 'flat';
+            playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
+        }
     });
 
     // ── CAGED System ────────────────────────────────────────────────────

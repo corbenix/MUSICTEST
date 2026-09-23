@@ -354,10 +354,12 @@
     fretboardWrap.addEventListener('click', e => {
         const cell = e.target.closest('.fret-cell, .open-badge');
         if (!cell) return;
-        cell.classList.toggle('active');
-        const abs = Number(cell.dataset.abs);
-        const preferFlats = noteDisplayMode === 'flat';
-        playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
+        const isNowActive = cell.classList.toggle('active');
+        if (isNowActive) {
+            const abs = Number(cell.dataset.abs);
+            const preferFlats = noteDisplayMode === 'flat';
+            playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
+        }
     });
 
     // ── Play button — replays whatever's currently selected in the

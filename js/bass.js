@@ -186,6 +186,17 @@
             bassRootPillRow.querySelectorAll('.root-pill').forEach(p => p.classList.toggle('active', p.dataset.sharp === bassRootNote));
         }
         repaint();
+        // Play the newly-marked root position so picking a root gives
+        // audible feedback too, same as clicking a fret directly does.
+        if (!isScaleVis && bassRootNote) {
+            const rootIdx = MT.noteIndex(bassRootNote);
+            const node = findSingleRootPosition(rootIdx);
+            if (node) {
+                const abs = Number(node.dataset.abs);
+                const preferFlats = noteDisplayMode === 'flat';
+                playTone(MT.noteName(abs % 12, preferFlats), Math.floor(abs / 12));
+            }
+        }
     }
 
     // ── Show-all-positions toggle for the Bass Root Note picker. Off by
@@ -444,9 +455,10 @@
         let best = null;
         let bestFret = null;
         fretboardWrap.querySelectorAll('.open-badge, .fret-cell').forEach(node => {
-            const pc = Number(node.dataset.pc);
+            const isOpen = node.classList.contains('open-badge');
+            const pc = isOpen ? Number(node.dataset.pc) : Number(node.querySelector('.fret-dot').dataset.pc);
             if (pc !== rootIdx) return;
-            const fret = node.classList.contains('open-badge') ? 0 : Number(node.dataset.fret);
+            const fret = isOpen ? 0 : Number(node.dataset.fret);
             if (bestFret === null || fret <= bestFret) {
                 bestFret = fret;
                 best = node;

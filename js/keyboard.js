@@ -34,6 +34,7 @@
     // playbackRate is reliably honored everywhere, so every key gets its
     // own distinct pitch.
     let sustainOn = false;
+    let soundSource = 'piano'; // 'piano' (sampled) or 'synth' (oscillator)
     const PIANO_SAMPLES = [
         ['A', 2], ['A', 3], ['A', 4], ['A', 5], ['A', 6],
         ['C', 2], ['C', 3], ['C', 4], ['C', 5], ['C', 6], ['C', 7],
@@ -89,7 +90,72 @@
     // isn't delayed by a network fetch + decode.
     PIANO_SAMPLES.forEach(s => loadBuffer(s.url));
 
+    // ── Synth voice — a small detuned-saw + triangle patch through a
+    // lowpass filter, with its own ADSR envelope (separate from the
+    // sampled piano above). Picked over a single oscillator so it has
+    // some body instead of sounding like a bare test tone; picked over
+    // something fancier (FM, noise, etc.) to keep it cheap enough to
+    // stack several notes at once for chords without crackling. ─────────
+    function playSynthTone(noteName, octave) {
+        try {
+            const targetAbs = octave * 12 + MT.noteIndex(noteName);
+            // A4 (octave 4, pitch class A) is abs = 4*12+9 = 57 and is
+            // tuned to 440Hz — same scientific-pitch reference the piano
+            // samples above and the rest of the app use (C4 = middle C).
+            const freq = 440 * Math.pow(2, (targetAbs - 57) / 12);
+            const ctx = getAudioContext();
+            const now = ctx.currentTime;
+
+            const gain = ctx.createGain();
+            gain.gain.value = 0;
+            gain.connect(ctx.destination);
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = Math.min(freq * 6, 6000);
+            filter.Q.value = 0.7;
+            filter.connect(gain);
+
+            const voices = [
+                { type: 'sawtooth', detune: -7, level: 0.5 },
+                { type: 'sawtooth', detune: 7, level: 0.5 },
+                { type: 'triangle', detune: 0, level: 0.4 },
+            ];
+            const oscillators = voices.map(v => {
+                const osc = ctx.createOscillator();
+                osc.type = v.type;
+                osc.frequency.value = freq;
+                osc.detune.value = v.detune;
+                const oscGain = ctx.createGain();
+                oscGain.gain.value = v.level;
+                osc.connect(oscGain);
+                oscGain.connect(filter);
+                return osc;
+            });
+
+            // Quick attack, short decay to a sustain plateau. Sustain
+            // pedal held → hold that plateau much longer before the
+            // release, mirroring how the piano sample's natural decay
+            // tail is allowed to ring out when sustainOn is true.
+            const attack = 0.012;
+            const decay = 0.16;
+            const sustainLevel = 0.32;
+            const holdEnd = now + (sustainOn ? 2.4 : 0.55);
+            const release = sustainOn ? 0.5 : 0.28;
+
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.8, now + attack);
+            gain.gain.linearRampToValueAtTime(sustainLevel, now + attack + decay);
+            gain.gain.setValueAtTime(sustainLevel, holdEnd);
+            gain.gain.linearRampToValueAtTime(0, holdEnd + release);
+
+            const stopAt = holdEnd + release + 0.02;
+            oscillators.forEach(o => { o.start(now); o.stop(stopAt); });
+        } catch (e) { /* audio unavailable, fail silently */ }
+    }
+
     function playTone(noteName, octave) {
+        if (soundSource === 'synth') { playSynthTone(noteName, octave); return; }
         try {
             const targetAbs = octave * 12 + MT.noteIndex(noteName);
             const { url, semitoneDiff } = nearestPianoSample(targetAbs);
@@ -739,6 +805,18 @@
         sustainToggle.classList.toggle('active', sustainOn);
     }
     sustainToggle.addEventListener('click', () => setSustain(!sustainOn));
+
+    // Piano / Synth sound-source toggle — swaps which playTone() branch
+    // (sampled piano vs. oscillator synth, see above) actually sounds.
+    const soundPianoBtn = document.getElementById('kb-sound-piano');
+    const soundSynthBtn = document.getElementById('kb-sound-synth');
+    function setSoundSource(source) {
+        soundSource = source;
+        if (soundPianoBtn) soundPianoBtn.classList.toggle('active', source === 'piano');
+        if (soundSynthBtn) soundSynthBtn.classList.toggle('active', source === 'synth');
+    }
+    if (soundPianoBtn) soundPianoBtn.addEventListener('click', () => setSoundSource('piano'));
+    if (soundSynthBtn) soundSynthBtn.addEventListener('click', () => setSoundSource('synth'));
 
     // Shift acts as a sustain-pedal shortcut: held down, it sustains
     // notes just like clicking the Sustain button, and lets go the

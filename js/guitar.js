@@ -532,7 +532,7 @@
     const chordLibTypePills = document.getElementById('chordlib-type-pills');
     const chordLibNoteToggle = document.getElementById('chordlib-note-toggle');
     let chordLibRootValue = '';
-    let chordLibTypeValue = 'Major';
+    let chordLibTypeValue = '';
     let chordLibVoicings = [];
     let chordLibVoicingIndex = -1;
     // Editable working copy of the currently-shown voicing's dots. Starts
@@ -823,13 +823,13 @@
 
     function resetChordFinder() {
         chordLibRootValue = '';
-        chordLibTypeValue = 'Major';
+        chordLibTypeValue = '';
         chordLibVoicings = [];
         chordLibVoicingIndex = -1;
         chordLibCustomDots = [];
         stopChordLibPlayback();
         chordLibRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
-        chordLibTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === 'Major'));
+        chordLibTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.remove('active'));
         chordLibTypeRow.classList.remove('ps-visible');
         renderVoicingChips();
         // Re-render through the board+banner path (not the plain
@@ -840,12 +840,19 @@
 
     function renderChordFinder() {
         const root = chordLibRootValue;
+        const type = chordLibTypeValue;
         const displayName = document.querySelector('#chordlib-display .chord-display-name');
         const displayNotes = document.querySelector('#chordlib-display .chord-display-notes');
-        if (!root) {
+        if (!root || !type) {
             chordLibVoicings = [];
             chordLibVoicingIndex = -1;
             chordLibCustomDots = [];
+            // No chord fully specified yet (root and/or quality still
+            // unpicked) — reset the banner back to its placeholder rather
+            // than leaving a stale chord name/notes from a prior pick.
+            displayName.textContent = 'Select a chord';
+            displayName.classList.remove('has-chord');
+            displayNotes.textContent = '';
             renderVoicingChips();
             // renderChordLibBoard (not renderChordLib) so the neck stays
             // editable and the banner/play button reflect the shape,
@@ -854,7 +861,6 @@
             renderChordLibBoard();
             return;
         }
-        const type = chordLibTypeValue;
         const preferFlats = chordLibNoteDisplayMode === 'flat';
         const notes = MT.chordNotes(root, type, preferFlats);
         const typeLabel = type === 'Major' ? 'Major' : type;

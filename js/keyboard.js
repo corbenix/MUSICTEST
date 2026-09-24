@@ -633,7 +633,7 @@
     const chordTypeRow = document.getElementById('chord-type-row');
     const chordTypePills = document.getElementById('chord-type-pills');
     var chordRootValue = '';
-    let chordTypeValue = 'Major';
+    let chordTypeValue = '';
     let chordInversionValue = 0;
 
     const CHORD_TYPE_GROUPS = [
@@ -851,10 +851,10 @@
         scaleRootValue = '';
         scaleRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
         chordRootValue = '';
-        chordTypeValue = 'Major';
+        chordTypeValue = '';
         chordInversionValue = 0;
         chordRootPills.querySelectorAll('.root-pill').forEach(p => p.classList.remove('active'));
-        chordTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.toggle('active', p.dataset.type === 'Major'));
+        chordTypePills.querySelectorAll('.type-pill-btn').forEach(p => p.classList.remove('active'));
         chordTypeRow.classList.remove('ps-visible');
         if (chordInversionRow) chordInversionRow.classList.remove('ps-visible');
         buildInversionPills();
@@ -914,8 +914,18 @@
     function renderChord() {
         const root = chordRootValue;
         const type = chordTypeValue;
-        if (!root) {
+        if (!root || !type) {
             applyHighlight(null, null, false);
+            // No chord fully specified yet (root and/or quality still
+            // unpicked) — reset the banner to its placeholder rather than
+            // leaving a stale chord name/notes from a prior pick.
+            const chordDisplayName = document.querySelector('#chord-display .chord-display-name');
+            const chordDisplayNotes = document.querySelector('#chord-display .chord-display-notes');
+            if (chordDisplayName) {
+                chordDisplayName.textContent = 'Select a chord';
+                chordDisplayName.classList.remove('has-chord');
+            }
+            if (chordDisplayNotes) chordDisplayNotes.textContent = '';
             renderInversionCards();
             updatePlayedChordDisplay();
             return;

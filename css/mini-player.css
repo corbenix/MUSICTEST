@@ -7,75 +7,22 @@
    localStorage so picking it back up is quick.
    ========================================================================== */
 
-.mp-toggle {
-    position: fixed;
-    left: 20px;
-    bottom: 72px; /* coffee button's bottom(20px) + height(40px) + 12px gap */
-    z-index: 40;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    background: linear-gradient(160deg, rgba(230, 175, 255, .9), rgba(195, 77, 255, .95));
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 0 rgba(0, 0, 0, .35), 0 8px 20px rgba(0, 0, 0, .4);
-    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
-}
-.mp-toggle:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 0 rgba(0, 0, 0, .35), 0 10px 24px rgba(0, 0, 0, .45);
-}
-.mp-toggle[aria-expanded="true"] {
-    background: linear-gradient(160deg, rgba(195, 77, 255, .95), rgba(120, 30, 170, .95));
-}
-
-.mp-tooltip {
-    position: fixed;
-    left: 68px;
-    bottom: 78px;
-    z-index: 40;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #fff;
-    white-space: nowrap;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.045) 100%);
-    border: 1px solid rgba(230, 175, 255, .22);
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 6px 18px rgba(0, 0, 0, 0.35);
-    opacity: 0;
-    transform: translateX(-6px);
-    pointer-events: none;
-    transition: opacity 0.16s ease, transform 0.16s ease;
-}
-.mp-tooltip--visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-@media (max-width: 480px) {
-    .mp-tooltip { left: 62px; bottom: 72px; font-size: 12.5px; }
-}
-
+/* The floating toggle + tooltip are gone — Play Along now opens from the
+   Tools menu (js/tools-fab.js). This panel just repositions to open near
+   that menu, bottom-right instead of bottom-left. */
 .mp-panel {
     position: fixed;
-    left: 20px;
-    bottom: 120px;
-    z-index: 40;
+    right: 20px;
+    left: auto;
+    bottom: 84px;
+    z-index: 520;
     width: min(320px, calc(100vw - 40px));
     background: linear-gradient(165deg, rgba(24, 21, 46, .96), rgba(10, 8, 22, .98));
     border: 1px solid rgba(230, 175, 255, .3);
     border-radius: 16px;
     padding: 16px;
     box-shadow: 0 8px 0 rgba(0, 0, 0, .35), 0 16px 34px rgba(0, 0, 0, .5);
-    transform-origin: bottom left;
+    transform-origin: bottom right;
     transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
 }
 .mp-panel[hidden] {
@@ -214,6 +161,5 @@
 .mp-error[hidden] { display: none; }
 
 @media (max-width: 480px) {
-    .mp-toggle { left: 20px; bottom: 66px; }
-    .mp-panel { left: 14px; bottom: 112px; }
+    .mp-panel { right: 14px; bottom: 78px; }
 }

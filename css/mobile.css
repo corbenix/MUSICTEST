@@ -159,7 +159,7 @@
 /* ── From metronome-widget.css ─────────────────────────────────────────── */
 
 @media (max-width: 460px) {
-    .gmw-fab { right: 14px; bottom: 14px; width: 36px; height: 36px; }
+    .tfab-fab { right: 14px; bottom: 14px; width: 36px; height: 36px; }
 }
 
 /* ── From coffee-widget.css ─────────────────────────────────────────── */

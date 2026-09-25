@@ -1,0 +1,151 @@
+/* ==========================================================================
+   TOOLS FAB — single bottom-right button that opens a menu with Metronome,
+   Record, and Play Along. Replaces the old standalone metronome button.
+   ========================================================================== */
+
+.tfab-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 521;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, rgba(191, 173, 255, 0.92) 0%, rgba(124, 92, 255, 0.88) 45%, rgba(94, 62, 220, 0.92) 100%);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -1px 2px rgba(40, 20, 90, 0.35),
+        0 6px 20px rgba(124, 92, 255, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.tfab-fab:hover {
+    transform: translateY(-2px) scale(1.04);
+}
+.tfab-fab--open {
+    background: linear-gradient(160deg, rgba(124, 92, 255, 0.95), rgba(94, 62, 220, 0.98));
+}
+.tfab-fab--recording {
+    animation: tfab-rec-pulse 1.4s ease-in-out infinite;
+}
+@keyframes tfab-rec-pulse {
+    0%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 -1px 2px rgba(40,20,90,.35), 0 6px 20px rgba(255,90,90,.55), 0 2px 8px rgba(0,0,0,.3); }
+    50% { box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 -1px 2px rgba(40,20,90,.35), 0 6px 28px rgba(255,90,90,.85), 0 2px 8px rgba(0,0,0,.3); }
+}
+
+.tfab-icon {
+    width: 17px;
+    height: 17px;
+    fill: #fff;
+}
+
+.tfab-fab-dot--flash {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -1px 2px rgba(40, 20, 90, 0.35),
+        0 0 0 4px rgba(255, 209, 102, 0.5),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tfab-menu {
+    position: fixed;
+    right: 20px;
+    bottom: 68px;
+    z-index: 520;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 220px;
+    padding: 8px;
+    border-radius: 14px;
+    background: linear-gradient(165deg, rgba(24, 21, 46, .97), rgba(10, 8, 22, .99));
+    border: 1px solid rgba(191, 173, 255, .3);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, .35), 0 16px 34px rgba(0, 0, 0, .5);
+    transform-origin: bottom right;
+    animation: tfab-menu-in 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tfab-menu[hidden] { display: none; }
+@keyframes tfab-menu-in {
+    from { opacity: 0; transform: scale(.92) translateY(6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tfab-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 9px;
+    background: transparent;
+    border: none;
+    color: #eee9ff;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+.tfab-item:hover:not(:disabled) {
+    background: rgba(191, 173, 255, .12);
+}
+.tfab-item:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+.tfab-item-icon {
+    width: 18px;
+    text-align: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.tfab-item-label {
+    flex: 1;
+    min-width: 0;
+}
+.tfab-item-status {
+    font-size: 11px;
+    font-weight: 700;
+    color: #b3a6ff;
+    white-space: nowrap;
+}
+.tfab-item--active {
+    background: rgba(124, 92, 255, .18);
+    color: #fff;
+}
+.tfab-item--active .tfab-item-status {
+    color: #cabfff;
+}
+
+.tfab-record-dot {
+    width: 10px !important;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff5a5a;
+    margin: 0 4px;
+    box-shadow: 0 0 6px rgba(255, 90, 90, 0.6);
+}
+.tfab-item--recording {
+    background: rgba(255, 90, 90, .14);
+}
+.tfab-item--recording .tfab-record-dot {
+    animation: tfab-dot-pulse 1s ease-in-out infinite;
+}
+.tfab-item--recording .tfab-item-status {
+    color: #ff9a9a;
+}
+@keyframes tfab-dot-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+}
+
+@media (max-width: 480px) {
+    .tfab-menu { right: 14px; bottom: 62px; width: 200px; }
+}

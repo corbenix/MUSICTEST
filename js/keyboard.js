@@ -109,6 +109,7 @@
             const gain = ctx.createGain();
             gain.gain.value = 0;
             gain.connect(ctx.destination);
+            if (window.Recorder) { const rec = window.Recorder.tap(ctx); if (rec) gain.connect(rec); }
 
             const filter = ctx.createBiquadFilter();
             filter.type = 'lowpass';
@@ -170,6 +171,7 @@
                 gain.gain.value = 0.85;
                 source.connect(gain);
                 gain.connect(ctx.destination);
+                if (window.Recorder) { const rec = window.Recorder.tap(ctx); if (rec) gain.connect(rec); }
 
                 source.start(0);
 

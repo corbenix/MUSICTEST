@@ -254,7 +254,20 @@ window.GuitarEffects = (function () {
     // returns the node to connect into (the pedalboard's entry) instead of
     // ctx.destination directly, lazily building the chain on first use.
     function getInputNode(ctx) {
-        return ensureChain(ctx).entry;
+        const c = ensureChain(ctx);
+        // Wire the recorder tap onto the *wet* (post-pedalboard) output each
+        // time this is called rather than only at chain-build time, since a
+        // recording can start well after the chain already exists — and
+        // Recorder.tap() itself no-ops once already connected for the
+        // current take, so this stays cheap on every note.
+        if (window.Recorder) {
+            const rec = window.Recorder.tap(ctx);
+            if (rec && c.recTappedNode !== rec) {
+                c.exit.connect(rec);
+                c.recTappedNode = rec;
+            }
+        }
+        return c.entry;
     }
 
     const COLORS = {

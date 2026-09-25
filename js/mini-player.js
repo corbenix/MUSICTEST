@@ -8,13 +8,6 @@
 (function () {
     const STORAGE_KEY = 'miniPlayerLastYouTubeUrl';
 
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'mp-toggle';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Play along');
-    toggle.textContent = '\u266A';
-
     const panel = document.createElement('div');
     panel.className = 'mp-panel';
     panel.hidden = true;
@@ -38,17 +31,24 @@
         <div class="mp-error" id="mp-error" hidden></div>
     `;
 
+    // Consumed by js/tools-fab.js, which owns the single floating button
+    // and its popup menu — this module now only builds the panel itself
+    // and exposes toggle/open/close so the Tools menu can drive it.
+    let panelOpenListeners = [];
+    window.MiniPlayer = {
+        toggle: () => setOpen(panel.hidden),
+        open: () => setOpen(true),
+        close: () => setOpen(false),
+        isOpen: () => !panel.hidden,
+        onOpenChange: fn => panelOpenListeners.push(fn),
+    };
+    function setOpen(open) {
+        panel.hidden = !open;
+        panelOpenListeners.forEach(fn => { try { fn(open); } catch (e) { /* ignore */ } });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-        document.body.appendChild(toggle);
         document.body.appendChild(panel);
-
-        const tooltip = document.createElement('span');
-        tooltip.className = 'mp-tooltip';
-        tooltip.textContent = 'Play Along';
-        document.body.appendChild(tooltip);
-        toggle.addEventListener('mouseenter', () => tooltip.classList.add('mp-tooltip--visible'));
-        toggle.addEventListener('mouseleave', () => tooltip.classList.remove('mp-tooltip--visible'));
-
         init();
     });
 
@@ -63,12 +63,6 @@
         const clearBtn = panel.querySelector('#mp-clear-btn');
         const errorEl = panel.querySelector('#mp-error');
         let objectUrl = null;
-
-        toggle.addEventListener('click', () => {
-            const open = panel.hidden;
-            panel.hidden = !open;
-            toggle.setAttribute('aria-expanded', String(open));
-        });
 
         function showError(msg) {
             errorEl.textContent = msg;

@@ -138,6 +138,7 @@ window.InstrumentSound = (function () {
                 gain.gain.value = 0.85;
                 source.connect(gain);
                 gain.connect(ctx.destination);
+                if (window.Recorder) { const rec = window.Recorder.tap(ctx); if (rec) gain.connect(rec); }
 
                 source.start(0);
                 const stopAt = ctx.currentTime + 0.9;

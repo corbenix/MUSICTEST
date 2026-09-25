@@ -35,7 +35,7 @@
 
     <link rel="stylesheet" href="css/shared.css?v=5" />
     <link rel="stylesheet" href="css/perf-low.css?v=1" />
-    <link rel="stylesheet" href="css/metronome-widget.css?v=3" />
+    <link rel="stylesheet" href="css/tools-fab.css?v=1" />
     <link rel="stylesheet" href="css/coffee-widget.css?v=2" />
     <link rel="stylesheet" href="css/landing.css?v=2" />
     <link rel="stylesheet" href="css/mobile-viewport-fit.css?v=4" media="(max-width: 768px)" />
@@ -886,10 +886,13 @@
     </div>
 
     <script src="js/metronome-core.js?v=1"></script>
+    <!-- lamejs: pure-JS MP3 encoder, used by js/recorder.js to turn the
+         "record while playing" capture into a downloadable .mp3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
+    <script src="js/recorder.js?v=1"></script>
     <script src="js/mobile-nav.js?v=1"></script>
     <script src="js/section-nav.js?v=2"></script>
     <script src="js/background.js?v=1"></script>
-    <script src="js/metronome-widget.js?v=2"></script>
     <script src="js/coffee-widget.js?v=1"></script>
 
     <!-- ── Section switcher — replaces cross-document navigation. Shows one
@@ -1073,6 +1076,7 @@
     </script>
     <script src="js/bg-fx.js?v=1"></script>
     <script src="js/mini-player.js?v=3"></script>
+    <script src="js/tools-fab.js?v=1"></script>
     <script src="js/back-to-top.js?v=1"></script>
 
     <!-- Practice Tools (Phase 2, merged) -->

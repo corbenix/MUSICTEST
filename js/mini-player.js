@@ -156,5 +156,16 @@
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) ytInput.value = saved;
         } catch (e) { /* storage unavailable */ }
+
+        // Close by clicking anywhere outside the panel — the Tools menu's
+        // own "Play Along" button calls stopPropagation() on the click
+        // that opens this panel, so that same click never reaches this
+        // listener and immediately re-closes it.
+        document.addEventListener('click', (e) => {
+            if (!panel.hidden && !panel.contains(e.target)) setOpen(false);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !panel.hidden) setOpen(false);
+        });
     }
 })();

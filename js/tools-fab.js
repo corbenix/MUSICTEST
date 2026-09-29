@@ -35,6 +35,10 @@
                 <span class="tfab-item-label">Record</span>
                 <span class="tfab-item-status" id="tfab-record-status"></span>
             </button>
+            <button type="button" class="tfab-item" id="tfab-play" hidden>
+                <span class="tfab-item-icon" id="tfab-play-icon">▶</span>
+                <span class="tfab-item-label">Play recording</span>
+            </button>
             <button type="button" class="tfab-item" id="tfab-download" hidden>
                 <span class="tfab-item-icon">⬇</span>
                 <span class="tfab-item-label">Download MP3</span>
@@ -56,8 +60,12 @@
         const metronomeStatus = menu.querySelector('#tfab-metronome-status');
         const recordBtn = menu.querySelector('#tfab-record');
         const recordStatus = menu.querySelector('#tfab-record-status');
+        const playBtn = menu.querySelector('#tfab-play');
+        const playIcon = menu.querySelector('#tfab-play-icon');
         const downloadBtn = menu.querySelector('#tfab-download');
         const playAlongBtn = menu.querySelector('#tfab-playalong');
+        const previewAudio = new Audio();
+        previewAudio.addEventListener('ended', () => { playIcon.textContent = '▶'; });
 
         // ── Open/close the popup menu ───────────────────────────────
         function setMenuOpen(open) {
@@ -95,7 +103,10 @@
                     recordBtn.classList.add('tfab-item--recording');
                     fab.classList.add('tfab-fab--recording');
                     recordStatus.textContent = '0:00';
+                    playBtn.hidden = true;
                     downloadBtn.hidden = true;
+                    previewAudio.pause();
+                    playIcon.textContent = '▶';
                 } else if (evt.type === 'tick') {
                     recordStatus.textContent = fmtTime(evt.seconds);
                 } else if (evt.type === 'stop') {
@@ -106,6 +117,8 @@
                     recordStatus.textContent = 'Processing…';
                 } else if (evt.type === 'ready') {
                     recordStatus.textContent = 'Saved';
+                    previewAudio.src = evt.url;
+                    playBtn.hidden = false;
                     downloadBtn.hidden = false;
                 } else if (evt.type === 'empty') {
                     recordStatus.textContent = 'No audio captured';
@@ -115,9 +128,19 @@
                     setTimeout(() => { recordStatus.textContent = ''; }, 3000);
                 }
             });
+            playBtn.addEventListener('click', () => {
+                if (previewAudio.paused) {
+                    previewAudio.play();
+                    playIcon.textContent = '⏸';
+                } else {
+                    previewAudio.pause();
+                    playIcon.textContent = '▶';
+                }
+            });
             downloadBtn.addEventListener('click', () => window.Recorder.download());
         } else {
             recordBtn.disabled = true;
+            playBtn.disabled = true;
         }
 
         // ── Play Along row ───────────────────────────────────────────

@@ -255,18 +255,10 @@ window.GuitarEffects = (function () {
     // ctx.destination directly, lazily building the chain on first use.
     function getInputNode(ctx) {
         const c = ensureChain(ctx);
-        // Wire the recorder tap onto the *wet* (post-pedalboard) output each
-        // time this is called rather than only at chain-build time, since a
-        // recording can start well after the chain already exists — and
-        // Recorder.tap() itself no-ops once already connected for the
-        // current take, so this stays cheap on every note.
-        if (window.Recorder) {
-            const rec = window.Recorder.tap(ctx);
-            if (rec && c.recTappedNode !== rec) {
-                c.exit.connect(rec);
-                c.recTappedNode = rec;
-            }
-        }
+        // Wire the recorder tap onto the *wet* (post-pedalboard) output.
+        // AudioCore.tapRecorder is itself idempotent per recording take, so
+        // it's safe to call this on every single note.
+        window.AudioCore.tapRecorder(c.exit, ctx);
         return c.entry;
     }
 

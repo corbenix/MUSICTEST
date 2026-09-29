@@ -84,31 +84,8 @@
         return { url: best.url, semitoneDiff: targetAbs - best.abs };
     }
 
-    let audioCtx = null;
-    function getAudioContext() {
-        if (!audioCtx) {
-            const Ctx = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new Ctx();
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume().catch(() => {});
-        }
-        return audioCtx;
-    }
-
-    const bufferCache = {};
-    const bufferPromises = {};
-    function loadBuffer(url) {
-        if (bufferCache[url]) return Promise.resolve(bufferCache[url]);
-        if (bufferPromises[url]) return bufferPromises[url];
-        const ctx = getAudioContext();
-        bufferPromises[url] = fetch(url)
-            .then(res => res.arrayBuffer())
-            .then(data => ctx.decodeAudioData(data))
-            .then(buf => { bufferCache[url] = buf; return buf; })
-            .catch(() => null);
-        return bufferPromises[url];
-    }
+    function getAudioContext() { return window.AudioCore.getContext(); }
+    function loadBuffer(url) { return window.AudioCore.loadBuffer(url, 'bass'); }
     BASS_SAMPLES.forEach(s => loadBuffer(s.url));
 
     function playTone(noteName, octave) {
@@ -126,7 +103,7 @@
                 gain.gain.value = 0.85;
                 source.connect(gain);
                 gain.connect(ctx.destination);
-                if (window.Recorder) { const rec = window.Recorder.tap(ctx); if (rec) gain.connect(rec); }
+                window.AudioCore.tapRecorder(gain, ctx);
 
                 source.start(0);
                 const stopAt = ctx.currentTime + 0.9;

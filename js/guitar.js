@@ -53,42 +53,8 @@
         return { url: best.url, semitoneDiff: targetAbs - best.abs };
     }
 
-    let audioCtx = null;
-    function getAudioContext() {
-        if (!audioCtx) {
-            const Ctx = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new Ctx();
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume().catch(() => {});
-        }
-        return audioCtx;
-    }
-
-    const bufferCache = {};
-    const bufferPromises = {};
-    function loadBuffer(url) {
-        if (bufferCache[url]) return Promise.resolve(bufferCache[url]);
-        if (bufferPromises[url]) return bufferPromises[url];
-        const ctx = getAudioContext();
-        bufferPromises[url] = fetch(url)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
-                return res.arrayBuffer();
-            })
-            .then(data => ctx.decodeAudioData(data))
-            .then(buf => { bufferCache[url] = buf; return buf; })
-            .catch(err => {
-                // Surfaced instead of swallowed — a 404 here means the
-                // file/path doesn't match, and a generic "Failed to
-                // fetch" almost always means the page was opened as
-                // file:// (fetch() of local files is blocked by the
-                // browser) rather than served over http(s).
-                console.warn('[guitar audio] could not load', url, err);
-                return null;
-            });
-        return bufferPromises[url];
-    }
+    function getAudioContext() { return window.AudioCore.getContext(); }
+    function loadBuffer(url) { return window.AudioCore.loadBuffer(url, 'guitar'); }
     GUITAR_SAMPLES.forEach(s => loadBuffer(s.url));
     GUITAR_ELECTRIC_SAMPLES.forEach(s => loadBuffer(s.url));
 

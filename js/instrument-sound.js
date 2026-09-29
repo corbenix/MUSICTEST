@@ -76,40 +76,22 @@ window.InstrumentSound = (function () {
         return { url: best.url, semitoneDiff: targetAbs - best.abs };
     }
 
-    let audioCtx = null;
     let audioUnavailable = false;
     function getAudioContext() {
         if (audioUnavailable) return null;
-        if (!audioCtx) {
-            try {
-                const Ctx = window.AudioContext || window.webkitAudioContext;
-                if (!Ctx) { audioUnavailable = true; return null; }
-                audioCtx = new Ctx();
-            } catch (e) {
-                audioUnavailable = true;
-                return null;
-            }
+        try {
+            return window.AudioCore.getContext();
+        } catch (e) {
+            audioUnavailable = true;
+            return null;
         }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume().catch(() => {});
-        }
-        return audioCtx;
     }
 
-    const bufferCache = {};
-    const bufferPromises = {};
     function loadBuffer(url) {
-        if (bufferCache[url]) return Promise.resolve(bufferCache[url]);
-        if (bufferPromises[url]) return bufferPromises[url];
         try {
             const ctx = getAudioContext();
             if (!ctx) return Promise.resolve(null);
-            bufferPromises[url] = fetch(url)
-                .then(res => res.arrayBuffer())
-                .then(data => ctx.decodeAudioData(data))
-                .then(buf => { bufferCache[url] = buf; return buf; })
-                .catch(() => null);
-            return bufferPromises[url];
+            return window.AudioCore.loadBuffer(url, 'chord builder');
         } catch (e) {
             return Promise.resolve(null);
         }
@@ -138,7 +120,7 @@ window.InstrumentSound = (function () {
                 gain.gain.value = 0.85;
                 source.connect(gain);
                 gain.connect(ctx.destination);
-                if (window.Recorder) { const rec = window.Recorder.tap(ctx); if (rec) gain.connect(rec); }
+                window.AudioCore.tapRecorder(gain, ctx);
 
                 source.start(0);
                 const stopAt = ctx.currentTime + 0.9;

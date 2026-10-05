@@ -206,7 +206,7 @@ html { scroll-behavior: smooth; }
 body {
     margin: 0;
     position: relative;
-    background: linear-gradient(180deg, #010004 0%, #05030c 55%, #090515 100%);
+    background: linear-gradient(180deg, #060606 0%, #0b0b0c 55%, #0e0e10 100%);
     color: var(--text);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
@@ -219,10 +219,14 @@ body::before {
     inset: -15%;
     z-index: -4;
     pointer-events: none;
+    /* Was a saturated purple "nebula" (three colored blobs) — now a much
+       quieter neutral glow, keeping just a faint trace of the brand
+       accent so the page doesn't feel flat, without tinting the whole
+       background purple like before. */
     background:
-        radial-gradient(circle at 20% 20%, rgba(124, 80, 220, 0.12), transparent 55%),
-        radial-gradient(circle at 80% 25%, rgba(90, 50, 180, 0.10), transparent 55%),
-        radial-gradient(circle at 50% 65%, rgba(60, 30, 140, 0.06), transparent 60%);
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.025), transparent 55%),
+        radial-gradient(circle at 80% 25%, rgba(139, 107, 255, 0.05), transparent 55%),
+        radial-gradient(circle at 50% 65%, rgba(255, 255, 255, 0.02), transparent 60%);
     filter: blur(70px);
     animation: home-bg-drift 20s ease-in-out infinite alternate;
 }

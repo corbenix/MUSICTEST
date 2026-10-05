@@ -649,10 +649,13 @@ a { color: inherit; text-decoration: none; }
     left: 8px;
     width: 0;
     border-radius: var(--radius-pill, 999px);
-    background: rgba(var(--c-rgb, 124, 92, 255), 0.16);
-    border: 1px solid rgba(var(--c-rgb, 124, 92, 255), 0.30);
-    border-bottom: 2px solid rgba(var(--c-rgb, 124, 92, 255), 0.9);
-    transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1), background 0.32s var(--ease), border-color 0.32s var(--ease);
+    /* Upgraded from a thin translucent outline to a solid glowing chip —
+       matches the hub-cards' vivid treatment instead of the old subtle
+       underline-ish style. */
+    background: linear-gradient(160deg, rgba(var(--c-rgb, 124, 92, 255), .95), rgba(var(--c-rgb, 124, 92, 255), .65));
+    border: 1px solid rgba(var(--c-rgb, 124, 92, 255), .9);
+    box-shadow: 0 0 18px rgba(var(--c-rgb, 124, 92, 255), .45), inset 0 1px 0 rgba(255,255,255,.25);
+    transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1), background 0.32s var(--ease), border-color 0.32s var(--ease), box-shadow 0.32s var(--ease);
     pointer-events: none;
     z-index: 0;
     /* Same name on every page's pill element (matched by the browser
@@ -666,9 +669,9 @@ a { color: inherit; text-decoration: none; }
 /* No-JS / not-yet-measured fallback: keep the active button legible
    even before section-nav.js has positioned the pill on first paint. */
 .section-nav-card:not(.js-ready) .section-nav-btn[aria-current="page"] {
-    background: rgba(124, 92, 255, 0.16);
-    border: 1px solid rgba(124, 92, 255, 0.30);
-    border-bottom: 2px solid rgba(124, 92, 255, 0.9);
+    background: linear-gradient(160deg, rgba(124, 92, 255, .95), rgba(124, 92, 255, .65));
+    border: 1px solid rgba(124, 92, 255, .9);
+    box-shadow: 0 0 18px rgba(124, 92, 255, .45);
 }
 
 .section-nav-btn {
@@ -699,8 +702,16 @@ a { color: inherit; text-decoration: none; }
     height: 25px;
     object-fit: contain;
 }
+/* Inactive tabs now carry a faint tint of their own instrument color at
+   rest too (not just once active), matching the hub-cards' always-visible
+   color treatment — each button already sets --c-rgb below. */
+.section-nav-btn:not([aria-current="page"]) {
+    background: rgba(var(--c-rgb, 124, 92, 255), .07);
+    border-radius: var(--radius-pill, 999px);
+}
 .section-nav-btn:hover {
     color: var(--text);
+    background: rgba(var(--c-rgb, 124, 92, 255), .14);
 }
 .section-nav-btn:hover .section-nav-icon { filter: none; }
 .section-nav-btn[aria-current="page"] {

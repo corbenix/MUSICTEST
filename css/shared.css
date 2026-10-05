@@ -432,19 +432,24 @@ a { color: inherit; text-decoration: none; }
     position: absolute;
     border-radius: 50%;
     filter: blur(90px);
-    opacity: 0.35;
+    /* Was 0.35 with much more saturated colors below — this pair of big
+       blurred circles was the actual dominant source of the purple wash
+       (more than body::before, which is comparatively subtle). Toned way
+       down so the page reads as neutral black with just a trace of the
+       brand accent, not a colored background. */
+    opacity: 0.16;
 }
 
 .cn-bg-glow--1 {
     width: 520px; height: 520px;
     top: -160px; left: -120px;
-    background: radial-gradient(circle, rgba(124,111,224,0.55), transparent 70%);
+    background: radial-gradient(circle, rgba(139,107,255,0.45), transparent 70%);
 }
 
 .cn-bg-glow--2 {
     width: 620px; height: 620px;
     bottom: -220px; right: -160px;
-    background: radial-gradient(circle, rgba(56,189,248,0.30), transparent 70%);
+    background: radial-gradient(circle, rgba(79,140,255,0.30), transparent 70%);
 }
 
 .cn-bg-orbit {

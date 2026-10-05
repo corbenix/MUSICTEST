@@ -21,13 +21,13 @@
        individually targeted below, like the Circle of Fifths panel
        (css/circle-of-fifths.css uses --bg2) — without inventing a new
        one-off color per component. Values are the same hue alpha-blended
-       to 100% over the page's --bg (#060414), so they read as the same
+       to 100% over the page's --bg (#0b0b0c), so they read as the same
        design, just solid. */
     :root {
-        --bg2: #0d0a20;
-        --bg3: #15102e;
-        --glass: #100c26;
-        --glass-md: #16112e;
+        --bg2: #141415;
+        --bg3: #181819;
+        --glass: #151516;
+        --glass-md: #1b1b1c;
     }
 
     .nclg-nav,

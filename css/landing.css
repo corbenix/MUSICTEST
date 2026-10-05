@@ -107,24 +107,38 @@
     gap: 12px;
     padding: 24px 20px 20px;
     border-radius: 20px;
-    background: linear-gradient(150deg, #1c1533, #241a3d);
-    border: none;
+    /* Each card's color now shows at rest, not just on hover — a subtle
+       tint blended into the same dark card base, plus a solid top edge
+       in that card's own color (guitar's amethyst, bass's teal, etc). */
+    background:
+        linear-gradient(150deg, rgba(var(--c-rgb),.14), transparent 60%),
+        linear-gradient(150deg, #161319, #1b1720);
+    border: 1px solid rgba(var(--c-rgb), .22);
+    border-top: 3px solid rgb(var(--c-rgb));
     overflow: hidden;
     will-change: transform;
     box-shadow: 0 10px 0 rgba(0,0,0,0.35), 0 14px 30px rgba(0,0,0,0.5);
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
                 box-shadow 0.25s var(--ease),
-                background 0.25s var(--ease);
+                background 0.25s var(--ease),
+                border-color 0.25s var(--ease);
 }
 
 .hub-card:hover,
 .hub-card:focus-visible {
     transform: translateY(-6px) rotate(-1deg);
     box-shadow: 0 14px 0 rgba(0,0,0,0.45), 0 26px 48px rgba(0,0,0,0.7);
+    border-color: rgba(var(--c-rgb), .5);
     background:
         linear-gradient(150deg, rgba(var(--c-rgb),0.9), rgba(var(--c2-rgb, var(--c-rgb)),0.85)),
-        linear-gradient(150deg, #1c1533, #241a3d);
+        linear-gradient(150deg, #161319, #1b1720);
     background-blend-mode: overlay, normal;
+}
+/* Full-color wash on hover needs the title back to plain white rather
+   than the (now low-contrast) tinted color it uses at rest. */
+.hub-card:hover .hub-card-title,
+.hub-card:focus-visible .hub-card-title {
+    color: var(--text);
 }
 
 .hub-card:active {
@@ -135,24 +149,31 @@
 .hub-card-icon {
     position: relative;
     z-index: 1;
-    font-size: 38px;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 30px;
     line-height: 1;
-    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
+    background: linear-gradient(160deg, rgba(var(--c-rgb),.9), rgba(var(--c-rgb),.55));
+    box-shadow: 0 0 18px rgba(var(--c-rgb),.4), inset 0 1px 0 rgba(255,255,255,.25);
 }
 .hub-card-icon-img {
-    width: 42px;
-    height: 42px;
+    width: 30px;
+    height: 30px;
     object-fit: contain;
-    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
 }
 
 .hub-card-title {
     position: relative;
     z-index: 1;
     font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--text);
+    font-size: 19px;
+    font-weight: 700;
+    color: rgb(var(--c2-rgb, var(--c-rgb)));
 }
 
 .hub-card-desc {

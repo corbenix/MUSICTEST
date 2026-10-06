@@ -146,8 +146,8 @@ main[data-app-section="learn"]         { --tool-rgb: 124, 111, 224; --tool-light
 }
 
 :root {
-    --font-display: 'Cormorant Garamond', 'Inter', system-ui, serif;
-    --font-body:    'Inter', system-ui, sans-serif;
+    --font-display: 'Chakra Petch', 'IBM Plex Sans', system-ui, sans-serif;
+    --font-body:    'IBM Plex Sans', system-ui, sans-serif;
 
     --bg:           #0b0b0c;
     --bg2:          rgba(255, 255, 255, 0.035);
@@ -538,8 +538,26 @@ a { color: inherit; text-decoration: none; }
     line-height: 1;
     font-family: var(--font-display);
 }
-.nclg-nav-wordmark strong { font-size: 20px; letter-spacing: 0.06em; color: var(--text); }
-.nclg-nav-wordmark span   { font-size: 15px; letter-spacing: 0.22em; color: var(--purple-l); }
+.nclg-nav-wordmark strong { font-size: 20px; font-weight: 400; letter-spacing: 0.14em; color: var(--text); }
+.nclg-nav-wordmark span   { font-size: 15px; font-weight: 400; letter-spacing: 0.3em; color: var(--purple-l); }
+
+/* Brand "E": three bars, no spine (matches the Corbenix wordmark).
+   Scales with font-size and takes the surrounding text colour. */
+.ne {
+    display: inline-block;
+    width: 0.56em;
+    height: 0.7em;
+    margin: 0 0.04em;
+    vertical-align: baseline;
+    font-style: normal;
+    background:
+        linear-gradient(currentColor, currentColor) 0 0 / 100% 0.085em no-repeat,
+        linear-gradient(currentColor, currentColor) 0 50% / 100% 0.085em no-repeat,
+        linear-gradient(currentColor, currentColor) 0 100% / 100% 0.085em no-repeat;
+}
+.ne--x { width: 0.46em; height: 0.5em; }   /* lowercase "e" in mixed-case text */
+.brand-display { font-family: var(--font-display); font-weight: 400; }
+.brand-caps    { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.1em; }
 
 .nclg-nav-links {
     display: flex;

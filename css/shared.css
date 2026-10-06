@@ -633,70 +633,70 @@ a { color: inherit; text-decoration: none; }
     border: 0;
 }
 
+/* ── Section nav (in-page tool switcher) ─────────────────────────────────
+   Slanted tabs on a hairline. The buttons themselves stay rectangular so
+   js/section-nav.js can keep measuring them (a skewed element's bounding
+   box is wider than its visible shape); only their painted shapes — the
+   sliding .section-nav-pill and each button's ::before — are skewed.
+   Per-tool colour comes from --c-rgb (set per link below). */
 .section-nav-card {
+    --nav-slant: -18deg;
     width: fit-content;
     max-width: 100%;
     margin: 32px auto 0;
-    padding: 8px;
+    padding: 0 14px;
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    gap: 3px;
-    background: #050508;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--radius-pill, 999px);
+    gap: 4px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
     position: relative;
     z-index: 1;
 }
 .section-nav-card[hidden] { display: none; }
 
 /* Sliding indicator — a single element positioned/colored via JS
-   (js/section-nav.js) rather than restyling each button independently,
-   so the active state animates smoothly between tabs and recolors
-   to match the active tool's own accent (--c-rgb, set per link below). */
+   (js/section-nav.js), so the active state animates between tabs and
+   recolors to the active tool's accent. Slanted edge on the left, glowing
+   underline, and a colour wash rising from the bottom. */
 .section-nav-pill {
     position: absolute;
-    top: 8px;
-    bottom: 8px;
-    left: 8px;
+    top: 0;
+    bottom: -1px;
+    left: 0;
     width: 0;
-    border-radius: var(--radius-pill, 999px);
-    /* Upgraded from a thin translucent outline to a solid glowing chip —
-       matches the hub-cards' vivid treatment instead of the old subtle
-       underline-ish style. */
-    background: linear-gradient(160deg, rgba(var(--c-rgb, 124, 92, 255), .95), rgba(var(--c-rgb, 124, 92, 255), .65));
-    border: 1px solid rgba(var(--c-rgb, 124, 92, 255), .9);
-    box-shadow: 0 0 18px rgba(var(--c-rgb, 124, 92, 255), .45), inset 0 1px 0 rgba(255,255,255,.25);
+    box-sizing: border-box;
+    transform: skewX(var(--nav-slant));
+    border-radius: 0;
+    background: linear-gradient(0deg, rgba(var(--c-rgb, 124, 92, 255), .30), rgba(var(--c-rgb, 124, 92, 255), .04) 75%);
+    border-left: 3px solid rgb(var(--c-rgb, 124, 92, 255));
+    border-bottom: 3px solid rgb(var(--c-rgb, 124, 92, 255));
+    box-shadow: 0 12px 20px -12px rgba(var(--c-rgb, 124, 92, 255), .9);
     transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1), background 0.32s var(--ease), border-color 0.32s var(--ease), box-shadow 0.32s var(--ease);
     pointer-events: none;
     z-index: 0;
     /* Same name on every page's pill element (matched by the browser
        across the old/new document snapshots) lets it morph position +
-       size natively during a cross-document navigation, instead of
-       just cross-fading in place with everything else under ::view-
-       transition-old/new(root). This is what actually makes the pill
-       *slide* from the old page's active tab to the new page's. */
+       size natively during a cross-document navigation. */
     view-transition-name: section-nav-pill;
-}
-/* No-JS / not-yet-measured fallback: keep the active button legible
-   even before section-nav.js has positioned the pill on first paint. */
-.section-nav-card:not(.js-ready) .section-nav-btn[aria-current="page"] {
-    background: linear-gradient(160deg, rgba(124, 92, 255, .95), rgba(124, 92, 255, .65));
-    border: 1px solid rgba(124, 92, 255, .9);
-    box-shadow: 0 0 18px rgba(124, 92, 255, .45);
 }
 
 .section-nav-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    padding: 11px 18px;
-    border-radius: var(--radius-pill, 999px);
+    gap: 9px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 26px 12px;
+    border-radius: 0;
     color: var(--text2);
     white-space: nowrap;
     flex: 0 0 auto;
@@ -704,8 +704,21 @@ a { color: inherit; text-decoration: none; }
     z-index: 1;
     transition: color 0.2s var(--ease);
 }
+/* Resting shape: a slanted divider on the left and a faint underline in the
+   tool's own colour (so the colours still read before a tab is active). */
+.section-nav-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    box-sizing: border-box;
+    transform: skewX(var(--nav-slant));
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 3px solid rgba(var(--c-rgb, 124, 92, 255), .22);
+    transition: background 0.2s var(--ease), border-color 0.2s var(--ease), opacity 0.2s var(--ease);
+}
 .section-nav-icon {
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1;
     filter: grayscale(1) brightness(1.6) opacity(0.75);
     transition: filter 0.15s var(--ease);
@@ -715,22 +728,27 @@ a { color: inherit; text-decoration: none; }
     height: 25px;
     object-fit: contain;
 }
-/* Inactive tabs now carry a faint tint of their own instrument color at
-   rest too (not just once active), matching the hub-cards' always-visible
-   color treatment — each button already sets --c-rgb below. */
-.section-nav-btn:not([aria-current="page"]) {
-    background: rgba(var(--c-rgb, 124, 92, 255), .07);
-    border-radius: var(--radius-pill, 999px);
-}
 .section-nav-btn:hover {
     color: var(--text);
-    background: rgba(var(--c-rgb, 124, 92, 255), .14);
+}
+.section-nav-btn:hover::before {
+    background: linear-gradient(0deg, rgba(var(--c-rgb, 124, 92, 255), .12), transparent 75%);
+    border-bottom-color: rgba(var(--c-rgb, 124, 92, 255), .6);
 }
 .section-nav-btn:hover .section-nav-icon { filter: none; }
-.section-nav-btn[aria-current="page"] {
-    color: var(--text);
-}
+.section-nav-btn[aria-current="page"] { color: var(--text); }
 .section-nav-btn[aria-current="page"] .section-nav-icon { filter: none; }
+/* Once the sliding pill is live it paints the active state, so the button's
+   own resting shape steps aside. */
+.section-nav-card.js-ready .section-nav-btn[aria-current="page"]::before { opacity: 0; }
+/* No-JS / not-yet-measured fallback: paint the active tab on the button
+   itself so it is legible before section-nav.js positions the pill. */
+.section-nav-card:not(.js-ready) .section-nav-btn[aria-current="page"]::before {
+    background: linear-gradient(0deg, rgba(var(--c-rgb, 124, 92, 255), .30), rgba(var(--c-rgb, 124, 92, 255), .04) 75%);
+    border-left: 3px solid rgb(var(--c-rgb, 124, 92, 255));
+    border-bottom: 3px solid rgb(var(--c-rgb, 124, 92, 255));
+    box-shadow: 0 12px 20px -12px rgba(var(--c-rgb, 124, 92, 255), .9);
+}
 
 /* Per-tool accent, read by section-nav.js and applied to the pill's
    --c-rgb custom property when that tab becomes active. */

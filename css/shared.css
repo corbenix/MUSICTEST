@@ -536,28 +536,23 @@ a { color: inherit; text-decoration: none; }
     display: flex;
     flex-direction: column;
     line-height: 1;
-    font-family: var(--font-display);
+    font-family: 'Corbenix E', var(--font-display);
 }
 .nclg-nav-wordmark strong { font-size: 20px; font-weight: 400; letter-spacing: 0.14em; color: var(--text); }
 .nclg-nav-wordmark span   { font-size: 15px; font-weight: 400; letter-spacing: 0.3em; color: var(--purple-l); }
 
-/* Brand "E": three bars, no spine (matches the Corbenix wordmark).
-   Scales with font-size and takes the surrounding text colour. */
-.ne {
-    display: inline-block;
-    width: 0.56em;
-    height: 0.7em;
-    margin: 0 0.04em;
-    vertical-align: baseline;
-    font-style: normal;
-    background:
-        linear-gradient(currentColor, currentColor) 0 0 / 100% 0.085em no-repeat,
-        linear-gradient(currentColor, currentColor) 0 50% / 100% 0.085em no-repeat,
-        linear-gradient(currentColor, currentColor) 0 100% / 100% 0.085em no-repeat;
+/* Brand "E": a tiny font (assets/fonts/corbenix-e.woff2) holding only the
+   spine-less E / e, as in the Corbenix wordmark. unicode-range limits it to
+   those two letters; every other character falls through to the display font. */
+@font-face {
+    font-family: 'Corbenix E';
+    src: url('../assets/fonts/corbenix-e.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    unicode-range: U+0045, U+0065;
 }
-.ne--x { width: 0.46em; height: 0.5em; }   /* lowercase "e" in mixed-case text */
-.brand-display { font-family: var(--font-display); font-weight: 400; }
-.brand-caps    { font-family: var(--font-display); font-weight: 400; letter-spacing: 0.1em; }
+.brand-display { font-family: 'Corbenix E', var(--font-display); font-weight: 400; }
+.brand-caps    { font-family: 'Corbenix E', var(--font-display); font-weight: 400; letter-spacing: 0.1em; }
 
 .nclg-nav-links {
     display: flex;

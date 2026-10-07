@@ -45,7 +45,7 @@
     box-shadow: 0 0 12px rgba(var(--guitar-rgb), .55) !important;
 }
 #chord-lib-fretboard .gtr-open-note-badge.gtr-user-picked {
-    background: #7a1f2c !important;
+    background: #6640e8 !important;
     border-color: #6640e8 !important;
     color: #fff !important;
     box-shadow: 0 0 12px rgba(102, 64, 232, .55) !important;
@@ -63,7 +63,7 @@
     box-shadow: 0 0 12px rgba(var(--guitar-rgb), .55) !important;
 }
 #chord-lib-fretboard .gtr-fret-cell.gtr-user-picked .gtr-fret-dot {
-    background: #7a1f2c !important;
+    background: #6640e8 !important;
     border-color: #6640e8 !important;
     color: #fff !important;
     box-shadow: 0 0 12px rgba(102, 64, 232, .55) !important;
@@ -75,19 +75,19 @@
    so it's visually obvious which notes were manually toggled. Same purple
    used for the manual fret-highlight (.gtr-user-picked) elsewhere. */
 .gtr-fret-dot--user-edited {
-    background: #7a1f2c !important;
+    background: #6640e8 !important;
     border-color: #6640e8 !important;
     color: #fff !important;
     box-shadow: 0 0 12px rgba(102, 64, 232, .55) !important;
 }
 #chord-lib-fretboard .gtr-fret-cell.active .gtr-fret-dot--shape.gtr-fret-dot--user-edited {
-    background: #7a1f2c !important;
+    background: #6640e8 !important;
     border-color: #6640e8 !important;
     color: #fff !important;
     box-shadow: 0 0 12px rgba(102, 64, 232, .55) !important;
 }
 .gtr-open-note-badge--user-edited {
-    background: #7a1f2c !important;
+    background: #6640e8 !important;
     border-color: #6640e8 !important;
     color: #fff !important;
     box-shadow: 0 0 12px rgba(102, 64, 232, .55) !important;
@@ -271,43 +271,33 @@
    color, matching the pills and chord-quality cards above the board. */
 .gcv-root-pills .root-pill:hover {
     background: rgba(102, 64, 232, 0.18);
-    border-color: rgba(245, 163, 171, .40);
+    border-color: rgba(var(--tool-light-rgb), .40);
     color: #fff;
 }
 .gcv-root-pills .root-pill.active {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),
-        radial-gradient(130% 160% at 50% 105%, rgba(var(--tool-rgb), 0.75) 0%, rgba(var(--tool-rgb), 0.38) 55%, rgba(var(--tool-rgb), 0.18) 100%);
-    backdrop-filter: blur(14px) saturate(200%);
-    -webkit-backdrop-filter: blur(14px) saturate(200%);
-    border-color: rgba(255, 255, 255, 0.2);
-    border-bottom: 2px solid rgba(var(--tool-light-rgb), 1);
+    /* Flat solid fill — no sheen, blur or inner glow. */
+    background: rgb(var(--tool-rgb));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: rgb(var(--tool-rgb));
     color: #fff;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -4px 8px -3px rgba(var(--tool-rgb), 0.4),
-        0 2px 8px rgba(var(--tool-rgb), 0.2);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: none;
+    text-shadow: none;
 }
 .gcv-type-pills .type-pill-btn:hover {
     background: rgba(102, 64, 232, 0.18);
-    border-color: rgba(245, 163, 171, .40);
+    border-color: rgba(var(--tool-light-rgb), .40);
     color: #fff;
 }
 .gcv-type-pills .type-pill-btn.active {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.01) 55%, transparent 100%),
-        radial-gradient(130% 160% at 50% 105%, rgba(var(--tool-rgb), 0.75) 0%, rgba(var(--tool-rgb), 0.38) 55%, rgba(var(--tool-rgb), 0.18) 100%);
-    backdrop-filter: blur(14px) saturate(200%);
-    -webkit-backdrop-filter: blur(14px) saturate(200%);
-    border-color: rgba(255, 255, 255, 0.2);
-    border-bottom: 2px solid rgba(var(--tool-light-rgb), 1);
+    /* Flat solid fill — no sheen, blur or inner glow. */
+    background: rgb(var(--tool-rgb));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: rgb(var(--tool-rgb));
     color: #fff;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -4px 8px -3px rgba(var(--tool-rgb), 0.4),
-        0 2px 8px rgba(var(--tool-rgb), 0.2);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: none;
+    text-shadow: none;
 }
 .gcv-card {
     /* No special background/border override — falls back to the plain

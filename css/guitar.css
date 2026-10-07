@@ -1028,84 +1028,142 @@
         0 3px 10px color-mix(in srgb, var(--capo-active-accent) 28%, transparent);
 }
 
-/* Card-style tab selector (Chord Library / Capo / Scale / CAGED).
-   Widened/enlarged to match the panel/circle cards below it (those run
-   up to --gtr-panel-maxw / 1200px, but .tool-tabs caps at 900px by
-   default) and given more room to breathe. */
+/* Selection nav (Chord Library / Capo / Scale / CAGED) — "expanding hex row".
+   Inactive items are a hexagon icon token + a label. The active item opens
+   into a wide card with a plain (glowing) icon, its name and description.
+   Everything is driven by --tool-rgb / --tool-light-rgb (the Guitar theme).
+   Still a role="tablist" of <button class="tool-tab guitar-tab"> — the
+   .tool-tab class is only the JS hook for js/guitar.js's tab switching. */
 .guitar_selection_nav {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     max-width: var(--gtr-panel-maxw);
     gap: 14px;
     margin-top: 28px;
 }
 .guitar-tab {
+    flex: 1 1 130px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
-    text-align: left;
-    padding: 18px 20px;
-    border-radius: 16px;
-    background: rgba(var(--tool-rgb), 0.08);
-    border: 1px solid rgba(var(--tool-light-rgb), 0.22);
+    justify-content: center;
+    gap: 10px;
+    padding: 8px 6px;
+    text-align: center;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    box-shadow: none;
     color: var(--text2);
     font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 700;
     cursor: pointer;
-    box-shadow: inset 0 -6px 12px rgba(0, 0, 0, .3), inset 0 2px 3px rgba(255, 255, 255, .04);
-    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease);
+    transition: flex-grow 0.35s var(--ease), background 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), color 0.2s var(--ease);
 }
+.guitar-tab:focus-visible {
+    outline: 2px solid rgb(var(--tool-light-rgb));
+    outline-offset: 3px;
+}
+
+/* Hexagon token: outer hex = outline colour, ::before = dark inner hex. */
+.guitar-tab-hex {
+    position: relative;
+    flex: none;
+    width: 62px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: rgba(var(--tool-light-rgb), 0.3);
+    transition: background 0.2s var(--ease);
+}
+.guitar-tab-hex::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    background: #0f0e12;
+}
+.guitar-tab-hex > * { position: relative; z-index: 1; }
+
 .guitar-tab-icon {
     flex-shrink: 0;
-    font-size: 24px;
-    color: var(--text3);
-}
-.guitar-tab[aria-selected="true"] .guitar-tab-icon {
+    font-size: 28px;
+    line-height: 1;
     color: rgb(var(--tool-light-rgb));
+    opacity: 0.55;
+    transition: opacity 0.2s var(--ease);
 }
 .guitar-tab-icon--img {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
 }
 .guitar-tab-text {
     display: flex;
     flex-direction: column;
+    align-items: center;
     min-width: 0;
 }
 .guitar-tab-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: color 0.2s var(--ease);
 }
 .guitar-tab-desc {
+    display: none;
     font-family: var(--font-body, inherit);
     font-weight: 400;
     font-size: 12.5px;
-    color: var(--text3);
+    color: #c9c0f5;
+    margin-top: 3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.guitar-tab:hover {
-    transform: translateY(-3px);
-    background: rgba(var(--tool-rgb), 0.14);
-    border-color: rgba(var(--tool-light-rgb), 0.35);
-    color: var(--text);
-    box-shadow: inset 0 -8px 14px rgba(0, 0, 0, .34), inset 0 2px 3px rgba(255, 255, 255, .06);
-}
+.guitar-tab:not([aria-selected="true"]):hover { transform: none; background: none; }
+.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-hex { background: rgba(var(--tool-light-rgb), 0.6); }
+.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-icon { opacity: 0.9; }
+.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-label { color: #fff; }
+
+/* Active: wide card, plain glowing icon (no hex), name + description. */
 .guitar-tab[aria-selected="true"] {
-    background: linear-gradient(180deg, rgba(var(--tool-rgb), .35), rgba(var(--tool-rgb), .15));
-    border: 1px solid rgba(var(--tool-light-rgb), .5);
-    border-bottom: 4px solid rgb(var(--tool-rgb));
-    box-shadow: inset 0 -10px 16px rgba(0, 0, 0, .38), inset 0 2px 4px rgba(255, 255, 255, .11);
+    flex: 2.6 1 300px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 18px;
+    min-height: 96px;
+    padding: 14px 26px;
+    text-align: left;
+    background: linear-gradient(150deg, rgba(var(--tool-rgb), 0.34), rgba(var(--tool-rgb), 0.08) 70%), #17122b;
+    border: 1px solid rgba(var(--tool-light-rgb), 0.55);
+    box-shadow: 0 0 26px -8px rgba(var(--tool-rgb), 0.8);
     color: #fff;
+    transform: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
+.guitar-tab[aria-selected="true"] .guitar-tab-hex {
+    width: auto;
+    height: auto;
+    clip-path: none;
+    background: none;
+    filter: drop-shadow(0 0 10px rgba(var(--tool-rgb), 0.9));
+}
+.guitar-tab[aria-selected="true"] .guitar-tab-hex::before { display: none; }
+.guitar-tab[aria-selected="true"] .guitar-tab-icon { opacity: 1; font-size: 40px; }
+.guitar-tab[aria-selected="true"] .guitar-tab-icon--img { width: 40px; height: 40px; }
+.guitar-tab[aria-selected="true"] .guitar-tab-text { align-items: flex-start; }
+.guitar-tab[aria-selected="true"] .guitar-tab-label { font-size: 15px; color: #fff; }
+.guitar-tab[aria-selected="true"] .guitar-tab-desc { display: block; }
 /* Fully self-contained: .guitar-tab and its sub-elements (.guitar-tab-icon,
    .guitar-tab-label, .guitar-tab-desc, .guitar-tab-text) share no class
    names with tool.css's generic .tool-tab component, so nothing here
@@ -1483,8 +1541,8 @@
     .capo-card-arrow { font-size: 9.5px; }
     .capo-card-target { font-size: 17px; }
     .capo-card-quality { font-size: 9.5px; }
-    .guitar-tab-icon { font-size: 23px; }
-    .guitar-tab-label { font-size: 14px; }
+    .guitar-tab-icon { font-size: 24px; }
+    .guitar-tab[aria-selected="true"] .guitar-tab-label { font-size: 14px; }
     .guitar-tab-desc { font-size: 12px; }
     .pedalboard-panel-label { font-size: 14px; }
     .pedal-box-label { font-size: 11px; }

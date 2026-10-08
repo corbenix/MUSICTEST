@@ -1075,15 +1075,16 @@
     align-items: center;
     justify-content: center;
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    background: rgba(var(--tool-light-rgb), 0.3);
-    transition: background 0.2s var(--ease);
+    background: rgba(var(--tool-light-rgb), 0.65);
+    transition: background 0.2s var(--ease), transform 0.2s var(--ease), filter 0.2s var(--ease);
 }
 .guitar-tab-hex::before {
     content: "";
     position: absolute;
     inset: 2px;
     clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-    background: #0f0e12;
+    background: linear-gradient(160deg, rgba(var(--tool-rgb), 0.42), rgba(var(--tool-rgb), 0.16)), #0f0e12;
+    transition: background 0.2s var(--ease);
 }
 .guitar-tab-hex > * { position: relative; z-index: 1; }
 
@@ -1092,7 +1093,7 @@
     font-size: 28px;
     line-height: 1;
     color: rgb(var(--tool-light-rgb));
-    opacity: 0.55;
+    opacity: 0.95;
     transition: opacity 0.2s var(--ease);
 }
 .guitar-tab-icon--img {
@@ -1111,7 +1112,7 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text2);
+    color: #bdbdc4;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1130,8 +1131,15 @@
 }
 
 .guitar-tab:not([aria-selected="true"]):hover { transform: none; background: none; }
-.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-hex { background: rgba(var(--tool-light-rgb), 0.6); }
-.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-icon { opacity: 0.9; }
+.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-hex {
+    background: rgb(var(--tool-light-rgb));
+    transform: translateY(-3px);
+    filter: drop-shadow(0 6px 10px rgba(var(--tool-rgb), 0.55));
+}
+.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-hex::before {
+    background: linear-gradient(160deg, rgba(var(--tool-rgb), 0.62), rgba(var(--tool-rgb), 0.3)), #0f0e12;
+}
+.guitar-tab:not([aria-selected="true"]):hover .guitar-tab-icon { opacity: 1; }
 .guitar-tab:not([aria-selected="true"]):hover .guitar-tab-label { color: #fff; }
 
 /* Active: wide card, plain glowing icon (no hex), name + description. */

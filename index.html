@@ -766,6 +766,7 @@
             <button class="tool-tab" role="tab" aria-selected="true" data-panel="panel-tuner">Tuner</button>
             <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-metro">Metronome</button>
             <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-analyzer">Song Analyzer</button>
+            <button class="tool-tab" role="tab" aria-selected="false" data-panel="panel-key">Key Analyzer</button>
         </div>
 
         <section id="panel-tuner" class="tool-panel" role="tabpanel">
@@ -802,6 +803,27 @@
                     <button id="metro-plus" type="button" class="metro-bpm-btn">+</button>
                 </div>
                 <button id="metro-toggle" type="button" class="tool-btn">Start</button>
+            </div>
+        </section>
+
+        <section id="panel-key" class="tool-panel" role="tabpanel" hidden>
+            <div class="key-panel">
+                <label for="key-input" class="key-label">Enter your chords</label>
+                <div class="key-input-row">
+                    <input id="key-input" class="key-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. C Am F G7" aria-describedby="key-hint" />
+                    <button id="key-clear" type="button" class="tool-btn key-clear" hidden>Clear</button>
+                </div>
+                <div id="key-hint" class="key-hint">Separate chords with spaces, commas or dashes. Understands Am, F#m7, Bbmaj7, Dsus4, G7b9, Bdim, E7/G# and more.</div>
+                <div id="key-examples" class="key-examples">
+                    <span class="key-examples-label">Try</span>
+                    <button type="button" class="key-example" data-chords="C Am F G">C Am F G</button>
+                    <button type="button" class="key-example" data-chords="Am F C G">Am F C G</button>
+                    <button type="button" class="key-example" data-chords="Dm7 G7 Cmaj7">Dm7 G7 Cmaj7</button>
+                    <button type="button" class="key-example" data-chords="C E7 Am F G">C E7 Am F G</button>
+                    <button type="button" class="key-example" data-chords="G D Em C Bm">G D Em C Bm</button>
+                </div>
+                <div id="key-chips" class="key-chips" aria-label="Recognized chords"></div>
+                <div id="key-results" class="key-results" aria-live="polite" hidden></div>
             </div>
         </section>
 
@@ -1083,6 +1105,7 @@
     <script src="js/music-theory.js?v=2"></script>
     <script src="js/tools.js?v=4"></script>
     <script src="js/song-analyzer.js?v=1"></script>
+    <script src="js/key-analyzer.js?v=1"></script>
 
     <!-- Chord Builder (Phase 2, merged) -->
     <script src="js/note-display.js?v=1"></script>
